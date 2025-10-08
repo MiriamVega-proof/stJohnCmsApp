@@ -103,6 +103,31 @@ function fetchAppointmentsByStatusId($conn, $statusId) {
     return $appointments;
 }
 
+// Function to fetch appointments by status string
+function fetchAppointmentsByStatus($conn, $status) {
+    $stmt = $conn->prepare("SELECT * FROM appointments WHERE status = ? ORDER BY dateRequested DESC, time DESC");
+    
+    if (!$stmt) {
+        sendResponse(false, "Error preparing statement: " . $conn->error);
+    }
+    
+    $stmt->bind_param("s", $status);
+    $stmt->execute();
+    
+    $result = $stmt->get_result();
+    if ($result === false) {
+        sendResponse(false, "Error executing query: " . $stmt->error);
+    }
+    
+    $appointments = array();
+    while ($row = $result->fetch_assoc()) {
+        $appointments[] = $row;
+    }
+    
+    $stmt->close();
+    return $appointments;
+}
+
 // Main execution
 try {
     // Validate database connection
@@ -115,6 +140,7 @@ try {
         // Get query parameters
         $clientId = isset($_GET['client_id']) ? intval($_GET['client_id']) : null;
         $statusId = isset($_GET['status_id']) ? intval($_GET['status_id']) : null;
+        $status = isset($_GET['status']) ? $_GET['status'] : null;
         
         $appointments = array();
         
@@ -125,6 +151,9 @@ try {
         } elseif ($statusId !== null) {
             $appointments = fetchAppointmentsByStatusId($conn, $statusId);
             $message = "Appointments fetched successfully for status ID: " . $statusId;
+        } elseif ($status) {
+            $appointments = fetchAppointmentsByStatus($conn, $status);
+            $message = "Appointments fetched successfully for status: " . $status;
         } else {
             $appointments = fetchAllAppointments($conn);
             $message = "All appointments fetched successfully";
