@@ -11,6 +11,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusFilter = document.getElementById('statusFilter');
     const clearSearchBtn = document.getElementById('clearSearchBtn');
 
+    // Pagination elements
+    const entriesPerPageSelect = document.getElementById('entriesPerPage');
+    const paginationInfo = document.getElementById('paginationInfo');
+    const paginationControls = document.getElementById('paginationControls');
+    const prevPageBtn = document.getElementById('prevPage');
+    const nextPageBtn = document.getElementById('nextPage');
+
     // Modals
     const editModalEl = document.getElementById('editReservationModal');
     const editModal = new bootstrap.Modal(editModalEl);
@@ -32,6 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Local state
     let reservations = []; // fetched from server
     let lotTypeMap = {}; // map for lot type names/prices
+    let filteredReservations = []; // filtered results
+    let currentPage = 1;
+    let entriesPerPage = 25;
 
     // -------------------------
     // Utility helpers
@@ -129,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const q = (searchInput.value || '').trim().toLowerCase();
         const status = statusFilter.value;
 
-        const filtered = reservations.filter(r => {
+        filteredReservations = reservations.filter(r => {
             const matchesSearch = (!q) ||
                 (r.clientName && r.clientName.toLowerCase().includes(q)) ||
                 (r.lotNumber && r.lotNumber.toLowerCase().includes(q)) ||
@@ -140,21 +150,29 @@ document.addEventListener('DOMContentLoaded', () => {
             return matchesSearch && matchesStatus;
         });
 
-        renderTable(filtered);
+        currentPage = 1; // Reset to first page when filtering
+        renderTable();
+        updatePagination();
     }
 
 
     // -------------------------
     // Render table
     // -------------------------
-    function renderTable(data) {
+    function renderTable() {
         tableBody.innerHTML = '';
-        if (!data.length) {
+        
+        if (!filteredReservations.length) {
             tableBody.innerHTML = '<tr><td colspan="16" class="text-center text-muted">No reservations found matching the criteria.</td></tr>';
             return;
         }
 
-        data.forEach(rec => {
+        // Calculate pagination
+        const startIndex = (currentPage - 1) * entriesPerPage;
+        const endIndex = startIndex + entriesPerPage;
+        const pageData = filteredReservations.slice(startIndex, endIndex);
+
+        pageData.forEach(rec => {
             // Determine button state and text for Archive/Restore
             let archiveButtonHtml = '';
             if (rec.status.toLowerCase() === 'archived') {
@@ -235,6 +253,108 @@ document.addEventListener('DOMContentLoaded', () => {
     clearSearchBtn?.addEventListener('click', () => {
         if (searchInput) searchInput.value = '';
         filterAndRender();
+    });
+
+    // -------------------------
+    // Pagination functions
+    // -------------------------
+    function updatePagination() {
+        const totalEntries = filteredReservations.length;
+        const totalPages = Math.ceil(totalEntries / entriesPerPage) || 1;
+        const startEntry = totalEntries === 0 ? 0 : (currentPage - 1) * entriesPerPage + 1;
+        const endEntry = Math.min(currentPage * entriesPerPage, totalEntries);
+
+        // Update pagination info
+        paginationInfo.textContent = `Showing ${startEntry} to ${endEntry} of ${totalEntries} entries`;
+
+        // Update pagination controls
+        updatePaginationControls(currentPage, totalPages);
+    }
+
+    function updatePaginationControls(current, total) {
+        paginationControls.innerHTML = '';
+
+        // Previous button
+        const prevLi = document.createElement('li');
+        prevLi.className = `page-item ${current === 1 ? 'disabled' : ''}`;
+        prevLi.innerHTML = `
+            <button class="page-link" ${current === 1 ? 'disabled' : ''} aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </button>
+        `;
+        prevLi.addEventListener('click', () => {
+            if (current > 1) {
+                currentPage = current - 1;
+                renderTable();
+                updatePagination();
+            }
+        });
+        paginationControls.appendChild(prevLi);
+
+        // Page numbers
+        const startPage = Math.max(1, current - 2);
+        const endPage = Math.min(total, current + 2);
+
+        if (startPage > 1) {
+            addPageButton(1);
+            if (startPage > 2) {
+                const ellipsis = document.createElement('li');
+                ellipsis.className = 'page-item disabled';
+                ellipsis.innerHTML = '<span class="page-link">...</span>';
+                paginationControls.appendChild(ellipsis);
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            addPageButton(i, i === current);
+        }
+
+        if (endPage < total) {
+            if (endPage < total - 1) {
+                const ellipsis = document.createElement('li');
+                ellipsis.className = 'page-item disabled';
+                ellipsis.innerHTML = '<span class="page-link">...</span>';
+                paginationControls.appendChild(ellipsis);
+            }
+            addPageButton(total);
+        }
+
+        // Next button
+        const nextLi = document.createElement('li');
+        nextLi.className = `page-item ${current === total ? 'disabled' : ''}`;
+        nextLi.innerHTML = `
+            <button class="page-link" ${current === total ? 'disabled' : ''} aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </button>
+        `;
+        nextLi.addEventListener('click', () => {
+            if (current < total) {
+                currentPage = current + 1;
+                renderTable();
+                updatePagination();
+            }
+        });
+        paginationControls.appendChild(nextLi);
+    }
+
+    function addPageButton(pageNum, active = false) {
+        const li = document.createElement('li');
+        li.className = `page-item ${active ? 'active' : ''}`;
+        li.innerHTML = `<button class="page-link" data-page="${pageNum}">${pageNum}</button>`;
+        li.addEventListener('click', () => {
+            currentPage = pageNum;
+            renderTable();
+            updatePagination();
+        });
+        paginationControls.appendChild(li);
+    }
+
+    // Pagination event listeners
+    entriesPerPageSelect?.addEventListener('change', (e) => {
+        entriesPerPage = parseInt(e.target.value);
+        currentPage = 1;
+        renderTable();
+        updatePagination();
     });
 
     // -------------------------
