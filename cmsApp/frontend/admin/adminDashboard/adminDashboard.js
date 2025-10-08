@@ -68,14 +68,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const logoutLinks = document.querySelectorAll('#logoutLinkDesktop, #logoutLinkMobile');
 
     if (logoutLinks.length === 0) {
-      console.warn(" No logout links found. Make sure IDs #logoutLinkDesktop or #logoutLinkMobile exist in your HTML.");
       return;
     }
 
     logoutLinks.forEach(link => {
       link.addEventListener('click', function(event) {
         event.preventDefault();
-        console.log("Logout link clicked:", link.id); 
         const confirmed = confirm('Are you sure you want to log out?');
         if (confirmed) {
           const redirectPath = link.getAttribute('href') && link.getAttribute('href') !== '#'
@@ -88,5 +86,88 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
 
-  setTimeout(attachLogoutHandlers, 200); 
+  setTimeout(attachLogoutHandlers, 200);
+  
+  // Fetch data from reservations table
+  fetch('../../../../cms.api/fetchReservations.php')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+
+      if (data.success) {
+        // Get all counts from the response
+        const totalReservations = data.totalCount;
+        const todayReservations = data.todayCount;
+        const weekReservations = data.weekCount;
+        
+        console.log('Total Reservations:', totalReservations);
+        console.log('Today\'s Reservations:', todayReservations);
+        console.log('This Week\'s Reservations:', weekReservations);
+        console.log('Today\'s Date:', data.today);
+        console.log('Week Range:', data.weekRange);
+        
+        // Update all counters
+        updateReservationCounters(totalReservations, todayReservations, weekReservations);
+        
+      }
+    })
+    .catch(error => {
+      // Handle fetch errors silently
+    });
+
+  // Function to update reservation metrics
+  function updateReservationCounters(totalCount, todayCount, weekCount) {
+    // Update total reservations
+    const totalReservationsElem = document.getElementById('total-reservations');
+    if (totalReservationsElem) {
+      totalReservationsElem.textContent = totalCount;
+    }
+    
+    // Update today's reservations
+    const todayReservationsElem = document.getElementById('today-reservations');
+    if (todayReservationsElem) {
+      todayReservationsElem.textContent = todayCount;
+    }
+    
+    // Update this week's reservations
+    const weekReservationsElem = document.getElementById('week-reservations');
+    if (weekReservationsElem) {
+      weekReservationsElem.textContent = weekCount;
+    }
+    
+    // Alternative selectors for today
+    const possibleTodaySelectors = [
+      '#reservations-today',
+      '#daily-reservations', 
+      '.today-count',
+      '#todayCount'
+    ];
+    
+    // Alternative selectors for week
+    const possibleWeekSelectors = [
+      '#reservations-week',
+      '#weekly-reservations', 
+      '.week-count',
+      '#weekCount',
+      '#this-week-reservations'
+    ];
+    
+    possibleTodaySelectors.forEach(selector => {
+      const element = document.querySelector(selector);
+      if (element) {
+        element.textContent = todayCount;
+      }
+    });
+    
+    possibleWeekSelectors.forEach(selector => {
+      const element = document.querySelector(selector);
+      if (element) {
+        element.textContent = weekCount;
+      }
+    });
+  }
 });

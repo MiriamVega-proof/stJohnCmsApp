@@ -90,10 +90,63 @@
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
-                            <tr><th>Client Name</th><th>Address</th><th>Contact</th><th class="text-center">Client ID</th><th>Reservation Date</th><th>Area</th><th>Block</th><th>Row</th><th>Lot</th><th>Lot Type</th><th>Depth</th><th>Amount</th><th class="text-center">Status</th><th>Submitted On</th><th>Updated On</th><th class="text-center">Actions</th></tr>
+                            <tr>
+                                <th>Client Name</th>
+                                <th>Address</th>
+                                <th>Contact</th>
+                                <th class="text-center">Client ID</th>
+                                <th>Reservation Date</th>
+                                <th>Area</th>
+                                <th>Block</th>
+                                <th>Row</th>
+                                <th>Lot</th>
+                                <th>Lot Type</th>
+                                <th>Depth</th>
+                                <th>Amount</th>
+                                <th class="text-center">Status</th>
+                                <th>Submitted On</th>
+                                <th>Updated On</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
                         </thead>
                         <tbody id="reservationTableBody"></tbody>
                     </table>
+                </div>
+
+                <!-- Pagination Controls -->
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <div class="d-flex align-items-center">
+                        <label for="entriesPerPage" class="form-label me-2 mb-0">Show:</label>
+                        <select id="entriesPerPage" class="form-select form-select-sm" style="width: auto;">
+                            <option value="10">10</option>
+                            <option value="25" selected>25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <span class="ms-2 text-muted">entries</span>
+                    </div>
+                    
+                    <div id="paginationInfo" class="text-muted">
+                        Showing 0 to 0 of 0 entries
+                    </div>
+                    
+                    <nav aria-label="Reservation pagination">
+                        <ul class="pagination pagination-sm mb-0" id="paginationControls">
+                            <li class="page-item disabled">
+                                <button class="page-link" id="prevPage" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </button>
+                            </li>
+                            <li class="page-item active">
+                                <button class="page-link" data-page="1">1</button>
+                            </li>
+                            <li class="page-item disabled">
+                                <button class="page-link" id="nextPage" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>
