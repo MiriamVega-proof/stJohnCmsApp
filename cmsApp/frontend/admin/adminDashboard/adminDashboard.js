@@ -88,5 +88,33 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
 
-  setTimeout(attachLogoutHandlers, 200); 
+  setTimeout(attachLogoutHandlers, 200);
+  
+  fetch('../../../../cms.api/testReservations.php')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+
+      if (data.success) {
+        // Log each reservation details
+        data.data.forEach((reservation, index) => {
+          console.log(`Reservation ${index + 1}:`, {
+            ID: reservation.reservationId,
+            Area: reservation.area,
+            Block: reservation.block,
+            Lot: reservation.lotNumber,
+            UserID: reservation.userId
+          });
+        });
+      } else {
+        console.error('Database error:', data.error);
+      }
+    })
+    .catch(error => {
+      console.error('Fetch error:', error);
+    });
 });
