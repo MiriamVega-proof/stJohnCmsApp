@@ -1,0 +1,170 @@
+/* ========== RESET ========== */
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #EFBF04; /* Consistent with your login page */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========== NAVBAR ========== */
+.navbar {
+    z-index: 1200;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #1f1f1f;
+}
+
+.navbar .nav-link {
+    color: rgba(0,0,0,0.75);
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link:focus,
+.navbar .nav-link.active {
+    color: #000;
+    border-bottom: 2px solid #333;
+}
+
+/* ========== SIGNUP SECTION LAYOUT ========== */
+#signup {
+    padding: 50px 0;
+}
+
+.signup-box {
+    width: 420px;
+    max-width: 96%;
+    background: #fff;
+    border-radius: 14px;
+    padding: 32px;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.12);
+}
+
+.signup-box h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.85rem;
+    color: #222;
+}
+
+.signup-box h2 .text-warning {
+    color: #d49d00;
+    font-weight: 700;
+}
+
+/* ========== FORM FIELDS & ICONS ========== */
+.form-control {
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.08);
+    transition: box-shadow .15s ease, border-color .15s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #ffc107;
+    box-shadow: 0 0 0 0.18rem rgba(255,193,7,0.14);
+}
+
+.position-relative input.form-control {
+    padding-left: 2.8rem;
+    padding-right: 2.8rem;
+}
+
+.input-icon {
+    color: #7b7b7b;
+    font-size: 1.05rem;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.password-toggle-icon {
+    color: #7b7b7b;
+    font-size: 1.05rem;
+    cursor: pointer;
+    z-index: 3;
+    user-select: none;
+}
+
+/* ========== BUTTONS & LINKS ========== */
+.btn-warning {
+    background: #ffc107;
+    border: none;
+    color: #111;
+    font-weight: 700;
+    border-radius: 10px;
+    padding: 10px 14px;
+}
+
+.btn-warning:hover, .btn-warning:focus {
+    background: #e0a800;
+    color: #fff;
+}
+
+/* ========== FOOTER ========== */
+footer {
+    text-align: center;
+    padding: 18px 8px;
+    color: rgba(0,0,0,0.55);
+    font-size: 0.9rem;
+    background-color: #EFBF04;
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+
+/* Desktop & larger screens */
+@media (min-width: 992px) {
+    .container {
+        max-width: 960px; /* Standard desktop container width */
+    }
+}
+
+/* Tablet & smaller devices */
+@media (max-width: 768px) {
+    .signup-box {
+        padding: 20px;
+    }
+}
+
+/* Mobile phones */
+@media (max-width: 576px) {
+    .signup-box {
+        padding: 15px;
+    }
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+    .nav-link {
+        font-size: 0.9rem;
+    }
+    .row.g-2 > .col-md-6 {
+        width: 100%;
+    }
+}
+
+/* Very small phones */
+@media (max-width: 320px) {
+    .signup-box {
+        padding: 10px;
+    }
+    .navbar-brand {
+        font-size: 1rem;
+    }
+    .nav-link {
+        font-size: 0.85rem;
+    }
+}

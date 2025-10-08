@@ -1,0 +1,329 @@
+/* --- Global Styles & Body Overrides --- */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background-color: #f8f9fa;
+    color: #333;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-top: 70px; /* Padding for the fixed navbar */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+body::-webkit-scrollbar {
+    display: none;
+}
+
+.content {
+    overflow-y: auto;
+    height: 100%;
+    padding-right: 0.5rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.content::-webkit-scrollbar {
+    display: none;
+}
+
+/* --- Modal Styles --- */
+.modal {
+    display: none; /* Handled by Bootstrap JS */
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    overflow: auto;
+}
+.modal-dialog {
+    position: relative;
+    margin: 5% auto;
+    max-width: 900px;
+    max-height: 90vh;
+}
+.modal-content {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.modal-header, .modal-footer {
+    padding: 10px 15px;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+.modal-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+}
+.modal-body {
+    height: 60vh;
+    padding: 15px;
+    padding-right: 0.5rem;
+    text-align: center;
+    overflow-y: auto;
+    scrollbar-width: auto;
+    -ms-overflow-style: auto;
+}
+.modal-body::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+.modal-body::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 6px;
+}
+.modal-body::-webkit-scrollbar-thumb {
+    background: #c4c4c4;
+    border-radius: 6px;
+}
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+#pdf-canvas {
+    border: 1px solid #ddd;
+    max-width: 100%;
+}
+.modal-footer .btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* --- General & Component Styles --- */
+main {
+    flex-grow: 1;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #EFBF04 !important;
+    border-bottom: none;
+}
+.navbar-brand, .navbar .nav-link {
+    color: #000 !important;
+}
+.navbar .nav-link.active {
+    font-weight: bold;
+}
+.navbar-toggler {
+    border-color: #ac8f1d !important;
+}
+
+/* Cards & Sections */
+.card {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
+    background-color: #fff;
+}
+.payment-section h3 {
+    margin-bottom: 25px;
+    margin-top: 10px;
+    color: #555;
+    text-align: center;
+}
+.payment-method {
+    border: 1px solid #ddd;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
+}
+.payment-method.active {
+    background-color: #efbf04a1;
+    border-color: #ac8f1d;
+}
+.payment-method i {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+/* File Input */
+.file-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+.file-upload-icon {
+    background-color: #EFBF04 !important;
+    color: black !important;
+    border: 1px solid #ac8f1d !important;
+}
+.file-upload-icon:hover {
+    background-color: #d8aa03 !important;
+}
+.view-icon {
+    background-color: transparent !important;
+    color: #6c757d !important;
+    border: none !important;
+    font-size: 1.2rem;
+    padding: 0.25rem;
+}
+.view-icon:hover {
+    color: #000 !important;
+}
+
+/* Payment History Table */
+.payment-history-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    font-size: 14px;
+    font-family: 'Segoe UI', sans-serif;
+}
+.payment-history-table th, .payment-history-table td {
+    padding: 12px 15px;
+    text-align: center;
+}
+.payment-history-table thead th {
+    background-color: #EFBF04;
+    font-weight: 600;
+    border-radius: 0;
+}
+.payment-history-table tbody tr{
+    background-color: var(--white);
+    box-shadow: 0 2px 6px var(--shadow-medium);
+    border-radius: 8px;
+}
+.payment-history-table tbody tr td {
+    border-bottom: none;
+}
+
+.status {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.8em;
+    text-transform: uppercase;
+    text-align: center;
+    display: inline-block;
+}
+.status.paid { background-color: #198754; color: white; }
+.status.pending { background-color: #ffc107; color: black; }
+.status.unpaid-deferred { background-color: #dc3545; color: white; }
+
+/* Buttons */
+.btn-primary, .submit-btn {
+    background: #EFBF04 !important; /* Added !important */
+    border: none;
+    color: #000; 
+}
+.btn-primary:hover, .submit-btn:hover { 
+    background: #ac8f1d !important; /* Darker gold on hover */
+}
+.btn-danger { background: #dc3545; border: none; color: #fff; }
+.btn-secondary { background: #6c757d; border: none; color: #fff; }
+#payment-form .btn-primary {
+    padding: 12px 40px;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+/* Footer */
+.footer {
+    background-color: #EFBF04;
+    color: black;
+    padding: 1rem 0;
+    margin-top: auto;
+}
+.footer a {
+    color: black;
+    text-decoration: none;
+}
+.footer a:hover {
+    text-decoration: underline;
+}
+
+/* --- Responsive Design --- */
+@media (min-width: 992px) {
+    .navbar-nav { margin: 0 auto; }
+}
+
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        background-color: #EFBF04;
+        padding: 1rem;
+        margin-top: 0.5rem;
+        border-radius: 0.25rem;
+    }
+}
+
+/* Adjustments for small phones (below 576px) */
+@media (max-width: 576px) {
+    h2 { font-size: 1.5rem; }
+    #monthly-payment, #lot-price, #total-paid, #remaining-balance {
+        font-size: 1.5rem;
+    }
+    #payment-form .btn-primary {
+        padding: 10px 20px;
+        font-size: 1rem;
+        width: 100%;
+    }
+    
+    /* Make payment methods full-width columns */
+    .payment-methods {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .payment-method { 
+        width: 100%;
+        flex-basis: auto;
+    }
+
+    .payment-qr-code {
+        max-width: 150px; /* Reduces QR code size on small screens */
+        height: auto;
+    }
+
+    .footer { font-size: 0.85rem; }
+
+    .payment-history-table th, 
+    .payment-history-table td {
+        font-size: 0.8rem; /* Makes table content fit better */
+        padding: 0.5rem;
+    }
+    
+    .payment-history-table td:nth-child(4), /* Hides Method and Reference columns on tiny screens */
+    .payment-history-table th:nth-child(4),
+    .payment-history-table td:nth-child(5),
+    .payment-history-table th:nth-child(5) {
+        display: none;
+    }
+}
+
+/* Specific fix for very small screens (360px and below) */
+@media (max-width: 400px) {
+    .payment-qr-code {
+        max-width: 120px;
+    }
+    .file-input-display {
+        flex-wrap: wrap;
+    }
+    .file-upload-icon {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    .view-icon {
+        font-size: 1rem;
+    }
+    .file-name {
+        font-size: 0.8rem;
+    }
+}

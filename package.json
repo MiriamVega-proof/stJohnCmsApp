@@ -1,0 +1,31 @@
+{
+  "name": "stjohncmsapp",
+  "version": "1.0.0",
+  "description": "Email OTP verification project (no MongoDB)",
+  "main": "cmsApp/frontend/auth/verifyOtp/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node cmsApp/frontend/auth/verifyOtp/server.js",
+    "dev": "nodemon cmsApp/frontend/auth/verifyOtp/server.js",
+    "build": "echo \"No build step required\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "otp",
+    "verification",
+    "email",
+    "express",
+    "nodemailer"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "nodemailer": "^6.10.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}

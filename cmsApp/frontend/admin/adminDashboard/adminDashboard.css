@@ -1,0 +1,238 @@
+/* adminDashboard.css */
+
+/* --- Custom Variables (Copied for completeness) --- */
+:root {
+    --gold: #EFBF04;
+    --dark-gold: #ac8f1d;
+    --black: #000000;
+    --white: #ffffff;
+    --light-bg: #f8f9fa;
+    --text-color: #333333;
+    --border-color: #dee2e6;
+    --danger: #dc3545;
+    --danger-hover: #b02a37;
+    --success: #198754;
+    --pending: #ffc107; /* Used for Warning status */
+    --archived: #6c757d;
+    --info: #0d6efd; /* Used for Primary/Info */
+    --info-hover: #0a58ca;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Base Body & Layout --- */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--light-bg);
+    color: var(--text-color);
+    padding-top: 56px; /* Space for fixed navbar */
+    min-height: 100vh;
+}
+
+/* --- Navigation Bar Consistency (Based on your provided styles) --- */
+.navbar {
+    background-color: var(--gold) !important;
+    box-shadow: var(--shadow);
+}
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--black) !important;
+}
+
+/* User Dropdown link and Toggler */
+.navbar .nav-link,
+.navbar-toggler {
+    color: var(--black) !important;
+}
+.navbar-toggler {
+    border-color: var(--dark-gold) !important;
+}
+
+/* --- Sidebar / Offcanvas Styling (Adapted for Gold/Black theme) --- */
+/* The HTML uses bg-dark, so we'll override it to black for better contrast/theme */
+.offcanvas {
+    background-color: var(--black) !important; 
+}
+
+.offcanvas-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.offcanvas-title {
+    color: var(--gold);
+    font-weight: bold;
+}
+
+.btn-close.btn-close-white {
+    filter: none; /* Resetting filter for the close button */
+    opacity: 0.8;
+}
+
+.sidebar-nav .nav-link {
+    padding: 0.75rem 1.5rem;
+    color: rgba(255, 255, 255, 0.8) !important;
+    transition: background-color 0.15s;
+}
+
+.sidebar-nav .nav-link:hover {
+    background-color: rgba(239, 191, 4, 0.1); /* Gold tint on hover */
+    color: var(--gold) !important;
+}
+
+.sidebar-nav .nav-link.active {
+    /* Using Gold as the active background */
+    background-color: var(--gold) !important;
+    color: var(--black) !important;
+    font-weight: 700;
+}
+
+.sidebar-heading {
+    padding: 0.5rem 1.5rem;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--dark-gold) !important; 
+}
+
+/* User Profile */
+.user-initials {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: #EFBF04; /* Gold */
+    font-weight: bold;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+.mobile-logout-link {
+    display: block;
+    padding: 0.5rem;
+    color: #000; /* Black */
+    text-decoration: none;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.mobile-logout-link:hover {
+    background-color: #ac8f1d; /* Dark Gold */
+}
+
+
+/* --- Main Content and Dashboard Cards --- */
+.main-content {
+    padding: 1.5rem;
+}
+
+/* Base Card Style (Applying your shadow/border styles) */
+.card {
+    box-shadow: var(--shadow);
+    border: none;
+    border-radius: 0.5rem; 
+}
+
+.dashboard-card {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    /* Default left border for a clean look */
+    border-left: 5px solid var(--border-color) !important; 
+    height: 100%;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.15) !important;
+    border-left-color: var(--gold) !important; /* Highlight on hover */
+}
+
+.card-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* Card-specific accent colors for the card title */
+.card-title.text-primary { color: var(--info) !important; }
+.card-title.text-success { color: var(--success) !important; }
+.card-title.text-danger { color: var(--danger) !important; }
+.card-title.text-warning { color: var(--pending) !important; }
+.card-title.text-info { color: var(--info) !important; }
+.card-title.text-secondary { color: var(--archived) !important; }
+.card-title.text-dark { color: var(--black) !important; }
+
+
+/* Rule under the title (HR) inherits text color */
+.card-body hr { 
+    border-top: 1px solid currentColor;
+    opacity: 0.2;
+}
+
+/* Style for the wide cards (Charts/Maps) */
+.wide-card {
+    height: 100%;
+}
+
+.wide-card .card-body {
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem; /* Adjusting padding for responsiveness */
+}
+
+/* Status Colors within Cards */
+.status-red { 
+    color: var(--danger); 
+    font-weight: 600; 
+}
+.status-green { 
+    color: var(--success); 
+    font-weight: 600; 
+}
+
+/* Chart Styles for Gold Theme */
+#incomeChart {
+    /* Ensures chart takes up available space in the card */
+    max-width: 100%;
+    max-height: 100%;
+}
+
+
+/* --- Footer Consistency (Based on your provided styles) --- */
+.footer {
+    background-color: var(--gold); 
+    color: var(--black); 
+    padding: 1rem; 
+    margin-top: auto; 
+    font-size: 0.8rem; 
+}
+
+.footer a { 
+    color: var(--black); 
+    text-decoration: none; 
+}
+
+.footer a:hover { 
+    text-decoration: underline; 
+}
+
+
+/* --- Responsive adjustments --- */
+@media (min-width: 768px) {
+    body { padding-top: 62px; }
+    .main-content { padding: 1.5rem; }
+    /* Ensure the wide cards look good on tablets */
+    .wide-card .card-body {
+        min-height: 200px; 
+    }
+}
+@media (min-width: 992px) {
+    .main-content { padding: 2rem; }
+    /* Setting a consistent height for the chart and map for desktop view */
+    .wide-card .card-body {
+        min-height: 300px;
+        height: 300px;
+    }
+}

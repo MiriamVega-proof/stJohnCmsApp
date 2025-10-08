@@ -1,0 +1,256 @@
+:root {
+    --gold: #EFBF04;
+    --dark-gold: #ac8f1d;
+    --black: #000000;
+    --white: #ffffff;
+    --light-bg: #f8f9fa;
+    --text-color: #333333;
+    --border-color: #dee2e6;
+    --danger: #dc3545;
+    --danger-hover: #b02a37;
+    --success: #198754;
+    --pending: #ffc107;
+    --archived: #6c757d;
+    --info: #0d6efd;
+    --info-hover: #0a58ca;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--light-bg);
+    color: var(--text-color);
+    padding-top: 56px; 
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex-grow: 1;
+    width: 100%;
+}
+
+.navbar {
+    background-color: var(--gold) !important;
+    box-shadow: var(--shadow);
+}
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+.navbar-brand, 
+.navbar .nav-link, 
+.dropdown-item {
+    color: var(--black) !important;
+}
+.navbar .nav-link:hover, 
+.navbar .nav-link.active {
+    font-weight: bold;
+}
+.navbar-toggler {
+    border-color: var(--dark-gold) !important;
+    padding: 0.2rem 0.5rem;
+    font-size: 1.rem;
+}
+.dropdown-menu {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: none;
+}
+/* User Profile */
+.user-initials {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: #EFBF04; /* Gold */
+    font-weight: bold;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+.mobile-logout-link {
+    display: block;
+    padding: 0.5rem;
+    color: #000; /* Black */
+    text-decoration: none;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.mobile-logout-link:hover {
+    background-color: #ac8f1d; /* Dark Gold */
+}
+
+
+.main-content {
+    padding: 1rem;
+}
+.card {
+    box-shadow: var(--shadow);
+    border: none;
+    width: 100%;
+}
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 1rem;
+}
+
+/* Custom Gold Button Style for "Add New User" */
+.btn-gold {
+    background-color: var(--gold);
+    color: var(--black);
+    border: 1px solid var(--dark-gold);
+    font-weight: 600;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+.btn-gold:hover {
+    background-color: var(--dark-gold);
+    color: var(--white);
+    border-color: var(--gold);
+}
+
+
+.table-responsive {
+    box-shadow: inset -10px 0 8px -10px rgba(0,0,0,0.1);
+}
+.table {
+    min-width: 900px;
+}
+.table thead th {
+    background-color: var(--gold);
+    color: var(--black);
+    white-space: nowrap;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 0.75rem 1rem;
+}
+.table td {
+    vertical-align: middle;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    padding: 0.6rem 1rem;
+}
+.table-hover tbody tr:hover {
+    background-color: #fef9e7;
+}
+
+
+.action-buttons { 
+    display: flex; 
+    justify-content: center; 
+    gap: 0.5rem; 
+}
+.action-btn { 
+    background: none; 
+    border: none; 
+    cursor: pointer; 
+    padding: 0.2rem 0.4rem; 
+    font-size: 1rem; 
+    transition: transform 0.2s ease, color 0.2s ease; 
+}
+.action-btn:hover { 
+    transform: scale(1.2); 
+}
+.btn-edit { color: var(--info) }
+.btn-edit:hover { color: var(--info) }
+.btn-reset-pw { color: var(--pending); }
+.btn-reset-pw:hover { color: var(--pending)}
+.btn-archive, .btn-delete { color: var(--archived); }
+.btn-archive:hover, .btn-delete:hover { color:var(--archived) }
+.btn-activate { color: #000; }
+.btn-activate:hover { color: #000; }
+
+
+.status-badge { 
+    padding: 0.4em 0.8em; 
+    font-size: .7rem; 
+    font-weight: 700; 
+    border-radius: 50px; 
+    text-transform: uppercase; 
+    color: var(--white); 
+    min-width: 80px; 
+    display: inline-block; 
+    text-align: center;
+}
+.badge-admin {color: #000; } 
+.badge-secretary {color: #000; } 
+.badge-client { color: #000; } 
+.badge-service { color: #000; } 
+
+.status-active { color: #000;}
+.status-inactive { color: #000; } 
+.status-archived { color: #000; }
+
+
+.footer { 
+    background-color: var(--gold); 
+    color: var(--black); 
+    padding: 1rem; 
+    margin-top: auto; 
+    font-size: 0.8rem; 
+}
+.footer a { 
+    color: var(--black); 
+    text-decoration: none; 
+}
+.footer a:hover { 
+    text-decoration: underline; 
+}
+
+/* --- STANDARD MODAL STYLES (Includes the Save Button fix) --- */
+.modal-header { 
+    background-color: var(--gold); 
+    color: var(--black); 
+    border-color: var(--dark-gold); 
+}
+.modal-header .btn-close { 
+    filter: invert(1) grayscale(100%) brightness(200%); 
+}
+.modal-footer .btn-primary { 
+    background: var(--gold); 
+    border: none; 
+    color: var(--black); 
+    font-weight: 500; 
+}
+.modal-footer .btn-primary:hover { 
+    background: var(--dark-gold); 
+    color: var(--white);
+}
+
+/* Adjust delete/archive buttons in the action modal */
+#archiveOrDeleteModal .modal-footer .btn-warning { 
+    background: var(--pending); 
+}
+#archiveOrDeleteModal .modal-footer .btn-danger { 
+    background: var(--danger); 
+}
+#archiveOrDeleteModal .modal-footer .btn-danger:hover { 
+    background: var(--danger-hover); 
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+    body { padding-top: 62px; }
+    .main-content { padding: 1.5rem; }
+    .card-body { padding: 1.5rem !important; }
+    .card-header { font-size: 1.25rem; padding: 1rem 1.5rem; }
+    .table thead th { font-size: 0.85rem; }
+    .table td { font-size: 0.9rem; }
+    .action-btn { font-size: 1.1rem; }
+    .status-badge { font-size: 0.75rem; }
+    .footer { font-size: 0.9rem; }
+}
+@media (min-width: 992px) {
+    .main-content { padding: 2rem; }
+    .card-body { padding: 2rem !important; }
+}
+@media (min-width: 1200px) {
+    .main-content { max-width: 1800px; margin-left: auto; margin-right: auto; }
+}

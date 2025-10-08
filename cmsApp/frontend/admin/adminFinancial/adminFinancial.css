@@ -1,0 +1,226 @@
+:root {
+    --gold: #EFBF04;
+    --dark-gold: #ac8f1d;
+    --black: #000000;
+    --white: #ffffff;
+    --light-bg: #f8f9fa;
+    --text-color: #333333;
+    --border-color: #dee2e6;
+    --danger: #dc3545;
+    --danger-hover: #b02a37;
+    --success: #198754;
+    --pending: #ffc107; /* Used for pending status */
+    --archived: #6c757d;
+    --info: #0d6efd; /* Used for monthly income/action buttons */
+    --info-hover: #0a58ca;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--light-bg);
+    color: var(--text-color);
+    padding-top: 56px; 
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex-grow: 1;
+    width: 100%;
+}
+
+/* --- Navigation Bar Styles --- */
+.navbar {
+    background-color: var(--gold) !important;
+    box-shadow: var(--shadow);
+}
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+.navbar-brand, 
+.navbar .nav-link, 
+.dropdown-item {
+    color: var(--black) !important;
+}
+.navbar .nav-link:hover, 
+.navbar .nav-link.active {
+    font-weight: bold;
+}
+.navbar-toggler {
+    border-color: var(--dark-gold) !important;
+    padding: 0.2rem 0.5rem;
+    font-size: 1.rem;
+}
+.dropdown-menu {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: none;
+    border-radius: 0.5rem;
+}
+/* User Profile */
+.user-initials {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: #EFBF04; /* Gold */
+    font-weight: bold;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+.mobile-logout-link {
+    display: block;
+    padding: 0.5rem;
+    color: #000; /* Black */
+    text-decoration: none;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.mobile-logout-link:hover {
+    background-color: #ac8f1d; /* Dark Gold */
+}
+
+
+/* --- Main Content & Card Styles --- */
+.main-content {
+    padding: 1rem;
+}
+.card {
+    box-shadow: var(--shadow);
+    border: none;
+    width: 100%;
+    border-radius: 0.5rem; 
+}
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 1rem;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+/* --- Table Styles --- */
+.table-responsive {
+    box-shadow: inset -10px 0 8px -10px rgba(0,0,0,0.1);
+    border-radius: 0.5rem; 
+}
+.table {
+    min-width: 900px; /* Reduced min-width slightly for financial table */
+    margin-bottom: 0;
+}
+.table thead th {
+    background-color: var(--gold);
+    color: var(--black);
+    white-space: nowrap;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 0.75rem 1rem;
+}
+.table td {
+    vertical-align: middle;
+    font-size: 0.85rem;
+    padding: 0.6rem 1rem;
+}
+.table-hover tbody tr:hover {
+    background-color: #fef9e7;
+}
+
+/* --- Financial Tracking Specific Styles --- */
+
+/* Summary Cards */
+.card-income-summary { 
+    border-left: 5px solid var(--gold); 
+    /* Ensures summary text is visually clean */
+}
+.card-income-summary .card-text { 
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+
+
+/* Status Colors (Using defined variables) */
+.text-pending { color: var(--pending) !important; font-weight: bold; }
+.text-success { color: var(--success) !important; font-weight: bold; }
+.text-danger { color: var(--danger) !important; font-weight: bold; }
+.text-info { color: var(--info) !important; font-weight: bold; } /* Used for 'Income This Month' */
+
+/* Table Status Classes */
+.status-successful { color: var(--success); font-weight: 600; }
+.status-pending { color: var(--pending); font-weight: 600; }
+.status-unpaid, .status-overdue { color: var(--danger); font-weight: 600; } 
+
+/* Action Button Overrides */
+.action-btn { 
+    background: none; 
+    border: none; 
+    padding: 0.25rem; 
+    margin: 0 0.15rem; 
+    color: var(--black); /* Use primary blue for action */
+}
+.action-btn:hover { 
+    color: var(--info-hover); 
+}
+
+/* --- Footer Styles (Copied from provided CSS) --- */
+.footer { 
+    background-color: var(--gold); 
+    color: var(--black); 
+    padding: 1rem; 
+    margin-top: auto; 
+    font-size: 0.8rem; 
+}
+.footer a { 
+    color: var(--black); 
+    text-decoration: none; 
+}
+.footer a:hover { 
+    text-decoration: underline; 
+}
+
+/* --- Modal Styles (Copied from provided CSS) --- */
+.modal-header { 
+    background-color: var(--gold); 
+    color: var(--black); 
+    border-color: var(--dark-gold); 
+}
+.modal-header .btn-close { 
+    filter: invert(1) grayscale(100%) brightness(200%); 
+}
+.modal-footer .btn-primary { 
+    background: var(--gold); 
+    border: none; 
+    color: var(--black); 
+    font-weight: 500; 
+}
+.modal-footer .btn-primary:hover { 
+    background: var(--dark-gold); 
+    color: var(--white);
+}
+
+/* --- Responsive adjustments (Copied from provided CSS) --- */
+@media (min-width: 768px) {
+    body { padding-top: 62px; }
+    .main-content { padding: 1.5rem; }
+    .card-body { padding: 1.5rem !important; }
+    .card-header { font-size: 1.25rem; padding: 1rem 1.5rem; }
+    .table thead th { font-size: 0.85rem; }
+    .table td { font-size: 0.9rem; }
+    .footer { font-size: 0.9rem; }
+}
+@media (min-width: 992px) {
+    .main-content { padding: 2rem; }
+    .card-body { padding: 2rem !important; }
+}
+@media (min-width: 1200px) {
+    .main-content { max-width: 1800px; margin-left: auto; margin-right: auto; }
+}
