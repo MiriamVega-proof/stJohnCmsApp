@@ -72,28 +72,48 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchReservations() {
         tableBody.innerHTML = '<tr><td colspan="16" class="text-center">Loading...</td></tr>';
         try {
-            const res = await fetch(API_BASE + 'fetchReservation.php', {
+            const res = await fetch(API_BASE + 'fetchAllReservation.php', {
                 credentials: 'same-origin'
             });
             const json = await res.json();
 
-            if (json.status !== 'success') {
-                tableBody.innerHTML = `<tr><td colspan="16" class="text-center text-danger">${json.message || 'Failed to load'}</td></tr>`;
+            if (!json.success) {
+                tableBody.innerHTML = `<tr><td colspan="16" class="text-center text-danger">${json.error || 'Failed to load reservations'}</td></tr>`;
                 return;
             }
-            reservations = json.data || [];
+            
+            // Map the new API response format to match existing code expectations
+            reservations = (json.data || []).map(r => ({
+                reservationId: r.reservationId,
+                clientName: r.clientName,
+                address: r.clientAddress,
+                contactNumber: r.clientContact,
+                clientValidId: r.clientId,
+                reservationDate: r.reservationDate,
+                area: r.area,
+                block: r.block,
+                rowNumber: r.row,
+                lotNumber: r.lotNumber,
+                lotTypeID: r.lotType,
+                typeName: r.lotTypeName,
+                burialDepth: r.burialDepth,
+                price: r.amount,
+                status: r.status,
+                createdAt: r.submittedOn,
+                updatedAt: r.updatedOn,
+                userId: r.userId
+            }));
 
             // Build lot type map for display and editing
-            lotTypeMap = {}; // Assuming lotType details are part of the reservation record.
-            reservations.forEach(r => {
-                if (r.lotTypeID) {
-                    lotTypeMap[r.lotTypeID] = {
-                        name: r.typeName || '',
-                        price: r.price || 0,
-                        monthly: r.monthlyPayment || 0
-                    };
-                }
-            });
+            lotTypeMap = {
+                '1': { name: 'Regular Lot (₱50,000)', price: 50000, monthly: 0 },
+                '2': { name: 'Regular Lot (₱60,000)', price: 60000, monthly: 0 },
+                '3': { name: 'Premium Lot (₱70,000)', price: 70000, monthly: 0 },
+                '4': { name: 'Mausoleum Inside (₱500,000)', price: 500000, monthly: 0 },
+                '5': { name: 'Mausoleum Roadside (₱600,000)', price: 600000, monthly: 0 },
+                '6': { name: '4-Lot Package (₱300,000)', price: 300000, monthly: 0 },
+                '7': { name: 'Exhumation (₱15,000)', price: 15000, monthly: 0 }
+            };
 
             filterAndRender(); // Initial render
         } catch (err) {
