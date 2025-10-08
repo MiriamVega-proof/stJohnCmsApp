@@ -101,16 +101,19 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(data => {
 
       if (data.success) {
-        // Get both counts from the response
+        // Get all counts from the response
         const totalReservations = data.totalCount;
         const todayReservations = data.todayCount;
+        const weekReservations = data.weekCount;
         
         console.log('📊 Total Reservations:', totalReservations);
         console.log('📅 Today\'s Reservations:', todayReservations);
-        console.log('📆 Today\'s Date:', data.today);
+        console.log('� This Week\'s Reservations:', weekReservations);
+        console.log('�📆 Today\'s Date:', data.today);
+        console.log('📆 Week Range:', data.weekRange);
         
-        // Update both counters
-        updateReservationCounters(totalReservations, todayReservations);
+        // Update all counters
+        updateReservationCounters(totalReservations, todayReservations, weekReservations);
         
       } else {
         console.error('Database error:', data.error);
@@ -121,9 +124,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
   // Function to update reservation metrics
-  function updateReservationCounters(totalCount, todayCount) {
+  function updateReservationCounters(totalCount, todayCount, weekCount) {
     console.log('📊 Total count: ' + totalCount);
     console.log('📅 Today count: ' + todayCount);
+    console.log('📅 Week count: ' + weekCount);
     
     // Update total reservations
     const totalReservationsElem = document.getElementById('total-reservations');
@@ -143,7 +147,16 @@ document.addEventListener('DOMContentLoaded', function() {
       console.warn('⚠️ Element with ID today-reservations not found.');
     }
     
-    // Alternative selectors (in case you use different IDs)
+    // Update this week's reservations
+    const weekReservationsElem = document.getElementById('week-reservations');
+    if (weekReservationsElem) {
+      weekReservationsElem.textContent = weekCount;
+      console.log('✅ Updated week-reservations element');
+    } else {
+      console.warn('⚠️ Element with ID week-reservations not found.');
+    }
+    
+    // Alternative selectors for today
     const possibleTodaySelectors = [
       '#reservations-today',
       '#daily-reservations', 
@@ -151,11 +164,28 @@ document.addEventListener('DOMContentLoaded', function() {
       '#todayCount'
     ];
     
+    // Alternative selectors for week
+    const possibleWeekSelectors = [
+      '#reservations-week',
+      '#weekly-reservations', 
+      '.week-count',
+      '#weekCount',
+      '#this-week-reservations'
+    ];
+    
     possibleTodaySelectors.forEach(selector => {
       const element = document.querySelector(selector);
       if (element) {
         element.textContent = todayCount;
         console.log(`✅ Updated ${selector} with today's count: ${todayCount}`);
+      }
+    });
+    
+    possibleWeekSelectors.forEach(selector => {
+      const element = document.querySelector(selector);
+      if (element) {
+        element.textContent = weekCount;
+        console.log(`✅ Updated ${selector} with week count: ${weekCount}`);
       }
     });
   }

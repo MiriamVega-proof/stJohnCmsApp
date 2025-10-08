@@ -22,16 +22,28 @@ try {
 
     $reservations = [];
     $todayCount = 0;
+    $weekCount = 0;
     $today = date('Y-m-d'); // Get today's date in YYYY-MM-DD format
+    
+    // Calculate start of this week (Monday)
+    $startOfWeek = date('Y-m-d', strtotime('monday this week'));
+    $endOfWeek = date('Y-m-d', strtotime('sunday this week'));
     
     while ($row = $result->fetch_assoc()) {
         $reservations[] = $row;
         
-        // Check if reservation was made today
+        // Check if reservation was made today or this week
         if ($row['createdAt']) {
             $reservationDate = date('Y-m-d', strtotime($row['createdAt']));
+            
+            // Count today's reservations
             if ($reservationDate === $today) {
                 $todayCount++;
+            }
+            
+            // Count this week's reservations (Monday to Sunday)
+            if ($reservationDate >= $startOfWeek && $reservationDate <= $endOfWeek) {
+                $weekCount++;
             }
         }
     }
@@ -41,7 +53,9 @@ try {
         'success' => true,
         'totalCount' => count($reservations),
         'todayCount' => $todayCount,
+        'weekCount' => $weekCount,
         'today' => $today,
+        'weekRange' => $startOfWeek . ' to ' . $endOfWeek,
         'data' => $reservations
     ];
 
