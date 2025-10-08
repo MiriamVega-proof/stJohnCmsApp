@@ -172,8 +172,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Fetch data from appointments table
-  console.log('=== FETCHING APPOINTMENTS DATA ===');
-  
   fetch('../../../../cms.api/fetchAppointments.php')
     .then(response => {
       if (!response.ok) {
@@ -182,15 +180,8 @@ document.addEventListener('DOMContentLoaded', function() {
       return response.json();
     })
     .then(data => {
-      console.log('=== APPOINTMENTS DATA ===');
-      
       if (data.success) {
-        console.log('✅ Success:', data.message);
-        console.log('📊 Total Appointments:', data.data.length);
-        
         if (data.data.length > 0) {
-          console.log('📋 All Appointments Data:');
-          console.table(data.data);
           
           // Count appointments by status enum
           let scheduledCount = 0;
@@ -214,44 +205,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
           });
           
-          console.log('📊 Appointment Status Counts:');
-          console.log(`   Scheduled: ${scheduledCount}`);
-          console.log(`   Completed: ${completedCount}`);
-          console.log(`   Cancelled: ${cancelledCount}`);
-          console.log(`   Empty Status: ${emptyStatusCount}`);
-          
           // Update the dashboard counts
           updateAppointmentStatusCounts(scheduledCount, completedCount, cancelledCount);
           
-          console.log('📝 Appointments List:');
-          data.data.forEach((appointment, index) => {
-            console.log(`${index + 1}. Appointment ID: ${appointment.appointmentId}`);
-            console.log(`   Client: ${appointment.clientName}`);
-            console.log(`   Address: ${appointment.clientAddress}`);
-            console.log(`   Contact: ${appointment.clientContactNumber}`);
-            console.log(`   Date: ${appointment.dateRequested}`);
-            console.log(`   Time: ${appointment.time}`);
-            console.log(`   Purpose: ${appointment.purpose}`);
-            console.log(`   Status ID: ${appointment.statusId}`);
-            console.log(`   Status: ${appointment.status || 'Empty'}`);
-            console.log(`   Created At: ${appointment.createdAt}`);
-            console.log('   ---');
-          });
-          
         } else {
-          console.log('ℹ️ No appointments found in the database');
           // Update with 0 counts if no appointments found
           updateAppointmentStatusCounts(0, 0, 0);
         }
-      } else {
-        console.error('❌ API Error:', data.message);
       }
-      
-      console.log('=== END APPOINTMENTS DATA ===');
     })
     .catch(error => {
-      console.error('🚨 Fetch Error:', error.message);
-      console.error('💡 Check if XAMPP is running and fetchAppointments.php exists');
+      // Handle fetch errors silently
     });
 
   // Function to update appointment status counts on dashboard
@@ -260,29 +224,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const scheduledElement = document.getElementById('scheduled-appointment-count');
     if (scheduledElement) {
       scheduledElement.textContent = scheduledCount;
-      console.log(`✅ Updated scheduled appointment count to: ${scheduledCount}`);
-    } else {
-      console.warn('⚠️ Element with ID "scheduled-appointment-count" not found');
     }
     
     // Update cancelled appointment count
     const cancelledElement = document.getElementById('cancelled-appointment-count');
     if (cancelledElement) {
       cancelledElement.textContent = cancelledCount;
-      console.log(`✅ Updated cancelled appointment count to: ${cancelledCount}`);
-    } else {
-      console.warn('⚠️ Element with ID "cancelled-appointment-count" not found');
     }
     
     // Update completed appointment count
     const completedElement = document.getElementById('completed-appointment-count');
     if (completedElement) {
       completedElement.textContent = completedCount;
-      console.log(`✅ Updated completed appointment count to: ${completedCount}`);
-    } else {
-      console.warn('⚠️ Element with ID "completed-appointment-count" not found');
     }
-    
-    console.log(`📈 Dashboard updated - Scheduled: ${scheduledCount}, Completed: ${completedCount}, Cancelled: ${cancelledCount}`); 
   }
 });
