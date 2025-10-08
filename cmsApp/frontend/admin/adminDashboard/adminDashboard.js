@@ -104,11 +104,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const todayReservations = data.todayCount;
         const weekReservations = data.weekCount;
         
-        console.log('Total Reservations:', totalReservations);
-        console.log('Today\'s Reservations:', todayReservations);
-        console.log('This Week\'s Reservations:', weekReservations);
-        console.log('Today\'s Date:', data.today);
-        console.log('Week Range:', data.weekRange);
+        // console.log('Total Reservations:', totalReservations);
+        // console.log('Today\'s Reservations:', todayReservations);
+        // console.log('This Week\'s Reservations:', weekReservations);
+        // console.log('Today\'s Date:', data.today);
+        // console.log('Week Range:', data.weekRange);
         
         // Update all counters
         updateReservationCounters(totalReservations, todayReservations, weekReservations);
@@ -169,5 +169,101 @@ document.addEventListener('DOMContentLoaded', function() {
         element.textContent = weekCount;
       }
     });
+  }
+
+  // Fetch data from appointments table
+  console.log('=== FETCHING APPOINTMENTS DATA ===');
+  
+  fetch('../../../../cms.api/fetchAppointments.php')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('=== APPOINTMENTS DATA ===');
+      
+      if (data.success) {
+        console.log('✅ Success:', data.message);
+        console.log('📊 Total Appointments:', data.data.length);
+        
+        if (data.data.length > 0) {
+          console.log('📋 All Appointments Data:');
+          console.table(data.data);
+          
+          // Count appointments by status ID
+          let scheduledCount = 0;
+          let completedCount = 0;
+          let cancelledCount = 0;
+          let otherCount = 0;
+          
+          data.data.forEach((appointment) => {
+            const statusId = parseInt(appointment.statusId) || 0;
+            if (statusId === 0) {
+              scheduledCount++;
+            } else if (statusId === 1) {
+              completedCount++;
+            } else if (statusId === 2) {
+              cancelledCount++;
+            } else {
+              otherCount++;
+            }
+          });
+          
+          console.log('📊 Appointment Status Counts:');
+          console.log(`   Scheduled (Status ID 0): ${scheduledCount}`);
+          console.log(`   Completed (Status ID 1): ${completedCount}`);
+          console.log(`   Cancelled (Status ID 2): ${cancelledCount}`);
+          console.log(`   Other Status: ${otherCount}`);
+          
+          // Update the dashboard counts
+          updateAppointmentStatusCounts(scheduledCount, completedCount, cancelledCount);
+          
+          console.log('📝 Appointments List:');
+          data.data.forEach((appointment, index) => {
+            console.log(`${index + 1}. Appointment ID: ${appointment.appointmentId}`);
+            console.log(`   Client: ${appointment.clientName}`);
+            console.log(`   Address: ${appointment.clientAddress}`);
+            console.log(`   Contact: ${appointment.clientContactNumber}`);
+            console.log(`   Date: ${appointment.dateRequested}`);
+            console.log(`   Time: ${appointment.time}`);
+            console.log(`   Purpose: ${appointment.purpose}`);
+            console.log(`   Status ID: ${appointment.statusId}`);
+            console.log(`   Created At: ${appointment.createdAt}`);
+            console.log('   ---');
+          });
+          
+        } else {
+          console.log('ℹ️ No appointments found in the database');
+          // Update with 0 counts if no appointments found
+          updateAppointmentStatusCounts(0, 0, 0);
+        }
+      } else {
+        console.error('❌ API Error:', data.message);
+      }
+      
+      console.log('=== END APPOINTMENTS DATA ===');
+    })
+    .catch(error => {
+      console.error('🚨 Fetch Error:', error.message);
+      console.error('💡 Check if XAMPP is running and fetchAppointments.php exists');
+    });
+
+  // Function to update appointment status counts on dashboard
+  function updateAppointmentStatusCounts(scheduledCount, completedCount, cancelledCount) {
+    // Update scheduled appointment count (statusId = 0)
+    const scheduledElement = document.getElementById('scheduled-appointment-count');
+    if (scheduledElement) {
+      scheduledElement.textContent = scheduledCount;
+      console.log(`✅ Updated scheduled appointment count to: ${scheduledCount}`);
+    } else {
+      console.warn('⚠️ Element with ID "scheduled-appointment-count" not found');
+    }
+    
+    // You can also update other appointment counts if needed in the future
+    // For example, if you have elements for completed and cancelled counts
+    
+    console.log(`📈 Dashboard updated - Scheduled: ${scheduledCount}, Completed: ${completedCount}, Cancelled: ${cancelledCount}`);
   }
 });
