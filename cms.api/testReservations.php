@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 
 try {
     // Query to get ALL reservations
-    $sql = "SELECT reservationId, area, block, lotNumber, userId, created_at
+    $sql = "SELECT reservationId, area, block, lotNumber, userId, createdAt
             FROM reservations
             ORDER BY reservationId DESC";
     

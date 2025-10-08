@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(attachLogoutHandlers, 200);
   
   // Fetch data from reservations table
-  fetch('../../../../cms.api/testReservations.php')
+  fetch('../../../../cms.api/fetchReservations.php')
     .then(response => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
