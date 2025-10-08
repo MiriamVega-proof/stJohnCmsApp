@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   setTimeout(attachLogoutHandlers, 200);
   
+  // Fetch data from reservations table
   fetch('../../../../cms.api/testReservations.php')
     .then(response => {
       if (!response.ok) {
@@ -100,16 +101,17 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(data => {
 
       if (data.success) {
-        // Log each reservation details
-        data.data.forEach((reservation, index) => {
-          console.log(`Reservation ${index + 1}:`, {
-            ID: reservation.reservationId,
-            Area: reservation.area,
-            Block: reservation.block,
-            Lot: reservation.lotNumber,
-            UserID: reservation.userId
-          });
-        });
+        // Get both counts from the response
+        const totalReservations = data.totalCount;
+        const todayReservations = data.todayCount;
+        
+        console.log('📊 Total Reservations:', totalReservations);
+        console.log('📅 Today\'s Reservations:', todayReservations);
+        console.log('📆 Today\'s Date:', data.today);
+        
+        // Update both counters
+        updateReservationCounters(totalReservations, todayReservations);
+        
       } else {
         console.error('Database error:', data.error);
       }
@@ -117,4 +119,44 @@ document.addEventListener('DOMContentLoaded', function() {
     .catch(error => {
       console.error('Fetch error:', error);
     });
+
+  // Function to update reservation metrics
+  function updateReservationCounters(totalCount, todayCount) {
+    console.log('📊 Total count: ' + totalCount);
+    console.log('📅 Today count: ' + todayCount);
+    
+    // Update total reservations
+    const totalReservationsElem = document.getElementById('total-reservations');
+    if (totalReservationsElem) {
+      totalReservationsElem.textContent = totalCount;
+      console.log('✅ Updated total-reservations element');
+    } else {
+      console.warn('⚠️ Element with ID total-reservations not found.');
+    }
+    
+    // Update today's reservations
+    const todayReservationsElem = document.getElementById('today-reservations');
+    if (todayReservationsElem) {
+      todayReservationsElem.textContent = todayCount;
+      console.log('✅ Updated today-reservations element');
+    } else {
+      console.warn('⚠️ Element with ID today-reservations not found.');
+    }
+    
+    // Alternative selectors (in case you use different IDs)
+    const possibleTodaySelectors = [
+      '#reservations-today',
+      '#daily-reservations', 
+      '.today-count',
+      '#todayCount'
+    ];
+    
+    possibleTodaySelectors.forEach(selector => {
+      const element = document.querySelector(selector);
+      if (element) {
+        element.textContent = todayCount;
+        console.log(`✅ Updated ${selector} with today's count: ${todayCount}`);
+      }
+    });
+  }
 });
