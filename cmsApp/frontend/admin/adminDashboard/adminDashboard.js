@@ -68,14 +68,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const logoutLinks = document.querySelectorAll('#logoutLinkDesktop, #logoutLinkMobile');
 
     if (logoutLinks.length === 0) {
-      console.warn(" No logout links found. Make sure IDs #logoutLinkDesktop or #logoutLinkMobile exist in your HTML.");
       return;
     }
 
     logoutLinks.forEach(link => {
       link.addEventListener('click', function(event) {
         event.preventDefault();
-        console.log("Logout link clicked:", link.id); 
         const confirmed = confirm('Are you sure you want to log out?');
         if (confirmed) {
           const redirectPath = link.getAttribute('href') && link.getAttribute('href') !== '#'
@@ -106,54 +104,39 @@ document.addEventListener('DOMContentLoaded', function() {
         const todayReservations = data.todayCount;
         const weekReservations = data.weekCount;
         
-        console.log('📊 Total Reservations:', totalReservations);
-        console.log('📅 Today\'s Reservations:', todayReservations);
-        console.log('� This Week\'s Reservations:', weekReservations);
-        console.log('�📆 Today\'s Date:', data.today);
-        console.log('📆 Week Range:', data.weekRange);
+        console.log('Total Reservations:', totalReservations);
+        console.log('Today\'s Reservations:', todayReservations);
+        console.log('This Week\'s Reservations:', weekReservations);
+        console.log('Today\'s Date:', data.today);
+        console.log('Week Range:', data.weekRange);
         
         // Update all counters
         updateReservationCounters(totalReservations, todayReservations, weekReservations);
         
-      } else {
-        console.error('Database error:', data.error);
       }
     })
     .catch(error => {
-      console.error('Fetch error:', error);
+      // Handle fetch errors silently
     });
 
   // Function to update reservation metrics
   function updateReservationCounters(totalCount, todayCount, weekCount) {
-    console.log('📊 Total count: ' + totalCount);
-    console.log('📅 Today count: ' + todayCount);
-    console.log('📅 Week count: ' + weekCount);
-    
     // Update total reservations
     const totalReservationsElem = document.getElementById('total-reservations');
     if (totalReservationsElem) {
       totalReservationsElem.textContent = totalCount;
-      console.log('✅ Updated total-reservations element');
-    } else {
-      console.warn('⚠️ Element with ID total-reservations not found.');
     }
     
     // Update today's reservations
     const todayReservationsElem = document.getElementById('today-reservations');
     if (todayReservationsElem) {
       todayReservationsElem.textContent = todayCount;
-      console.log('✅ Updated today-reservations element');
-    } else {
-      console.warn('⚠️ Element with ID today-reservations not found.');
     }
     
     // Update this week's reservations
     const weekReservationsElem = document.getElementById('week-reservations');
     if (weekReservationsElem) {
       weekReservationsElem.textContent = weekCount;
-      console.log('✅ Updated week-reservations element');
-    } else {
-      console.warn('⚠️ Element with ID week-reservations not found.');
     }
     
     // Alternative selectors for today
@@ -177,7 +160,6 @@ document.addEventListener('DOMContentLoaded', function() {
       const element = document.querySelector(selector);
       if (element) {
         element.textContent = todayCount;
-        console.log(`✅ Updated ${selector} with today's count: ${todayCount}`);
       }
     });
     
@@ -185,7 +167,6 @@ document.addEventListener('DOMContentLoaded', function() {
       const element = document.querySelector(selector);
       if (element) {
         element.textContent = weekCount;
-        console.log(`✅ Updated ${selector} with week count: ${weekCount}`);
       }
     });
   }
