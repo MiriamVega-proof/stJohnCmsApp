@@ -40,10 +40,9 @@ function updateAppointmentCounts(appointments) {
     
     appointments.forEach((appointment) => {
         const status = (appointment.status || '').toLowerCase().trim();
-        const statusId = parseInt(appointment.statusId) || 0;
         
-        // Count based on status enum or statusId
-        if (status === 'scheduled' || (status === '' && statusId === 0)) {
+        // Count based on status enum only
+        if (status === 'scheduled' || status === '') {
             scheduledCount++;
         } else if (status === 'completed') {
             completedCount++;
@@ -100,8 +99,8 @@ function populateAppointmentTable(appointments) {
         const row = document.createElement('tr');
         
         // Map status for display
-        const statusText = getStatusDisplayText(appointment.status, appointment.statusId);
-        const statusClass = getStatusClass(appointment.status, appointment.statusId);
+        const statusText = getStatusDisplayText(appointment.status);
+        const statusClass = getStatusClass(appointment.status);
         
         // Format date and time
         const appointmentDate = formatDisplayDate(appointment.dateRequested);
@@ -153,34 +152,22 @@ function populateAppointmentTable(appointments) {
 }
 
 // --- Helper Functions ---
-function getStatusDisplayText(status, statusId) {
-    if (status) {
+function getStatusDisplayText(status) {
+    if (status && status.trim() !== '') {
         return status.charAt(0).toUpperCase() + status.slice(1);
     }
     
-    // Fallback to statusId if status is empty
-    switch (parseInt(statusId)) {
-        case 0: return 'Scheduled';
-        case 1: return 'Confirmed';
-        case 2: return 'Completed';
-        case 3: return 'Cancelled';
-        default: return 'Unknown';
-    }
+    // Default status if empty
+    return 'Pending';
 }
 
-function getStatusClass(status, statusId) {
-    if (status) {
+function getStatusClass(status) {
+    if (status && status.trim() !== '') {
         return status.toLowerCase();
     }
     
-    // Fallback to statusId mapping
-    switch (parseInt(statusId)) {
-        case 0: return 'pending';
-        case 1: return 'confirmed';
-        case 2: return 'completed';
-        case 3: return 'cancelled';
-        default: return 'pending';
-    }
+    // Default class if empty
+    return 'pending';
 }
 
 function formatDisplayDate(dateString) {

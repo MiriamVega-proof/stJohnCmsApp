@@ -183,10 +183,11 @@ main {
     min-width: 70px; 
     
 }
-.status-display.confirmed { color: black }
-.status-display.pending { color: black  }
-.status-display.cancelled { color: black  }
-.status-display.completed { color: black  }
+.status-display.confirmed { color: var(--success); }
+.status-display.pending { color: var(--pending); }
+.status-display.scheduled { color: var(--pending); }
+.status-display.cancelled { color: var(--danger); }
+.status-display.completed { color: var(--archived); }
 
 .internal-note {
     width: 120px;
