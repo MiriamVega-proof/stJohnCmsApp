@@ -23,16 +23,21 @@ try {
     $pendingResult = $conn->query($pendingSql);
     $pendingCount = $pendingResult->fetch_assoc()['count'];
     
-    // Count completed requests for current month (using updatedAt for completion date)
+    // Count completed requests for current month (using createdAt as basis)
     $completedSql = "SELECT COUNT(*) as count FROM maintenancerequest 
                      WHERE status = 'Completed' 
-                     AND MONTH(COALESCE(updatedAt, createdAt)) = ? 
-                     AND YEAR(COALESCE(updatedAt, createdAt)) = ?";
+                     AND MONTH(createdAt) = ? 
+                     AND YEAR(createdAt) = ?";
     $stmt = $conn->prepare($completedSql);
     $stmt->bind_param("ii", $currentMonth, $currentYear);
     $stmt->execute();
     $completedResult = $stmt->get_result();
-    $completedCount = $completedResult->fetch_assoc()['count'];
+    $completedThisMonth = $completedResult->fetch_assoc()['count'];
+    
+    // Count all completed requests (total)
+    $completedTotalSql = "SELECT COUNT(*) as count FROM maintenancerequest WHERE status = 'Completed'";
+    $completedTotalResult = $conn->query($completedTotalSql);
+    $completedTotal = $completedTotalResult->fetch_assoc()['count'];
     
     // Count cancelled requests (total)
     $cancelledSql = "SELECT COUNT(*) as count FROM maintenancerequest WHERE status = 'Cancelled'";
@@ -41,7 +46,8 @@ try {
     
     $counts = [
         'pending' => (int)$pendingCount,
-        'completed' => (int)$completedCount,
+        'completed' => (int)$completedThisMonth,
+        'completed_total' => (int)$completedTotal,
         'cancelled' => (int)$cancelledCount,
         'month' => (int)$currentMonth,
         'year' => (int)$currentYear

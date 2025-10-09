@@ -77,12 +77,19 @@ const fetchMaintenanceCounts = async () => {
 // Function to update dashboard metrics using API counts
 const updateDashboardMetricsFromAPI = async () => {
     const counts = await fetchMaintenanceCounts();
+    
     if (counts) {
-        document.getElementById('pendingCount').textContent = counts.pending;
-        document.getElementById('completedCount').textContent = counts.completed;
-        document.getElementById('cancelledCount').textContent = counts.cancelled;
+        const pendingElement = document.getElementById('pendingCount');
+        const completedElement = document.getElementById('completedCount');
+        const cancelledElement = document.getElementById('cancelledCount');
+        
+        if (pendingElement) pendingElement.textContent = counts.pending;
+        if (completedElement) completedElement.textContent = counts.completed;
+        if (cancelledElement) cancelledElement.textContent = counts.cancelled;
     }
 };
+
+
 
 // Function to refresh data and update UI
 const refreshMaintenanceData = async () => {
@@ -345,6 +352,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Update dashboard metrics using API counts
     await updateDashboardMetricsFromAPI();
+    
+    // Also update with local data as fallback
+    updateDashboardMetrics(maintenanceData);
+    
     renderTable(maintenanceData, currentPage);
     
     // Set up event listeners

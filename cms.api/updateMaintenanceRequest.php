@@ -15,14 +15,7 @@ function sendResponse($success, $message = "", $data = []) {
 
 // Check if user is logged in and is admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
-    // Debug info
-    $debug_info = [
-        'session_exists' => !empty($_SESSION),
-        'user_id_set' => isset($_SESSION['user_id']),
-        'role_value' => $_SESSION['role'] ?? 'not set',
-        'session_data' => $_SESSION
-    ];
-    sendResponse(false, "Unauthorized access. Admin login required. Debug: " . json_encode($debug_info));
+    sendResponse(false, "Unauthorized access. Admin login required.");
 }
 
 // Get POST data
