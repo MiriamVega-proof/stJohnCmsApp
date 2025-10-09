@@ -1,27 +1,98 @@
 // adminMaintenance.js
 
-// Sample Data Structure - Includes Lot breakdown (Area/Block, Row, LotNoOnly)
-const maintenanceData = [
-    { id: 101, client: "Client A", contact: "0917-XXX-XXXX / client.a@example.com", lotNo: "A-12-03", areaBlock: "A", rowNo: "12", lotNoOnly: "03", service: "General Cleaning", requested: "2025-10-10T10:00", submitted: "2025-10-05", status: "Pending", notes: "The area is overgrown with weeds and needs deep cleaning before the scheduled visit.", adminNotes: "" },
-    { id: 102, client: "Client B", contact: "0917-XXX-XXXX / client.b@example.com", lotNo: "B-05-01", areaBlock: "B", rowNo: "05", lotNoOnly: "01", service: "Grass Trimming", requested: "2025-10-08T14:00", submitted: "2025-10-04", status: "Completed", notes: "Scheduled for bi-weekly trimming.", adminNotes: "Completed on 2025-10-08." },
-    { id: 103, client: "Client C", contact: "0917-XXX-XXXX / client.c@example.com", lotNo: "C-10-02", areaBlock: "C", rowNo: "10", lotNoOnly: "02", service: "Minor Repair", requested: "2025-09-28T09:00", submitted: "2025-09-25", status: "Completed", notes: "Small crack on the marble base needs fixing.", adminNotes: "Repair completed. Used white grout. Marked as done by Admin on 2025-09-28." },
-    { id: 104, client: "Client D", contact: "0917-XXX-XXXX / client.d@example.com", lotNo: "D-01-05", areaBlock: "D", rowNo: "01", lotNoOnly: "05", service: "General Cleaning", requested: "2025-10-15T11:00", submitted: "2025-10-06", status: "Pending", notes: "First cleaning requested.", adminNotes: "" },
-    { id: 105, client: "Client E", contact: "0917-XXX-XXXX / client.e@example.com", lotNo: "E-07-04", areaBlock: "E", rowNo: "07", lotNoOnly: "04", service: "Grass Trimming", requested: "2025-09-20T13:00", submitted: "2025-09-18", status: "Cancelled", notes: "Client called to postpone service.", adminNotes: "Cancelled per client request. Awaiting reschedule." },
-    { id: 106, client: "Client F", contact: "0917-XXX-XXXX / client.f@example.com", lotNo: "F-02-11", areaBlock: "F", rowNo: "02", lotNoOnly: "11", service: "General Cleaning", requested: "2025-10-12T08:00", submitted: "2025-10-07", status: "Pending", notes: "Regular monthly cleaning.", adminNotes: "" },
-    { id: 107, client: "Client G", contact: "0917-XXX-XXXX / client.g@example.com", lotNo: "G-11-01", areaBlock: "G", rowNo: "11", lotNoOnly: "01", service: "Minor Repair", requested: "2025-10-14T16:00", submitted: "2025-10-07", status: "Pending", notes: "Fence post is loose.", adminNotes: "" },
-    { id: 108, client: "Client H", contact: "0917-XXX-XXXX / client.h@example.com", lotNo: "A-01-01", areaBlock: "A", rowNo: "01", lotNoOnly: "01", service: "General Cleaning", requested: "2025-10-14T09:00", submitted: "2025-10-07", status: "Pending", notes: "New cleaning contract.", adminNotes: "" },
-    { id: 109, client: "Client I", contact: "0917-XXX-XXXX / client.i@example.com", lotNo: "B-03-02", areaBlock: "B", rowNo: "03", lotNoOnly: "02", service: "Grass Trimming", requested: "2025-10-01T15:00", submitted: "2025-09-29", status: "Completed", notes: "Weekly cut.", adminNotes: "Completed on 2025-10-01." },
-    { id: 110, client: "Client J", contact: "0917-XXX-XXXX / client.j@example.com", lotNo: "C-05-10", areaBlock: "C", rowNo: "05", lotNoOnly: "10", service: "Minor Repair", requested: "2025-09-22T10:00", submitted: "2025-09-20", status: "Completed", notes: "Fix small tilt on headstone.", adminNotes: "Re-aligned headstone. Completed on 2025-09-22." },
-    { id: 111, client: "Client K", contact: "0917-XXX-XXXX / client.k@example.com", lotNo: "D-08-07", areaBlock: "D", rowNo: "08", lotNoOnly: "07", service: "General Cleaning", requested: "2025-10-18T14:00", submitted: "2025-10-10", status: "Pending", notes: "Deep scrub required.", adminNotes: "" },
-    { id: 112, client: "Client L", contact: "0917-XXX-XXXX / client.l@example.com", lotNo: "E-10-03", areaBlock: "E", rowNo: "10", lotNoOnly: "03", service: "Grass Trimming", requested: "2025-09-15T11:00", submitted: "2025-09-12", status: "Cancelled", notes: "Client decided to do it themselves this month.", adminNotes: "Cancelled per client call." },
-    { id: 113, client: "Client M", contact: "0917-XXX-XXXX / client.m@example.com", lotNo: "F-04-06", areaBlock: "F", rowNo: "04", lotNoOnly: "06", service: "General Cleaning", requested: "2025-10-20T08:00", submitted: "2025-10-11", status: "Pending", notes: "Standard cleaning.", adminNotes: "" },
-    { id: 114, client: "Client N", contact: "0917-XXX-XXXX / client.n@example.com", lotNo: "G-12-08", areaBlock: "G", rowNo: "12", lotNoOnly: "08", service: "Minor Repair", requested: "2025-10-25T16:00", submitted: "2025-10-15", status: "Pending", notes: "Small decorative piece fell off.", adminNotes: "" },
-    { id: 115, client: "Client O", contact: "0917-XXX-XXXX / client.o@example.com", lotNo: "A-07-02", areaBlock: "A", rowNo: "07", lotNoOnly: "02", service: "Grass Trimming", requested: "2025-10-22T13:00", submitted: "2025-10-14", status: "Pending", notes: "Scheduled bi-weekly.", adminNotes: "" },
-];
-
+// Global variables
+let maintenanceData = [];
 const recordsPerPage = 10; 
-let currentData = maintenanceData;
+let currentData = [];
 let currentPage = 1;
+
+// Function to fetch maintenance requests from the database
+const fetchMaintenanceRequests = async () => {
+    try {
+        const response = await fetch('/stJohnCmsApp/cms.api/fetchMaintenanceRequests.php', {
+            credentials: 'same-origin'
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            // Transform the database data to match the expected format
+            maintenanceData = result.data.map(request => {
+                // Use area/block/lot from maintenance table first, fallback to reservation data
+                const area = request.area || '';
+                const block = request.block || '';
+                const lotNumber = request.lotNumber || '';
+                
+                return {
+                    id: parseInt(request.requestId),
+                    client: request.clientName || 'Unknown Client',
+                    contact: request.contactNumber ? 
+                        `${request.contactNumber} / ${request.email || ''}` : 
+                        request.username || 'No contact info',
+                    lotNo: `${area}-${block}-${lotNumber}`.replace(/^-*|-*$/g, '') || 'Not specified',
+                    areaBlock: area,
+                    rowNo: block,
+                    lotNoOnly: lotNumber,
+                    service: request.serviceType || '',
+                    requested: request.requestedDate || '',
+                    submitted: request.createdAt ? request.createdAt.split(' ')[0] : '',
+                    status: request.status || 'Pending',
+                    notes: request.notes || '',
+                    adminNotes: '', // This would need to be added to the database if needed
+                    updatedAt: request.updatedAt || null // Include updatedAt for completion date
+                };
+            });
+            
+            currentData = maintenanceData;
+            return maintenanceData;
+        } else {
+            return [];
+        }
+    } catch (error) {
+        return [];
+    }
+};
+
+// Function to fetch maintenance counts from the database
+const fetchMaintenanceCounts = async () => {
+    try {
+        const response = await fetch('/stJohnCmsApp/cms.api/getMaintenanceCounts.php', {
+            credentials: 'same-origin'
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            return result.data;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        return null;
+    }
+};
+
+// Function to update dashboard metrics using API counts
+const updateDashboardMetricsFromAPI = async () => {
+    const counts = await fetchMaintenanceCounts();
+    
+    if (counts) {
+        const pendingElement = document.getElementById('pendingCount');
+        const completedElement = document.getElementById('completedCount');
+        const cancelledElement = document.getElementById('cancelledCount');
+        
+        if (pendingElement) pendingElement.textContent = counts.pending;
+        if (completedElement) completedElement.textContent = counts.completed;
+        if (cancelledElement) cancelledElement.textContent = counts.cancelled;
+    }
+};
+
+
+
+// Function to refresh data and update UI
+const refreshMaintenanceData = async () => {
+    await fetchMaintenanceRequests();
+    applyFilters();
+    await updateDashboardMetricsFromAPI();
+};
 
 const formatDateTime = (dateTimeString) => {
     if (!dateTimeString) return '-';
@@ -86,7 +157,8 @@ const updateDashboardMetrics = (data) => {
     const pendingCount = data.filter(r => r.status === 'Pending').length;
     const completedCount = data.filter(r => {
         if (r.status === 'Completed') {
-            const completedDate = new Date(r.submitted); 
+            // Use updatedAt if available (when status was changed to completed), otherwise use submitted date
+            const completedDate = r.updatedAt ? new Date(r.updatedAt) : new Date(r.submitted);
             return completedDate.getMonth() === currentMonth && completedDate.getFullYear() === currentYear;
         }
         return false;
@@ -139,37 +211,75 @@ const showRequestDetails = (id) => {
     document.getElementById('adminNotes').value = record.adminNotes || '';
 };
 
-const saveStatusUpdate = () => {
+const saveStatusUpdate = async () => {
     const id = parseInt(document.getElementById('modalRequestId').value);
     const newStatus = document.getElementById('updateStatus').value;
     const newAdminNotes = document.getElementById('adminNotes').value;
     const scheduledDateTime = document.getElementById('scheduledDateTime').value;
-    const recordIndex = maintenanceData.findIndex(r => r.id === id);
-    if (recordIndex === -1) return;
-    maintenanceData[recordIndex].status = newStatus;
-    maintenanceData[recordIndex].adminNotes = newAdminNotes;
-    if (scheduledDateTime) {
-        maintenanceData[recordIndex].requested = scheduledDateTime; 
+
+    try {
+        const response = await fetch('/stJohnCmsApp/cms.api/updateMaintenanceRequest.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+                requestId: id,
+                status: newStatus,
+                adminNotes: newAdminNotes
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            // Refresh data from database and update counts
+            await fetchMaintenanceRequests();
+            applyFilters();
+            await updateDashboardMetricsFromAPI();
+            
+            const modal = bootstrap.Modal.getInstance(document.getElementById('requestModal'));
+            modal.hide();
+            alert(`Request #${id} status updated to: ${newStatus}.`);
+        } else {
+            alert(`Error updating status: ${result.message}`);
+        }
+    } catch (error) {
+        alert('Error updating status. Please try again.');
     }
-    applyFilters();
-    updateDashboardMetrics(maintenanceData);
-    const modal = bootstrap.Modal.getInstance(document.getElementById('requestModal'));
-    modal.hide();
-    alert(`Request #${id} status updated to: ${newStatus}.`);
 };
 
-const updateRecordStatus = (id, newStatus) => {
+const updateRecordStatus = async (id, newStatus) => {
     if (!confirm(`Are you sure you want to mark Request #${id} as ${newStatus}?`)) return;
 
-    const recordIndex = maintenanceData.findIndex(r => r.id === id);
-    if (recordIndex === -1) return;
+    try {
+        const response = await fetch('/stJohnCmsApp/cms.api/updateMaintenanceRequest.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+                requestId: id,
+                status: newStatus
+            })
+        });
 
-    maintenanceData[recordIndex].status = newStatus;
-    maintenanceData[recordIndex].adminNotes = (maintenanceData[recordIndex].adminNotes || '') + `\nStatus updated to ${newStatus} by Admin on ${new Date().toLocaleDateString('en-US')}.`;
+        const result = await response.json();
 
-    applyFilters();
-    updateDashboardMetrics(maintenanceData);
-    alert(`Request #${id} successfully marked as ${newStatus}.`);
+        if (result.success) {
+            // Refresh data from database and update counts
+            await fetchMaintenanceRequests();
+            applyFilters();
+            await updateDashboardMetricsFromAPI();
+            alert(`Request #${id} successfully marked as ${newStatus}.`);
+        } else {
+            alert(`Error updating status: ${result.message}`);
+        }
+    } catch (error) {
+        alert('Error updating status. Please try again.');
+    }
 }
 
 const updatePaginationControls = (totalRecords, currentPage) => {
@@ -219,9 +329,30 @@ window.handleLogout = (e) => {
     }
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Show loading indicator
+    const tableBody = document.getElementById('maintenanceTableBody');
+    if (tableBody) {
+        tableBody.innerHTML = '<tr><td colspan="7" class="text-center">Loading maintenance requests...</td></tr>';
+    }
+    
+    // Fetch maintenance requests from database
+    await fetchMaintenanceRequests();
+    
+    // Initialize the page with fetched data
+    if (maintenanceData.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="7" class="text-center">No maintenance requests found.</td></tr>';
+    }
+    
+    // Update dashboard metrics using API counts
+    await updateDashboardMetricsFromAPI();
+    
+    // Also update with local data as fallback
     updateDashboardMetrics(maintenanceData);
+    
     renderTable(maintenanceData, currentPage);
+    
+    // Set up event listeners
     document.getElementById('saveStatusBtn').addEventListener('click', saveStatusUpdate);
     document.querySelector('.pagination').addEventListener('click', handlePaginationClick);
     document.getElementById('clearFiltersBtn').addEventListener('click', clearFilters);

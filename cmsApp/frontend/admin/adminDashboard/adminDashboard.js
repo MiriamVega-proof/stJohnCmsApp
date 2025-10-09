@@ -238,4 +238,46 @@ document.addEventListener('DOMContentLoaded', function() {
       completedElement.textContent = completedCount;
     }
   }
+
+  // Fetch maintenance request counts
+  fetch('../../../../cms.api/fetchMaintenanceRequests.php?action=count_by_status')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.success) {
+        updateMaintenanceStatusCounts(data.data.pending, data.data.in_progress, data.data.completed);
+      } else {
+        // Update with 0 counts if no maintenance requests found
+        updateMaintenanceStatusCounts(0, 0, 0);
+      }
+    })
+    .catch(error => {
+      // Handle fetch errors silently and update with 0 counts
+      updateMaintenanceStatusCounts(0, 0, 0);
+    });
+
+  // Function to update maintenance request status counts on dashboard
+  function updateMaintenanceStatusCounts(pendingCount, inProgressCount, completedCount) {
+    // Update pending maintenance count
+    const pendingElement = document.getElementById('pending-maintenance-count');
+    if (pendingElement) {
+      pendingElement.textContent = pendingCount;
+    }
+    
+    // Update in progress maintenance count
+    const inProgressElement = document.getElementById('inprogress-maintenance-count');
+    if (inProgressElement) {
+      inProgressElement.textContent = inProgressCount;
+    }
+    
+    // Update completed maintenance count
+    const completedElement = document.getElementById('completed-maintenance-count');
+    if (completedElement) {
+      completedElement.textContent = completedCount;
+    }
+  }
 });
