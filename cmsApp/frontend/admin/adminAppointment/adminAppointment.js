@@ -12,7 +12,64 @@ window.handleLogout = () => {
     }
 };
 
+// --- Fetch Appointment Counts ---
+function fetchAppointmentCounts() {
+    fetch('../../../../cms.api/fetchAppointments.php')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                updateAppointmentCounts(data.data);
+            }
+        })
+        .catch(error => {
+            // Handle fetch errors silently
+        });
+}
+
+// --- Update Appointment Count Cards ---
+function updateAppointmentCounts(appointments) {
+    let scheduledCount = 0;
+    let completedCount = 0;
+    let cancelledCount = 0;
+    let confirmedCount = 0;
+    
+    appointments.forEach((appointment) => {
+        const status = (appointment.status || '').toLowerCase().trim();
+        const statusId = parseInt(appointment.statusId) || 0;
+        
+        // Count based on status enum or statusId
+        if (status === 'scheduled' || (status === '' && statusId === 0)) {
+            scheduledCount++;
+        } else if (status === 'completed') {
+            completedCount++;
+        } else if (status === 'cancelled') {
+            cancelledCount++;
+        } else if (status === 'confirmed') {
+            confirmedCount++;
+        }
+    });
+    
+    // Update the dashboard cards
+    const confirmedElement = document.getElementById('confirmed-count');
+    const scheduledElement = document.getElementById('scheduled-count');
+    const cancelledElement = document.getElementById('cancelled-count');
+    const completedElement = document.getElementById('completed-count');
+    
+    if (confirmedElement) confirmedElement.textContent = confirmedCount;
+    if (scheduledElement) scheduledElement.textContent = scheduledCount;
+    if (cancelledElement) cancelledElement.textContent = cancelledCount;
+    if (completedElement) completedElement.textContent = completedCount;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Fetch and display appointment counts
+    fetchAppointmentCounts();
+    
     const tableBody = document.getElementById('appointmentTableBody');
     const searchInput = document.getElementById('appointmentSearch');
     const filterStatus = document.getElementById('filterStatus');
