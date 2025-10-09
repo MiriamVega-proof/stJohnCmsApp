@@ -45,11 +45,9 @@ const fetchMaintenanceRequests = async () => {
             currentData = maintenanceData;
             return maintenanceData;
         } else {
-            console.error('Failed to fetch maintenance requests:', result.message);
             return [];
         }
     } catch (error) {
-        console.error('Error fetching maintenance requests:', error);
         return [];
     }
 };
@@ -65,11 +63,9 @@ const fetchMaintenanceCounts = async () => {
         if (result.success) {
             return result.data;
         } else {
-            console.error('Failed to fetch maintenance counts:', result.message);
             return null;
         }
     } catch (error) {
-        console.error('Error fetching maintenance counts:', error);
         return null;
     }
 };
@@ -250,7 +246,6 @@ const saveStatusUpdate = async () => {
             alert(`Error updating status: ${result.message}`);
         }
     } catch (error) {
-        console.error('Error updating maintenance request:', error);
         alert('Error updating status. Please try again.');
     }
 };
@@ -283,7 +278,6 @@ const updateRecordStatus = async (id, newStatus) => {
             alert(`Error updating status: ${result.message}`);
         }
     } catch (error) {
-        console.error('Error updating maintenance request:', error);
         alert('Error updating status. Please try again.');
     }
 }
