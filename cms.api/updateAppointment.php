@@ -68,7 +68,7 @@ function updateAppointmentStatus($conn, $appointmentId, $status) {
 
 // Function to update appointment date and time (for reschedule)
 function updateAppointmentDateTime($conn, $appointmentId, $date, $time) {
-    $stmt = $conn->prepare("UPDATE appointments SET dateRequested = ?, time = ?, updatedAt = CURRENT_TIMESTAMP WHERE appointmentId = ?");
+    $stmt = $conn->prepare("UPDATE appointments SET dateRequested = ?, time = ?, status = 'scheduled', updatedAt = CURRENT_TIMESTAMP WHERE appointmentId = ?");
     
     if (!$stmt) {
         sendResponse(false, "Error preparing statement: " . $conn->error);

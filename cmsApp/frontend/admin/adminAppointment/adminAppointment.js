@@ -151,6 +151,11 @@ function updateAppointmentReschedule(appointmentId, newDate, newTime, row) {
                 const readableTime = `${displayHours}:${minutes} ${ampm}`;
                 
                 detailsCell.innerHTML = `Date: ${readableDate} <br>Time: ${readableTime}`;
+                
+                // Update status to 'scheduled'
+                updateStatusUI(row, 'scheduled');
+                // Refresh the counts
+                fetchAppointmentCounts();
             }
         } else {
             alert('Error: ' + data.message);
