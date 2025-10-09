@@ -65,6 +65,132 @@ function updateAppointmentCounts(appointments) {
     if (completedElement) completedElement.textContent = completedCount;
 }
 
+// --- Update Appointment Status via API ---
+function updateAppointmentStatus(appointmentId, action, row) {
+    const requestData = {
+        appointmentId: parseInt(appointmentId),
+        action: action
+    };
+    
+    fetch('../../../../cms.api/updateAppointment.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Update UI based on action
+            let newStatus = '';
+            switch(action) {
+                case 'confirm': newStatus = 'confirmed'; break;
+                case 'cancel': newStatus = 'cancelled'; break;
+                case 'complete': newStatus = 'completed'; break;
+            }
+            
+            if (newStatus && row) {
+                updateStatusUI(row, newStatus);
+                // Refresh the counts
+                fetchAppointmentCounts();
+            }
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('Error updating appointment: ' + error.message);
+    });
+}
+
+// --- Update Appointment Reschedule via API ---
+function updateAppointmentReschedule(appointmentId, newDate, newTime, row) {
+    const requestData = {
+        appointmentId: parseInt(appointmentId),
+        action: 'reschedule',
+        newDate: newDate,
+        newTime: newTime
+    };
+    
+    fetch('../../../../cms.api/updateAppointment.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Update the UI with new date and time
+            if (row) {
+                const detailsCell = row.querySelector('.appointment-details');
+                const readableDate = new Date(newDate).toLocaleDateString('en-US', { 
+                    month: 'long', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                });
+                
+                // Convert time to 12-hour format
+                const timeParts = newTime.split(':');
+                const hours = parseInt(timeParts[0]);
+                const minutes = timeParts[1];
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                const displayHours = hours % 12 || 12;
+                const readableTime = `${displayHours}:${minutes} ${ampm}`;
+                
+                detailsCell.innerHTML = `Date: ${readableDate} <br>Time: ${readableTime}`;
+            }
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('Error rescheduling appointment: ' + error.message);
+    });
+}
+
+// --- Status Update Helper (Global scope) ---
+function updateStatusUI(row, newStatus) {
+    row.setAttribute('data-status', newStatus);
+    const badge = row.querySelector('.status-display');
+    
+    badge.classList.remove('confirmed', 'pending', 'cancelled', 'completed', 'scheduled');
+    badge.classList.add(newStatus);
+    badge.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+    
+    // Only disable the button that represents the CURRENT status.
+    row.querySelectorAll('.action-buttons button[data-action]').forEach(btn => {
+        const action = btn.getAttribute('data-action');
+        // Disable the button if its action matches the new (current) status
+        if (action === 'confirm' && newStatus === 'confirmed') {
+            btn.disabled = true;
+        } else if (action === 'complete' && newStatus === 'completed') {
+            btn.disabled = true;
+        } else if (action === 'cancel' && newStatus === 'cancelled') {
+            btn.disabled = true;
+        } else {
+            btn.disabled = false;
+        }
+    });
+    
+    // Reinitialize table data if the function exists
+    if (window.initializeTableData) {
+        window.initializeTableData();
+    }
+}
+
 // --- Fetch and Populate Appointment Table ---
 function fetchAppointmentTable() {
     fetch('../../../../cms.api/fetchAppointments.php')
@@ -334,25 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
-    // --- Status Update Helper (FIXED LOGIC) ---
-    const updateStatusUI = (row, newStatus) => {
-        row.setAttribute('data-status', newStatus);
-        const badge = row.querySelector('.status-display');
-        
-        badge.classList.remove('confirmed', 'pending', 'cancelled', 'completed');
-        badge.classList.add(newStatus);
-        badge.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
-        
-        // FIX: Only disable the button that represents the CURRENT status.
-        // Other buttons (reschedule, cancel) must remain clickable.
-        row.querySelectorAll('.action-buttons button[data-action]').forEach(btn => {
-            const action = btn.getAttribute('data-action');
-            // Disable the button if its action matches the new (current) status
-            btn.disabled = action === newStatus;
-        });
-        
-        initializeTableData(); 
-    };
+
 
     // --- Action Button Delegation ---
     tableBody.addEventListener('click', (e) => {
@@ -382,19 +490,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         if (confirm(confirmationText)) {
-            console.log(`[API Call]: ${action.toUpperCase()} appointment for ${clientName}`);
-            
-            if (action === 'confirm') {
-                updateStatusUI(row, 'confirmed');
-            } else if (action === 'cancel') {
-                updateStatusUI(row, 'cancelled');
-            } else if (action === 'complete') {
-                 updateStatusUI(row, 'completed');
-            }
+            const appointmentId = button.getAttribute('data-id');
+            updateAppointmentStatus(appointmentId, action, row);
         }
     });
     
-    // --- Save Reschedule Button Handler (Kept the same) ---
+    // --- Save Reschedule Button Handler ---
     saveRescheduleBtn.addEventListener('click', () => {
         const newDate = newAppointmentDate.value;
         const newTime = newAppointmentTime.value;
@@ -406,23 +507,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (!currentRescheduleRow) return;
 
-        const clientName = rescheduleClientName.textContent;
+        // Get appointment ID from the reschedule button
+        const rescheduleButton = currentRescheduleRow.querySelector('button[data-action="reschedule"]');
+        const appointmentId = rescheduleButton.getAttribute('data-id');
         
-        console.log(`[API Call]: RESCHEDULED ${clientName} to ${newDate} at ${newTime}`);
+        // Update appointment via API
+        updateAppointmentReschedule(appointmentId, newDate, newTime, currentRescheduleRow);
         
-        const detailsCell = currentRescheduleRow.querySelector('.appointment-details');
-        
-        const readableDate = new Date(newDate).toLocaleDateString('en-US', { 
-            month: 'long', 
-            day: 'numeric', 
-            year: 'numeric' 
-        });
-
-        detailsCell.innerHTML = `Date: ${readableDate} <br> Time: ${newTime}`;
-        
-        // Rescheduling typically confirms the new time.
-        updateStatusUI(currentRescheduleRow, 'confirmed'); 
-
         rescheduleModal.hide();
         currentRescheduleRow = null;
     });
