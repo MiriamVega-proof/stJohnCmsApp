@@ -72,25 +72,25 @@
             <div class="col-sm-6 col-lg-3">
                 <div class="card h-100 p-3 text-center">
                     <h5 class="card-title text-success fw-bold">Confirmed</h5>
-                    <p class="fs-1 fw-bolder" style="color: var(--success);">15</p>
+                    <p id="confirmed-count" class="fs-1 fw-bolder" style="color: var(--success);">0</p>
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3">
                 <div class="card h-100 p-3 text-center">
-                    <h5 class="card-title text-warning fw-bold">Pending</h5>
-                    <p class="fs-1 fw-bolder" style="color: var(--pending);">5</p>
+                    <h5 class="card-title text-warning fw-bold">Scheduled</h5>
+                    <p id="scheduled-count" class="fs-1 fw-bolder" style="color: var(--pending);">0</p>
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3">
                 <div class="card h-100 p-3 text-center">
                     <h5 class="card-title text-danger fw-bold">Cancelled</h5>
-                    <p class="fs-1 fw-bolder" style="color: var(--danger);">2</p>
+                    <p id="cancelled-count" class="fs-1 fw-bolder" style="color: var(--danger);">0</p>
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3">
                 <div class="card h-100 p-3 text-center">
                     <h5 class="card-title text-secondary fw-bold">Completed</h5>
-                    <p class="fs-1 fw-bolder" style="color: var(--archived);">10</p>
+                    <p id="completed-count" class="fs-1 fw-bolder" style="color: var(--archived);">0</p>
                 </div>
             </div>
         </div>
@@ -145,49 +145,7 @@
                             </tr>
                         </thead>
                         <tbody id="appointmentTableBody">
-                            <tr data-status="confirmed">
-                                <td>Miguel Bautista</td>
-                                <td>
-                                    Email: <a href="mailto:miguel@example.com">miguel@example.com</a> <br>
-                                    <span class="user-id-text">Phone: 09201239876</span>
-                                </td>
-                                <td class="appointment-details">
-                                    Date: May 5, 2025 <br>
-                                    Time: 10:00 AM
-                                </td>
-                                <td>Viewing available plots.</td>
-                                <td>2025-05-01 09:30 AM</td>
-                                <td><span class="badge rounded-pill status-display confirmed">Confirmed</span></td>
-                                <td class="action-buttons">
-                                    <button class="btn btn-sm btn-success" data-action="confirm" disabled title="Confirmed"><i class="fas fa-check"></i></button>
-                                    <button class="btn btn-sm btn-info text-white" data-action="reschedule" title="Reschedule"><i class="fas fa-calendar-alt"></i></button>
-                                    <button class="btn btn-sm btn-secondary" data-action="complete" title="Mark Complete"><i class="fas fa-flag-checkered"></i></button>
-                                    <button class="btn btn-sm btn-danger" data-action="cancel" title="Cancel"><i class="fas fa-times"></i></button>
-                                </td>
-                                <td><textarea class="form-control internal-note" placeholder="Add note..."></textarea></td>
-                            </tr>
-                            <tr data-status="pending">
-                                <td>Ana Cruz</td>
-                                <td>
-                                    Email: <a href="mailto:ana@example.com">ana@example.com</a> <br>
-                                    <span class="user-id-text">Phone: 09123456789</span>
-                                </td>
-                                <td class="appointment-details">
-                                    Date: May 6, 2025 <br>
-                                    Time: 01:00 PM
-                                </td>
-                                <td>Inquiry about burial arrangements.</td>
-                                <td>2025-05-02 11:45 AM</td>
-                                <td><span class="badge rounded-pill status-display pending">Pending</span></td>
-                                <td class="action-buttons">
-                                    <button class="btn btn-sm btn-success" data-action="confirm" title="Confirm"><i class="fas fa-check"></i></button>
-                                    <button class="btn btn-sm btn-info text-white" data-action="reschedule" title="Reschedule"><i class="fas fa-calendar-alt"></i></button>
-                                    <button class="btn btn-sm btn-secondary" data-action="complete" title="Mark Complete"><i class="fas fa-flag-checkered"></i></button>
-                                    <button class="btn btn-sm btn-danger" data-action="cancel" title="Cancel"><i class="fas fa-times"></i></button>
-                                </td>
-                                <td><textarea class="form-control internal-note" placeholder="Add note..."></textarea></td>
-                            </tr>
-                            </tbody>
+                        </tbody>
                     </table>
                 </div>
                 <p id="noLogsMessage" class="text-center p-4 d-none">No appointments found matching your criteria.</p>

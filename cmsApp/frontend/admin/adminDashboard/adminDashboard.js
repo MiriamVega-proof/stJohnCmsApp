@@ -104,11 +104,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const todayReservations = data.todayCount;
         const weekReservations = data.weekCount;
         
-        console.log('Total Reservations:', totalReservations);
-        console.log('Today\'s Reservations:', todayReservations);
-        console.log('This Week\'s Reservations:', weekReservations);
-        console.log('Today\'s Date:', data.today);
-        console.log('Week Range:', data.weekRange);
+        // console.log('Total Reservations:', totalReservations);
+        // console.log('Today\'s Reservations:', todayReservations);
+        // console.log('This Week\'s Reservations:', weekReservations);
+        // console.log('Today\'s Date:', data.today);
+        // console.log('Week Range:', data.weekRange);
         
         // Update all counters
         updateReservationCounters(totalReservations, todayReservations, weekReservations);
@@ -169,5 +169,73 @@ document.addEventListener('DOMContentLoaded', function() {
         element.textContent = weekCount;
       }
     });
+  }
+
+  // Fetch data from appointments table
+  fetch('../../../../cms.api/fetchAppointments.php')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.success) {
+        if (data.data.length > 0) {
+          
+          // Count appointments by status enum
+          let scheduledCount = 0;
+          let completedCount = 0;
+          let cancelledCount = 0;
+          let emptyStatusCount = 0;
+          
+          data.data.forEach((appointment) => {
+            const status = (appointment.status || '').toLowerCase().trim();
+            const statusId = parseInt(appointment.statusId) || 0;
+            
+            // Use status enum if available, otherwise fall back to statusId
+            if (status === 'scheduled' || (status === '' && statusId === 0)) {
+              scheduledCount++;
+            } else if (status === 'completed') {
+              completedCount++;
+            } else if (status === 'cancelled') {
+              cancelledCount++;
+            } else if (status === '') {
+              emptyStatusCount++;
+            }
+          });
+          
+          // Update the dashboard counts
+          updateAppointmentStatusCounts(scheduledCount, completedCount, cancelledCount);
+          
+        } else {
+          // Update with 0 counts if no appointments found
+          updateAppointmentStatusCounts(0, 0, 0);
+        }
+      }
+    })
+    .catch(error => {
+      // Handle fetch errors silently
+    });
+
+  // Function to update appointment status counts on dashboard
+  function updateAppointmentStatusCounts(scheduledCount, completedCount, cancelledCount) {
+    // Update scheduled appointment count
+    const scheduledElement = document.getElementById('scheduled-appointment-count');
+    if (scheduledElement) {
+      scheduledElement.textContent = scheduledCount;
+    }
+    
+    // Update cancelled appointment count
+    const cancelledElement = document.getElementById('cancelled-appointment-count');
+    if (cancelledElement) {
+      cancelledElement.textContent = cancelledCount;
+    }
+    
+    // Update completed appointment count
+    const completedElement = document.getElementById('completed-appointment-count');
+    if (completedElement) {
+      completedElement.textContent = completedCount;
+    }
   }
 });
