@@ -43,15 +43,16 @@ function fetchAllMaintenanceRequests($conn) {
                 m.notes,
                 m.createdAt,
                 m.updatedAt,
+                m.area,
+                m.block,
+                m.lotNumber,
                 r.clientName,
-                r.area,
-                r.block,
-                r.rowNumber,
-                r.lotNumber,
-                u.username
+                r.contactNumber,
+                CONCAT(u.firstName, ' ', u.lastName) as username,
+                u.email
             FROM maintenancerequest m
             LEFT JOIN reservations r ON m.reservationId = r.reservationId
-            LEFT JOIN users u ON m.userId = u.userId
+            LEFT JOIN user u ON m.userId = u.userId
             ORDER BY m.requestedDate DESC";
     
     $result = $conn->query($sql);
