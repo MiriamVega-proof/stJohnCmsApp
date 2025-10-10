@@ -80,7 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const lastLoginDate = new Date(user.lastLogin);
                 
                 if (lastLoginDate < threeMonthsAgo) {
-                    console.log(`[Inactivity Check] User ${user.id} (${user.firstName}) set to Inactive.`);
                     user.status = 'Inactive';
                 }
             }
@@ -181,10 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Core Rendering Function ---
     const renderTable = (filteredUsers) => {
-        console.log('Rendering table with', filteredUsers.length, 'filtered users');
-        
         if (!userTableBody) {
-            console.error('userTableBody element not found!');
             return;
         }
         
@@ -192,11 +188,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const start = (currentPage - 1) * usersPerPage;
         const end = start + usersPerPage;
         const pageUsers = filteredUsers.slice(start, end);
-        
-        console.log('Page users:', pageUsers.length, 'users to display');
 
         if (pageUsers.length === 0) {
-                console.log('No users to display, showing empty message');
             const noUsersMsg = document.getElementById('noUsersMessage');
             if (noUsersMsg) noUsersMsg.classList.remove('d-none');
             if (userTableBody.closest('.table-responsive')) {
@@ -205,7 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        console.log('Displaying users in table');
         const noUsersMsg = document.getElementById('noUsersMessage');
         if (noUsersMsg) noUsersMsg.classList.add('d-none');
         if (userTableBody.closest('.table-responsive')) {
@@ -214,7 +206,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         pageUsers.forEach((user, index) => {
             try {
-                console.log(`Rendering user ${index + 1}:`, user.firstName, user.lastName);
                 const row = userTableBody.insertRow();
                 
                 let statusActionBtn;
@@ -239,7 +230,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </td>
                 `;
-                console.log(`Successfully rendered user ${index + 1}`);
             } catch (error) {
                 console.error(`Error rendering user ${index + 1}:`, error, user);
             }
@@ -604,10 +594,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // INITIAL LOAD
-    console.log('Initializing user management...');
-    console.log('Users data:', users.length, 'users found');
-    console.log('Table body element:', userTableBody);
-    
     applyInactivityCheck();
     filterAndRender();
 });
