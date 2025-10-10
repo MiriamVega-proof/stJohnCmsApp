@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             row.innerHTML = `
-                <td>${user.id}</td> <td>${user.firstName}</td>
+                <td>${user.firstName}</td>
                 <td>${user.lastName}</td>
                 <td>${user.email}</td>
                 <td><span class="status-badge ${getRoleClass(user.role)}">${user.role}</span></td>
