@@ -31,6 +31,8 @@ main {
     width: 100%;
 }
 
+/* Card Styles */
+
 .navbar {
     background-color: var(--gold) !important;
     box-shadow: var(--shadow);
@@ -88,11 +90,18 @@ main {
 .main-content {
     padding: 1rem;
 }
+
 .card {
     box-shadow: var(--shadow);
     border: none;
-    width: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
 .card-header {
     background-color: transparent;
     border-bottom: 1px solid var(--border-color);
@@ -235,7 +244,105 @@ main {
     background: var(--danger-hover); 
 }
 
-/* Responsive adjustments */
+/* Mobile Responsive Styles */
+@media (max-width: 575.98px) {
+    .main-content {
+        padding: 0.5rem;
+    }
+    
+    /* Compact navbar on mobile */
+    .navbar-brand {
+        font-size: 1rem;
+    }
+    
+    /* KPI Cards - Mobile */
+    .card-body h5 {
+        font-size: 1.1rem;
+    }
+    
+    .card-body small {
+        font-size: 0.7rem;
+    }
+    
+    /* Table improvements for mobile */
+    .table-responsive {
+        border-radius: 8px;
+        margin: -1px;
+    }
+    
+    .table {
+        font-size: 0.8rem;
+        margin-bottom: 0;
+    }
+    
+    .table thead th {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.7rem;
+        white-space: nowrap;
+    }
+    
+    .table tbody td {
+        padding: 0.5rem 0.25rem;
+        vertical-align: middle;
+    }
+    
+    /* Hide less important columns on mobile */
+    .table th:nth-child(6), /* Last Login column */
+    .table td:nth-child(6) {
+        display: none;
+    }
+    
+    /* Action buttons mobile optimization */
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+    
+    .action-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+    }
+    
+    /* Status badges mobile */
+    .status-badge {
+        font-size: 0.6rem;
+        padding: 0.2rem 0.5rem;
+        min-width: 60px;
+    }
+    
+    /* Card header mobile */
+    .card-header {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem !important;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .main-content {
+        padding: 0.75rem;
+    }
+    
+    .table th:nth-child(6), /* Last Login column */
+    .table td:nth-child(6) {
+        display: none;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .table thead th {
+        font-size: 0.8rem;
+    }
+    
+    .table tbody td {
+        font-size: 0.85rem;
+    }
+}
+
 @media (min-width: 768px) {
     body { padding-top: 62px; }
     .main-content { padding: 1.5rem; }

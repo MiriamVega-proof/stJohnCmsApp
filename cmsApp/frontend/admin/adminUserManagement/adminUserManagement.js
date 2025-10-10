@@ -125,6 +125,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    // --- Metrics Calculation Function ---
+    const updateMetrics = () => {
+        const totalUsers = users.length;
+        const activeUsers = users.filter(user => user.status === 'Active').length;
+        const inactiveUsers = users.filter(user => user.status === 'Inactive' || user.status === 'Archived').length;
+        const adminUsers = users.filter(user => user.role === 'Admin').length;
+
+        // Update metric displays with animation
+        animateCounter('totalUsersMetric', totalUsers);
+        animateCounter('activeUsersMetric', activeUsers);
+        animateCounter('inactiveUsersMetric', inactiveUsers);
+        animateCounter('adminUsersMetric', adminUsers);
+    };
+
+    // --- Counter Animation Function ---
+    const animateCounter = (elementId, targetValue) => {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+
+        const startValue = parseInt(element.textContent) || 0;
+        const duration = 1000; // 1 second
+        const startTime = Date.now();
+
+        const updateCounter = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Easing function for smooth animation
+            const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+            const currentValue = Math.round(startValue + (targetValue - startValue) * easeOutQuart);
+            
+            element.textContent = currentValue;
+            
+            if (progress < 1) {
+                requestAnimationFrame(updateCounter);
+            } else {
+                element.textContent = targetValue; // Ensure final value is exact
+            }
+        };
+
+        requestAnimationFrame(updateCounter);
+    };
+
 
     // --- Core Rendering Function ---
     const renderTable = (filteredUsers) => {
@@ -197,6 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentFilteredUsers = filtered;
         currentPage = 1;
         renderTable(currentFilteredUsers);
+        updateMetrics(); // Update metrics whenever data changes
     };
     
     userSearch.addEventListener('input', filterAndRender);
@@ -224,8 +268,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- User Modal Logic (General Info Edit/Creation) ---
 
-    // 1. ADD NEW USER
-    document.getElementById('addUserBtn').addEventListener('click', () => {
+    // 1. ADD NEW USER - Function to handle modal opening
+    const openAddUserModal = () => {
         document.getElementById('modalActionText').textContent = 'Create New User';
         userForm.reset();
         document.getElementById('userId').value = '';
@@ -240,7 +284,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('saveUserBtn').textContent = 'Create User';
         userModal.show();
-    });
+    };
+
+    // Add event listeners for both desktop and mobile add buttons
+    document.getElementById('addUserBtn').addEventListener('click', openAddUserModal);
+    document.getElementById('addUserBtnMobile').addEventListener('click', openAddUserModal);
 
     // 2. EDIT USER 
     window.openEditUserModal = (id) => {
@@ -471,6 +519,25 @@ document.addEventListener('DOMContentLoaded', () => {
     if (passwordUpdateModalEl) {
         passwordUpdateModalEl.addEventListener('shown.bs.modal', setupPasswordToggles);
     }
+    
+    // Refresh button functionality
+    document.getElementById('refreshUsersBtn').addEventListener('click', () => {
+        // Show loading state
+        const refreshBtn = document.getElementById('refreshUsersBtn');
+        const originalContent = refreshBtn.innerHTML;
+        refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Refreshing...';
+        refreshBtn.disabled = true;
+        
+        // Simulate refresh (in real app, this would fetch from server)
+        setTimeout(() => {
+            applyInactivityCheck();
+            filterAndRender();
+            
+            // Reset button
+            refreshBtn.innerHTML = originalContent;
+            refreshBtn.disabled = false;
+        }, 1000);
+    });
     
     // INITIAL LOAD
     applyInactivityCheck();
