@@ -127,7 +127,7 @@
                 
                 <!-- Filters Section -->
                 <div class="row g-2 g-md-3 mb-3">
-                    <div class="col-12 col-md-6 col-lg-4">
+                    <div class="col-12 col-md-8">
                         <label class="form-label small d-none d-md-block">Search Users</label>
                         <div class="input-group">
                             <input type="text" id="userSearch" class="form-control" placeholder="Search users...">
@@ -136,7 +136,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="col-6 col-md-3 col-lg-2">
+                    <div class="col-6 col-md-2">
                         <label class="form-label small d-none d-md-block">Role</label>
                         <select id="userRoleFilter" class="form-select">
                             <option value="All" selected>All Roles</option>
@@ -145,7 +145,7 @@
                             <option value="Client">Client</option>
                         </select>
                     </div>
-                    <div class="col-6 col-md-3 col-lg-2">
+                    <div class="col-6 col-md-2">
                         <label class="form-label small d-none d-md-block">Status</label>
                         <select id="userStatusFilter" class="form-select">
                             <option value="All" selected>All Status</option>
@@ -154,19 +154,7 @@
                             <option value="Archived">Archived</option>
                         </select>
                     </div>
-                    <div class="col-12 col-lg-4">
-                        <label class="form-label small d-none d-md-block">Actions</label>
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-outline-primary btn-sm flex-fill" id="refreshUsersBtn">
-                                <i class="fas fa-refresh me-1 d-none d-md-inline"></i>
-                                <span class="d-md-none">Refresh</span>
-                                <span class="d-none d-md-inline">Refresh</span>
-                            </button>
-                            <button class="btn btn-outline-success btn-sm flex-fill d-none d-md-inline-flex" id="exportUsersBtn">
-                                <i class="fas fa-download me-1"></i>Export
-                            </button>
-                        </div>
-                    </div>
+
                 </div>
 
                 <div class="table-responsive">
