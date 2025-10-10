@@ -50,6 +50,49 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(() => toast.remove(), 3000);
     }
 
+    /** Updates the key metrics display with animation */
+    function updateMetrics() {
+        const totalRecords = burialData.length;
+        const activeRecords = burialData.filter(record => record.status === 'active').length;
+        const exhumedRecords = burialData.filter(record => record.status === 'exhumed').length;
+        const archivedRecords = burialData.filter(record => record.status === 'archived').length;
+
+        // Update metrics with animation
+        animateCounter('totalRecordsMetric', totalRecords);
+        animateCounter('activeRecordsMetric', activeRecords);
+        animateCounter('exhumedRecordsMetric', exhumedRecords);
+        animateCounter('archivedRecordsMetric', archivedRecords);
+    }
+
+    /** Animates counter from current value to target value */
+    function animateCounter(elementId, targetValue) {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+
+        const startValue = parseInt(element.textContent) || 0;
+        const duration = 1000; // 1 second
+        const startTime = Date.now();
+
+        const updateCounter = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Easing function for smooth animation
+            const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+            const currentValue = Math.round(startValue + (targetValue - startValue) * easeOutQuart);
+            
+            element.textContent = currentValue;
+            
+            if (progress < 1) {
+                requestAnimationFrame(updateCounter);
+            } else {
+                element.textContent = targetValue; // Ensure final value is exact
+            }
+        };
+
+        requestAnimationFrame(updateCounter);
+    }
+
     /**
      * Handles the user logout process.
      * Prompts for confirmation and redirects to the login page.
@@ -92,6 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         attachTableListeners();
         initializeTooltips();
+        updateMetrics(); // Update metrics whenever table is rendered
     }
 
     function applyFilters() {
@@ -283,5 +327,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // --- 7. INITIALIZATION ---
-    applyFilters();
+    updateMetrics(); // Initialize metrics immediately
+    applyFilters(); // This will also update metrics after rendering table
 });
