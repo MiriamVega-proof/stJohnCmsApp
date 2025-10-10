@@ -102,6 +102,69 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // API functions for user management
+    const createUser = async (userData) => {
+        try {
+            const response = await fetch('../../../../cms.api/userManagement.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData)
+            });
+            
+            const result = await response.json();
+            if (!result.success) {
+                throw new Error(result.error || 'Failed to create user');
+            }
+            return result;
+        } catch (error) {
+            console.error('Error creating user:', error);
+            throw error;
+        }
+    };
+
+    const updateUserData = async (userData) => {
+        try {
+            const response = await fetch('../../../../cms.api/userManagement.php', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData)
+            });
+            
+            const result = await response.json();
+            if (!result.success) {
+                throw new Error(result.error || 'Failed to update user');
+            }
+            return result;
+        } catch (error) {
+            console.error('Error updating user:', error);
+            throw error;
+        }
+    };
+
+    const deleteUserData = async (userId) => {
+        try {
+            const response = await fetch(`../../../../cms.api/userManagement.php?userId=${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            const result = await response.json();
+            if (!result.success) {
+                throw new Error(result.error || 'Failed to delete user');
+            }
+            return result;
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            throw error;
+        }
+    };
+
     // --- Utility Functions (Unchanged) ---
     const getRoleClass = (role) => {
         switch(role) {
@@ -436,7 +499,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 3. Form Submission (Create or Edit)
     if (userForm) {
-        userForm.addEventListener('submit', (e) => {
+        userForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const id = document.getElementById('userId').value;
@@ -448,74 +511,71 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
 
-        // --- VALIDATION: Existing Email Check ---
-        const existingUser = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.id != id);
-        if (existingUser) {
-            document.getElementById('email').classList.add('is-invalid');
-            document.getElementById('emailFeedback').textContent = 'Error: An account with this email already exists.';
-            return;
-        }
+        // Reset validation classes
         document.getElementById('email').classList.remove('is-invalid');
         
-        // Get current date/time
-        const now = new Date().toLocaleString('en-US', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true
-        }).replace(/,/, ''); 
+        // Disable the save button and show loading
+        const saveBtn = document.getElementById('saveUserBtn');
+        const originalBtnText = saveBtn.textContent;
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
 
-        if (id) {
-            // EDIT/UPDATE Logic (General Info)
-            const userIndex = users.findIndex(u => u.id == id);
-            if (userIndex !== -1) {
-                users[userIndex] = {
-                    ...users[userIndex],
+        try {
+            if (id) {
+                // EDIT/UPDATE Logic
+                const userData = {
+                    userId: parseInt(id),
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    role: role
+                };
+                
+                await updateUserData(userData);
+                alert(`User ${firstName} ${lastName} updated successfully!`);
+            } else {
+                // CREATE Logic - Validate password first
+                if (password.length < 6) { 
+                    alert('Error: Password must be at least 6 characters long.');
+                    return;
+                }
+                if (password !== confirmPassword) {
+                    alert('Error: Passwords do not match!');
+                    return;
+                }
+
+                const userData = {
                     firstName: firstName,
                     lastName: lastName,
                     email: email,
                     role: role,
-                    status: status,
-                    // Reset lastLogin if status is Active
-                    lastLogin: status === 'Active' ? now : users[userIndex].lastLogin,
+                    password: password
                 };
-                alert(`User ${firstName} ${lastName} updated successfully!`);
-            }
-        } else {
-            // --- VALIDATION: Password Check for New User ---
-            if (password.length < 6) { 
-                alert('Error: Password must be at least 6 characters long.');
-                return;
-            }
-            if (password !== confirmPassword) {
-                alert('Error: Passwords do not match!');
-                return;
+                
+                await createUser(userData);
+                alert(`User ${firstName} ${lastName} created successfully!`);
             }
 
-            // CREATE Logic
-            const newUser = {
-                id: Math.max(...users.map(u => u.id), 0) + 1,
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                role: role,
-                status: status,
-                // Set lastLogin on creation if status is Active
-                lastLogin: status === 'Active' ? now : 'N/A',
-                password: password 
-            };
-            users.push(newUser);
-            alert(`User ${firstName} ${lastName} created successfully!`);
+            if (userModal) {
+                userModal.hide();
+            }
+            
+            // Refresh the user list
+            await fetchUsers();
+            
+        } catch (error) {
+            console.error('Error saving user:', error);
+            if (error.message.includes('email already exists')) {
+                document.getElementById('email').classList.add('is-invalid');
+                document.getElementById('emailFeedback').textContent = 'Error: An account with this email already exists.';
+            } else {
+                alert('Error: ' + error.message);
+            }
+        } finally {
+            // Re-enable the save button
+            saveBtn.disabled = false;
+            saveBtn.textContent = originalBtnText;
         }
-
-        if (userModal) {
-            userModal.hide();
-        }
-        // Rerun the check and render
-        applyInactivityCheck(); 
-        filterAndRender(); 
         });
     }
 
@@ -589,36 +649,50 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
-    window.handleArchiveAction = (id, action) => {
+    window.handleArchiveAction = async (id, action) => {
         const userIndex = users.findIndex(u => u.id === id);
         if (userIndex === -1) return;
 
-        if (action === 'Archive') {
-            users[userIndex].status = 'Archived';
-            alert(`User ID ${id} account has been Archived.`);
-        } else if (action === 'Activate') {
-            users[userIndex].status = 'Active';
-            alert(`User ID ${id} account has been Activated.`);
-            // Reset lastLogin on activation
-            users[userIndex].lastLogin = new Date().toLocaleString('en-US', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true
-            }).replace(/,/, '');
-        } else if (action === 'Delete') {
-            users.splice(userIndex, 1);
-            alert(`User ID ${id} has been permanently Deleted.`);
+        try {
+            if (action === 'Archive') {
+                users[userIndex].status = 'Archived';
+                alert(`User ID ${id} account has been Archived.`);
+            } else if (action === 'Activate') {
+                users[userIndex].status = 'Active';
+                alert(`User ID ${id} account has been Activated.`);
+                // Reset lastLogin on activation
+                users[userIndex].lastLogin = new Date().toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                }).replace(/,/, '');
+            } else if (action === 'Delete') {
+                // Actually delete from database
+                await deleteUserData(id);
+                alert(`User ID ${id} has been permanently deleted from the database.`);
+                // Refresh the user list to reflect database changes
+                await fetchUsers();
+            }
+            
+            if (archiveOrDeleteModal) {
+                archiveOrDeleteModal.hide();
+            }
+            
+            // Only re-render locally if not deleting (delete refreshes from API)
+            if (action !== 'Delete') {
+                applyInactivityCheck(); 
+                filterAndRender(); 
+            }
+        } catch (error) {
+            console.error('Error performing action:', error);
+            alert('Error: ' + error.message);
+            if (archiveOrDeleteModal) {
+                archiveOrDeleteModal.hide();
+            }
         }
-        
-        if (archiveOrDeleteModal) {
-            archiveOrDeleteModal.hide();
-        }
-        // Rerun the check and render
-        applyInactivityCheck(); 
-        filterAndRender(); 
     };
 
     const confirmArchiveBtn = document.getElementById('confirmArchiveBtn');
