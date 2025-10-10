@@ -280,4 +280,56 @@ document.addEventListener('DOMContentLoaded', function() {
       completedElement.textContent = completedCount;
     }
   }
+
+  // Fetch user data from users table
+  fetch('../../../../cms.api/fetchUsers.php')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.success) {
+        // Get all counts from the response
+        const totalUsers = data.totalCount;
+        const activeUsers = data.activeCount;
+        const clientCount = data.clientCount;
+        const todayNewUsers = data.todayCount;
+
+        // console.log("total users: " + totalUsers);
+        
+        // Update user-related counters
+        updateUserCounters(totalUsers, activeUsers, clientCount, todayNewUsers);
+      } else {
+        // Update with 0 counts if fetch fails
+        updateUserCounters(0, 0, 0, 0);
+      }
+    })
+    .catch(error => {
+      // Handle fetch errors silently and update with 0 counts
+      updateUserCounters(0, 0, 0, 0);
+    });
+
+  // Function to update user-related counts on dashboard
+  function updateUserCounters(totalUsers, activeUsers, clientCount, todayNewUsers) {
+    // Update registered clients count
+    const registeredClientsElement = document.getElementById('registered-clients-count');
+    if (registeredClientsElement) {
+      registeredClientsElement.textContent = clientCount;
+    }
+    
+    // Update active users count (24h) - using today's new users as a proxy
+    const activeUsersElement = document.getElementById('active-users-count');
+    if (activeUsersElement) {
+      activeUsersElement.textContent = todayNewUsers;
+    }
+    
+    // Update pending approvals count (using a default value for now)
+    const pendingApprovalsElement = document.getElementById('pending-approvals-count');
+    if (pendingApprovalsElement) {
+      // This could be enhanced to get actual pending approvals count
+      pendingApprovalsElement.textContent = '0';
+    }
+  }
 });

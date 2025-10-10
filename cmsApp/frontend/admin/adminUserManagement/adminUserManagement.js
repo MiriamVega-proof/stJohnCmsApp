@@ -1,45 +1,169 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    let users = [
-        { id: 1, firstName: 'John', lastName: 'Doe', email: 'john.doe@client.com', role: 'Client', status: 'Active', lastLogin: '2024-05-15 10:30 AM', password: 'hashedpassword1' },
-        { id: 2, firstName: 'Jane', lastName: 'Smith', email: 'jane.s@office.com', role: 'Secretary', status: 'Inactive', lastLogin: '2023-11-01 08:00 AM', password: 'hashedpassword2' },
-        { id: 3, firstName: 'Very', lastName: 'Old', email: 'old@client.com', role: 'Client', status: 'Active', lastLogin: '2023-01-01 12:00 PM', password: 'hashedpassword3' },
-        { id: 4, firstName: 'Admin', lastName: 'Master', email: 'admin@sys.com', role: 'Admin', status: 'Active', lastLogin: '2024-05-15 1:00 PM', password: 'hashedpassword4' },
-        { id: 5, firstName: 'Archived', lastName: 'Client', email: 'archived.c@test.com', role: 'Client', status: 'Archived', lastLogin: '2024-05-10 11:00 AM', password: 'hashedpassword5' },
-        { id: 6, firstName: 'Another', lastName: 'Secretary', email: 'sec2@office.com', role: 'Secretary', status: 'Active', lastLogin: '2024-05-14 9:00 AM', password: 'hashedpassword6' },
-        { id: 7, firstName: 'New', lastName: 'Client', email: 'new.c@test.com', role: 'Client', status: 'Inactive', lastLogin: 'N/A', password: 'hashedpassword7' },
-        // Add more mock data for pagination testing
-        ...Array(15).fill(null).map((_, i) => ({
-            id: i + 8,
-            firstName: `Test`,
-            lastName: `User ${i + 1}`,
-            email: `test${i + 1}@example.com`,
-            role: i % 3 === 0 ? 'Client' : 'Secretary',
-            status: i % 5 === 0 ? 'Archived' : 'Active',
-            lastLogin: `2024-05-${(i % 20) + 1} 10:00 AM`,
-            password: `hashedpassword${i + 8}`
-        }))
-    ];
+    let users = [];
+    let apiData = null;
 
     let currentPage = 1;
     const usersPerPage = 10;
     let currentFilteredUsers = users;
     
-    // --- DOM Elements & Modals (Unchanged) ---
+    // --- DOM Elements & Modals ---
     const userTableBody = document.getElementById('userTableBody');
     const userSearch = document.getElementById('userSearch');
     const userRoleFilter = document.getElementById('userRoleFilter');
     const userStatusFilter = document.getElementById('userStatusFilter');
     
-    const userModal = new bootstrap.Modal(document.getElementById('userModal'));
-    const passwordUpdateModal = new bootstrap.Modal(document.getElementById('passwordUpdateModal'));
-    const archiveOrDeleteModal = new bootstrap.Modal(document.getElementById('archiveOrDeleteModal'));
+    // Check for required elements
+    if (!userTableBody) {
+        console.error('Critical error: userTableBody element not found!');
+        return;
+    }
+    
+    const userModalEl = document.getElementById('userModal');
+    const passwordUpdateModalEl = document.getElementById('passwordUpdateModal');
+    const archiveOrDeleteModalEl = document.getElementById('archiveOrDeleteModal');
+    
+    const userModal = userModalEl ? new bootstrap.Modal(userModalEl) : null;
+    const passwordUpdateModal = passwordUpdateModalEl ? new bootstrap.Modal(passwordUpdateModalEl) : null;
+    const archiveOrDeleteModal = archiveOrDeleteModalEl ? new bootstrap.Modal(archiveOrDeleteModalEl) : null;
     
     const userForm = document.getElementById('userForm');
     const passwordUpdateForm = document.getElementById('passwordUpdateForm');
     const creationPasswordFields = document.getElementById('creationPasswordFields');
     
     let currentUserId = null; 
+
+    // --- API Functions ---
+    const fetchUsers = async () => {
+        try {
+            showLoadingState();
+            const response = await fetch('../../../../cms.api/fetchUsers.php');
+            const data = await response.json();
+            
+            if (data.success) {
+                apiData = data;
+                // Transform API data to match our existing user structure
+                users = data.data.map(user => ({
+                    id: user.userId,
+                    firstName: user.firstName || '',
+                    lastName: user.lastName || '',
+                    email: user.email || '',
+                    role: user.role || 'Client',
+                    status: user.status || 'Active', // Use actual status from database
+                    lastLogin: user.updatedAt ? formatDateTime(user.updatedAt) : 'N/A',
+                    contactNumber: user.contactNumber || '',
+                    emergencyContactName: user.emergencyContactName || '',
+                    emergencyContactNumber: user.emergencyContactNumber || '',
+                    createdAt: user.createdAt,
+                    updatedAt: user.updatedAt
+                }));
+                
+                hideLoadingState();
+                applyInactivityCheck();
+                filterAndRender();
+            } else {
+                throw new Error(data.error || 'Failed to fetch users');
+            }
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            hideLoadingState();
+            showErrorMessage('Failed to load user data. Please try refreshing the page.');
+        }
+    };
+
+    const formatDateTime = (dateString) => {
+        if (!dateString) return 'N/A';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
+    };
+
+    const showLoadingState = () => {
+        const tableBody = document.getElementById('userTableBody');
+        if (tableBody) {
+            tableBody.innerHTML = '<tr><td colspan="7" class="text-center p-4"><i class="fas fa-spinner fa-spin me-2"></i>Loading users...</td></tr>';
+        }
+    };
+
+    const hideLoadingState = () => {
+        // This will be handled by the renderTable function
+    };
+
+    const showErrorMessage = (message) => {
+        const tableBody = document.getElementById('userTableBody');
+        if (tableBody) {
+            tableBody.innerHTML = `<tr><td colspan="7" class="text-center p-4 text-danger"><i class="fas fa-exclamation-triangle me-2"></i>${message}</td></tr>`;
+        }
+    };
+
+    // API functions for user management
+    const createUser = async (userData) => {
+        try {
+            const response = await fetch('../../../../cms.api/userManagement.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData)
+            });
+            
+            const result = await response.json();
+            if (!result.success) {
+                throw new Error(result.error || 'Failed to create user');
+            }
+            return result;
+        } catch (error) {
+            console.error('Error creating user:', error);
+            throw error;
+        }
+    };
+
+    const updateUserData = async (userData) => {
+        try {
+            const response = await fetch('../../../../cms.api/userManagement.php', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData)
+            });
+            
+            const result = await response.json();
+            if (!result.success) {
+                throw new Error(result.error || 'Failed to update user');
+            }
+            return result;
+        } catch (error) {
+            console.error('Error updating user:', error);
+            throw error;
+        }
+    };
+
+    const deleteUserData = async (userId) => {
+        try {
+            const response = await fetch(`../../../../cms.api/userManagement.php?userId=${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            const result = await response.json();
+            if (!result.success) {
+                throw new Error(result.error || 'Failed to delete user');
+            }
+            return result;
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            throw error;
+        }
+    };
 
     // --- Utility Functions (Unchanged) ---
     const getRoleClass = (role) => {
@@ -70,7 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const lastLoginDate = new Date(user.lastLogin);
                 
                 if (lastLoginDate < threeMonthsAgo) {
-                    console.log(`[Inactivity Check] User ${user.id} (${user.firstName}) set to Inactive.`);
                     user.status = 'Inactive';
                 }
             }
@@ -125,48 +248,116 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    // --- Metrics Calculation Function ---
+    const updateMetrics = () => {
+        let totalUsers, activeUsers, inactiveUsers, adminUsers;
+        
+        if (apiData) {
+            // Use API provided counts when available
+            totalUsers = apiData.totalCount || 0;
+            adminUsers = apiData.adminCount || 0;
+            activeUsers = apiData.activeCount || 0;
+            inactiveUsers = (apiData.inactiveCount || 0) + (apiData.archivedCount || 0);
+        } else {
+            // Fallback to local calculation
+            totalUsers = users.length;
+            activeUsers = users.filter(user => user.status === 'Active').length;
+            inactiveUsers = users.filter(user => user.status === 'Inactive' || user.status === 'Archived').length;
+            adminUsers = users.filter(user => user.role === 'Admin').length;
+        }
+
+        // Update metric displays with animation
+        animateCounter('totalUsersMetric', totalUsers);
+        animateCounter('activeUsersMetric', activeUsers);
+        animateCounter('inactiveUsersMetric', inactiveUsers);
+        animateCounter('adminUsersMetric', adminUsers);
+    };
+
+    // --- Counter Animation Function ---
+    const animateCounter = (elementId, targetValue) => {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+
+        const startValue = parseInt(element.textContent) || 0;
+        const duration = 1000; // 1 second
+        const startTime = Date.now();
+
+        const updateCounter = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Easing function for smooth animation
+            const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+            const currentValue = Math.round(startValue + (targetValue - startValue) * easeOutQuart);
+            
+            element.textContent = currentValue;
+            
+            if (progress < 1) {
+                requestAnimationFrame(updateCounter);
+            } else {
+                element.textContent = targetValue; // Ensure final value is exact
+            }
+        };
+
+        requestAnimationFrame(updateCounter);
+    };
+
 
     // --- Core Rendering Function ---
     const renderTable = (filteredUsers) => {
+        if (!userTableBody) {
+            return;
+        }
+        
         userTableBody.innerHTML = '';
         const start = (currentPage - 1) * usersPerPage;
         const end = start + usersPerPage;
         const pageUsers = filteredUsers.slice(start, end);
 
         if (pageUsers.length === 0) {
-            document.getElementById('noUsersMessage').classList.remove('d-none');
-            userTableBody.closest('.table-responsive').style.display = 'none'; 
+            const noUsersMsg = document.getElementById('noUsersMessage');
+            if (noUsersMsg) noUsersMsg.classList.remove('d-none');
+            if (userTableBody.closest('.table-responsive')) {
+                userTableBody.closest('.table-responsive').style.display = 'none';
+            }
             return;
         }
 
-        document.getElementById('noUsersMessage').classList.add('d-none');
-        userTableBody.closest('.table-responsive').style.display = 'block';
+        const noUsersMsg = document.getElementById('noUsersMessage');
+        if (noUsersMsg) noUsersMsg.classList.add('d-none');
+        if (userTableBody.closest('.table-responsive')) {
+            userTableBody.closest('.table-responsive').style.display = 'block';
+        }
 
-        pageUsers.forEach(user => {
-            const row = userTableBody.insertRow();
-            
-            let statusActionBtn;
-            if (user.status === 'Archived') {
-                statusActionBtn = `<button class="action-btn btn-activate" onclick="handleArchiveAction(${user.id}, 'Activate')" title="Activate Account"><i class="fas fa-undo"></i></button>`;
-            } else {
-                statusActionBtn = `<button class="action-btn btn-archive" onclick="openArchiveOrDeleteModal(${user.id})" title="Archive/Delete"><i class="fas fa-archive"></i></button>`;
+        pageUsers.forEach((user, index) => {
+            try {
+                const row = userTableBody.insertRow();
+                
+                let statusActionBtn;
+                if (user.status === 'Archived') {
+                    statusActionBtn = `<button class="action-btn btn-activate" onclick="handleArchiveAction(${user.id}, 'Activate')" title="Activate Account"><i class="fas fa-undo"></i></button>`;
+                } else {
+                    statusActionBtn = `<button class="action-btn btn-archive" onclick="openArchiveOrDeleteModal(${user.id})" title="Archive/Delete"><i class="fas fa-archive"></i></button>`;
+                }
+
+                row.innerHTML = `
+                    <td>${user.firstName}</td>
+                    <td>${user.lastName}</td>
+                    <td>${user.email}</td>
+                    <td><span class="status-badge ${getRoleClass(user.role)}">${user.role}</span></td>
+                    <td class="text-center"><span class="status-badge ${getStatusClass(user.status)}">${user.status}</span></td>
+                    <td>${user.lastLogin}</td>
+                    <td class="text-center">
+                        <div class="action-buttons">
+                            <button class="action-btn btn-edit" onclick="openEditUserModal(${user.id})" title="Edit User Details"><i class="fas fa-pencil"></i></button>
+                            <button class="action-btn btn-reset-pw" onclick="openPasswordUpdateModal(${user.id})" title="Admin Set Password"><i class="fas fa-key"></i></button>
+                            ${statusActionBtn}
+                        </div>
+                    </td>
+                `;
+            } catch (error) {
+                console.error(`Error rendering user ${index + 1}:`, error, user);
             }
-
-            row.innerHTML = `
-                <td>${user.id}</td> <td>${user.firstName}</td>
-                <td>${user.lastName}</td>
-                <td>${user.email}</td>
-                <td><span class="status-badge ${getRoleClass(user.role)}">${user.role}</span></td>
-                <td class="text-center"><span class="status-badge ${getStatusClass(user.status)}">${user.status}</span></td>
-                <td>${user.lastLogin}</td>
-                <td class="text-center">
-                    <div class="action-buttons">
-                        <button class="action-btn btn-edit" onclick="openEditUserModal(${user.id})" title="Edit User Details"><i class="fas fa-pencil"></i></button>
-                        <button class="action-btn btn-reset-pw" onclick="openPasswordUpdateModal(${user.id})" title="Admin Set Password"><i class="fas fa-key"></i></button>
-                        ${statusActionBtn}
-                    </div>
-                </td>
-            `;
         });
         
         // Update pagination info
@@ -197,35 +388,56 @@ document.addEventListener('DOMContentLoaded', () => {
         currentFilteredUsers = filtered;
         currentPage = 1;
         renderTable(currentFilteredUsers);
+        updateMetrics(); // Update metrics whenever data changes
     };
     
-    userSearch.addEventListener('input', filterAndRender);
-    document.getElementById('clearSearchBtn').addEventListener('click', () => {
-        userSearch.value = '';
-        filterAndRender();
-    });
-    userRoleFilter.addEventListener('change', filterAndRender);
-    userStatusFilter.addEventListener('change', filterAndRender);
+    if (userSearch) {
+        userSearch.addEventListener('input', filterAndRender);
+    }
     
-    document.getElementById('prevPageBtn').addEventListener('click', () => {
-        if (currentPage > 1) {
-            currentPage--;
-            renderTable(currentFilteredUsers);
-        }
-    });
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    if (clearSearchBtn) {
+        clearSearchBtn.addEventListener('click', () => {
+            if (userSearch) {
+                userSearch.value = '';
+                filterAndRender();
+            }
+        });
+    }
+    
+    if (userRoleFilter) {
+        userRoleFilter.addEventListener('change', filterAndRender);
+    }
+    
+    if (userStatusFilter) {
+        userStatusFilter.addEventListener('change', filterAndRender);
+    }
+    
+    const prevPageBtn = document.getElementById('prevPageBtn');
+    if (prevPageBtn) {
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable(currentFilteredUsers);
+            }
+        });
+    }
 
-    document.getElementById('nextPageBtn').addEventListener('click', () => {
-        const totalPages = Math.ceil(currentFilteredUsers.length / usersPerPage);
-        if (currentPage < totalPages) {
-            currentPage++;
-            renderTable(currentFilteredUsers);
-        }
-    });
+    const nextPageBtn = document.getElementById('nextPageBtn');
+    if (nextPageBtn) {
+        nextPageBtn.addEventListener('click', () => {
+            const totalPages = Math.ceil(currentFilteredUsers.length / usersPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable(currentFilteredUsers);
+            }
+        });
+    }
 
     // --- User Modal Logic (General Info Edit/Creation) ---
 
-    // 1. ADD NEW USER
-    document.getElementById('addUserBtn').addEventListener('click', () => {
+    // 1. ADD NEW USER - Function to handle modal opening
+    const openAddUserModal = () => {
         document.getElementById('modalActionText').textContent = 'Create New User';
         userForm.reset();
         document.getElementById('userId').value = '';
@@ -239,8 +451,22 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('emailFeedback').textContent = '';
 
         document.getElementById('saveUserBtn').textContent = 'Create User';
-        userModal.show();
-    });
+        if (userModal) {
+            userModal.show();
+        }
+    };
+
+    // Add event listeners for both desktop and mobile add buttons
+    const addUserBtn = document.getElementById('addUserBtn');
+    if (addUserBtn) {
+        addUserBtn.addEventListener('click', openAddUserModal);
+    }
+    
+    // Add mobile button listener if it exists
+    const mobileAddBtn = document.getElementById('addUserBtnMobile');
+    if (mobileAddBtn) {
+        mobileAddBtn.addEventListener('click', openAddUserModal);
+    }
 
     // 2. EDIT USER 
     window.openEditUserModal = (id) => {
@@ -265,11 +491,14 @@ document.addEventListener('DOMContentLoaded', () => {
         
         document.getElementById('saveUserBtn').textContent = 'Save Changes';
         currentUserId = id;
-        userModal.show();
+        if (userModal) {
+            userModal.show();
+        }
     };
     
     // 3. Form Submission (Create or Edit)
-    userForm.addEventListener('submit', (e) => {
+    if (userForm) {
+        userForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const id = document.getElementById('userId').value;
@@ -281,73 +510,75 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
 
-        // --- VALIDATION: Existing Email Check ---
-        const existingUser = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.id != id);
-        if (existingUser) {
-            document.getElementById('email').classList.add('is-invalid');
-            document.getElementById('emailFeedback').textContent = 'Error: An account with this email already exists.';
-            return;
-        }
+        // Reset validation classes
         document.getElementById('email').classList.remove('is-invalid');
         
-        // Get current date/time
-        const now = new Date().toLocaleString('en-US', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true
-        }).replace(/,/, ''); 
+        // Disable the save button and show loading
+        const saveBtn = document.getElementById('saveUserBtn');
+        const originalBtnText = saveBtn.textContent;
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
 
-        if (id) {
-            // EDIT/UPDATE Logic (General Info)
-            const userIndex = users.findIndex(u => u.id == id);
-            if (userIndex !== -1) {
-                users[userIndex] = {
-                    ...users[userIndex],
+        try {
+            if (id) {
+                // EDIT/UPDATE Logic
+                const userData = {
+                    userId: parseInt(id),
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    role: role,
+                    status: status
+                };
+                
+                await updateUserData(userData);
+                alert(`User ${firstName} ${lastName} updated successfully!`);
+            } else {
+                // CREATE Logic - Validate password first
+                if (password.length < 6) { 
+                    alert('Error: Password must be at least 6 characters long.');
+                    return;
+                }
+                if (password !== confirmPassword) {
+                    alert('Error: Passwords do not match!');
+                    return;
+                }
+
+                const userData = {
                     firstName: firstName,
                     lastName: lastName,
                     email: email,
                     role: role,
                     status: status,
-                    // Reset lastLogin if status is Active
-                    lastLogin: status === 'Active' ? now : users[userIndex].lastLogin,
+                    password: password
                 };
-                alert(`User ${firstName} ${lastName} updated successfully!`);
-            }
-        } else {
-            // --- VALIDATION: Password Check for New User ---
-            if (password.length < 6) { 
-                alert('Error: Password must be at least 6 characters long.');
-                return;
-            }
-            if (password !== confirmPassword) {
-                alert('Error: Passwords do not match!');
-                return;
+                
+                await createUser(userData);
+                alert(`User ${firstName} ${lastName} created successfully!`);
             }
 
-            // CREATE Logic
-            const newUser = {
-                id: Math.max(...users.map(u => u.id), 0) + 1,
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                role: role,
-                status: status,
-                // Set lastLogin on creation if status is Active
-                lastLogin: status === 'Active' ? now : 'N/A',
-                password: password 
-            };
-            users.push(newUser);
-            alert(`User ${firstName} ${lastName} created successfully!`);
+            if (userModal) {
+                userModal.hide();
+            }
+            
+            // Refresh the user list
+            await fetchUsers();
+            
+        } catch (error) {
+            console.error('Error saving user:', error);
+            if (error.message.includes('email already exists')) {
+                document.getElementById('email').classList.add('is-invalid');
+                document.getElementById('emailFeedback').textContent = 'Error: An account with this email already exists.';
+            } else {
+                alert('Error: ' + error.message);
+            }
+        } finally {
+            // Re-enable the save button
+            saveBtn.disabled = false;
+            saveBtn.textContent = originalBtnText;
         }
-
-        userModal.hide();
-        // Rerun the check and render
-        applyInactivityCheck(); 
-        filterAndRender(); 
-    });
+        });
+    }
 
     // --- Admin Direct Password Update Logic ---
 
@@ -363,10 +594,13 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('confirmNewPassword').classList.remove('is-invalid');
         document.getElementById('confirmNewPasswordFeedback').textContent = 'Passwords do not match.';
 
-        passwordUpdateModal.show();
+        if (passwordUpdateModal) {
+            passwordUpdateModal.show();
+        }
     };
     
-    passwordUpdateForm.addEventListener('submit', (e) => {
+    if (passwordUpdateForm) {
+        passwordUpdateForm.addEventListener('submit', (e) => {
         e.preventDefault();
         
         const id = document.getElementById('updateUserId').value;
@@ -396,8 +630,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         alert(`Password for user ID ${id} has been successfully updated.`);
-        passwordUpdateModal.hide();
-    });
+        if (passwordUpdateModal) {
+            passwordUpdateModal.hide();
+        }
+        });
+    }
 
     // 5. Archive / Activate / Delete Logic (Unchanged)
     window.openArchiveOrDeleteModal = (id) => {
@@ -408,48 +645,72 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('archiveModalText').innerHTML = `You are performing an action on <strong>${user.firstName} ${user.lastName} (${user.role})</strong>. Do you want to **Archive** this account (setting status to Archived) or **Delete** it permanently?`;
 
         currentUserId = id;
-        archiveOrDeleteModal.show();
+        if (archiveOrDeleteModal) {
+            archiveOrDeleteModal.show();
+        }
     };
     
-    window.handleArchiveAction = (id, action) => {
+    window.handleArchiveAction = async (id, action) => {
         const userIndex = users.findIndex(u => u.id === id);
         if (userIndex === -1) return;
 
-        if (action === 'Archive') {
-            users[userIndex].status = 'Archived';
-            alert(`User ID ${id} account has been Archived.`);
-        } else if (action === 'Activate') {
-            users[userIndex].status = 'Active';
-            alert(`User ID ${id} account has been Activated.`);
-            // Reset lastLogin on activation
-            users[userIndex].lastLogin = new Date().toLocaleString('en-US', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true
-            }).replace(/,/, '');
-        } else if (action === 'Delete') {
-            users.splice(userIndex, 1);
-            alert(`User ID ${id} has been permanently Deleted.`);
+        try {
+            if (action === 'Archive') {
+                // Update status in database
+                await updateUserData({
+                    userId: id,
+                    status: 'Archived'
+                });
+                alert(`User ID ${id} account has been Archived.`);
+                // Refresh the user list to reflect database changes
+                await fetchUsers();
+            } else if (action === 'Activate') {
+                // Update status in database
+                await updateUserData({
+                    userId: id,
+                    status: 'Active'
+                });
+                alert(`User ID ${id} account has been Activated.`);
+                // Refresh the user list to reflect database changes
+                await fetchUsers();
+            } else if (action === 'Delete') {
+                // Actually delete from database
+                await deleteUserData(id);
+                alert(`User ID ${id} has been permanently deleted from the database.`);
+                // Refresh the user list to reflect database changes
+                await fetchUsers();
+            }
+            
+            if (archiveOrDeleteModal) {
+                archiveOrDeleteModal.hide();
+            }
+            
+            // All actions now refresh from API, so no need for local re-rendering
+        } catch (error) {
+            console.error('Error performing action:', error);
+            alert('Error: ' + error.message);
+            if (archiveOrDeleteModal) {
+                archiveOrDeleteModal.hide();
+            }
         }
-        
-        archiveOrDeleteModal.hide();
-        // Rerun the check and render
-        applyInactivityCheck(); 
-        filterAndRender(); 
     };
 
-    document.getElementById('confirmArchiveBtn').addEventListener('click', () => {
-        handleArchiveAction(currentUserId, 'Archive');
-    });
+    const confirmArchiveBtn = document.getElementById('confirmArchiveBtn');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
     
-    document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
-        if(confirm("WARNING: Permanent deletion cannot be undone. Are you absolutely sure?")) {
-            handleArchiveAction(currentUserId, 'Delete');
-        }
-    });
+    if (confirmArchiveBtn) {
+        confirmArchiveBtn.addEventListener('click', () => {
+            handleArchiveAction(currentUserId, 'Archive');
+        });
+    }
+    
+    if (confirmDeleteBtn) {
+        confirmDeleteBtn.addEventListener('click', () => {
+            if(confirm("WARNING: Permanent deletion cannot be undone. Are you absolutely sure?")) {
+                handleArchiveAction(currentUserId, 'Delete');
+            }
+        });
+    }
 
     const logoutLinks = document.querySelectorAll('#logoutLinkDesktop, #logoutLinkMobile');
     logoutLinks.forEach(link => {
@@ -460,9 +721,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // END LOGOUT LOGIC
 
 
-    const userModalEl = document.getElementById('userModal');
-    const passwordUpdateModalEl = document.getElementById('passwordUpdateModal');
-    
     // Attach setupPasswordToggles to the Bootstrap modal 'shown' event
     if (userModalEl) {
         userModalEl.addEventListener('shown.bs.modal', setupPasswordToggles);
@@ -473,6 +731,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // INITIAL LOAD
-    applyInactivityCheck();
-    filterAndRender();
+    fetchUsers(); // This will call applyInactivityCheck() and filterAndRender() after loading data
 });
