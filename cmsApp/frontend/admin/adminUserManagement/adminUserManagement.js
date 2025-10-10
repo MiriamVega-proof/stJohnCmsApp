@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     lastName: user.lastName || '',
                     email: user.email || '',
                     role: user.role || 'Client',
-                    status: 'Active', // Default status since API doesn't provide this
+                    status: user.status || 'Active', // Use actual status from database
                     lastLogin: user.updatedAt ? formatDateTime(user.updatedAt) : 'N/A',
                     contactNumber: user.contactNumber || '',
                     emergencyContactName: user.emergencyContactName || '',
@@ -256,9 +256,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Use API provided counts when available
             totalUsers = apiData.totalCount || 0;
             adminUsers = apiData.adminCount || 0;
-            // Calculate active/inactive from current users array since API doesn't provide status
-            activeUsers = users.filter(user => user.status === 'Active').length;
-            inactiveUsers = users.filter(user => user.status === 'Inactive' || user.status === 'Archived').length;
+            activeUsers = apiData.activeCount || 0;
+            inactiveUsers = (apiData.inactiveCount || 0) + (apiData.archivedCount || 0);
         } else {
             // Fallback to local calculation
             totalUsers = users.length;
@@ -528,7 +527,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     firstName: firstName,
                     lastName: lastName,
                     email: email,
-                    role: role
+                    role: role,
+                    status: status
                 };
                 
                 await updateUserData(userData);
@@ -549,6 +549,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     lastName: lastName,
                     email: email,
                     role: role,
+                    status: status,
                     password: password
                 };
                 
@@ -655,20 +656,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             if (action === 'Archive') {
-                users[userIndex].status = 'Archived';
+                // Update status in database
+                await updateUserData({
+                    userId: id,
+                    status: 'Archived'
+                });
                 alert(`User ID ${id} account has been Archived.`);
+                // Refresh the user list to reflect database changes
+                await fetchUsers();
             } else if (action === 'Activate') {
-                users[userIndex].status = 'Active';
+                // Update status in database
+                await updateUserData({
+                    userId: id,
+                    status: 'Active'
+                });
                 alert(`User ID ${id} account has been Activated.`);
-                // Reset lastLogin on activation
-                users[userIndex].lastLogin = new Date().toLocaleString('en-US', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true
-                }).replace(/,/, '');
+                // Refresh the user list to reflect database changes
+                await fetchUsers();
             } else if (action === 'Delete') {
                 // Actually delete from database
                 await deleteUserData(id);
@@ -681,11 +685,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 archiveOrDeleteModal.hide();
             }
             
-            // Only re-render locally if not deleting (delete refreshes from API)
-            if (action !== 'Delete') {
-                applyInactivityCheck(); 
-                filterAndRender(); 
-            }
+            // All actions now refresh from API, so no need for local re-rendering
         } catch (error) {
             console.error('Error performing action:', error);
             alert('Error: ' + error.message);

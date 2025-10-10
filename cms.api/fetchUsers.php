@@ -12,7 +12,7 @@ header('Access-Control-Allow-Headers: Content-Type');
 try {
     // Get all users from the users table
     $sql = "SELECT userId, firstName, lastName, email, contactNumber, 
-                   role, emergencyContactName, emergencyContactNumber, createdAt, updatedAt
+                   role, status, emergencyContactName, emergencyContactNumber, createdAt, updatedAt
             FROM user
             ORDER BY userId DESC";
 
@@ -26,6 +26,9 @@ try {
     $adminCount = 0;
     $secretaryCount = 0;
     $clientCount = 0;
+    $activeCount = 0;
+    $inactiveCount = 0;
+    $archivedCount = 0;
     
     $today = date('Y-m-d'); // Get today's date in YYYY-MM-DD format
     
@@ -57,6 +60,24 @@ try {
             }
         }
         
+        // Count users by status
+        if (isset($row['status'])) {
+            switch ($row['status']) {
+                case 'Active':
+                    $activeCount++;
+                    break;
+                case 'Inactive':
+                    $inactiveCount++;
+                    break;
+                case 'Archived':
+                    $archivedCount++;
+                    break;
+                default:
+                    // Handle empty status or other values
+                    break;
+            }
+        }
+        
         // Check if user was created today or this week
         if ($row['createdAt']) {
             $userCreatedDate = date('Y-m-d', strtotime($row['createdAt']));
@@ -82,6 +103,9 @@ try {
         'adminCount' => $adminCount,
         'secretaryCount' => $secretaryCount,
         'clientCount' => $clientCount,
+        'activeCount' => $activeCount,
+        'inactiveCount' => $inactiveCount,
+        'archivedCount' => $archivedCount,
         'today' => $today,
         'weekRange' => $startOfWeek . ' to ' . $endOfWeek,
         'data' => $users
@@ -100,6 +124,9 @@ try {
         'adminCount' => 0,
         'secretaryCount' => 0,
         'clientCount' => 0,
+        'activeCount' => 0,
+        'inactiveCount' => 0,
+        'archivedCount' => 0,
         'data' => []
     ]);
 }

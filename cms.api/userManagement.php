@@ -76,18 +76,22 @@ function createUser($conn, $data) {
     $emergencyContactName = $data['emergencyContactName'] ?? '';
     $emergencyContactNumber = $data['emergencyContactNumber'] ?? '';
     
+    // Prepare status (default to 'Active' if not provided)
+    $status = $data['status'] ?? 'Active';
+    
     // Insert new user
-    $sql = "INSERT INTO user (firstName, lastName, email, contactNumber, role, 
+    $sql = "INSERT INTO user (firstName, lastName, email, contactNumber, role, status,
             emergencyContactName, emergencyContactNumber, password, createdAt, updatedAt) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
     
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param('ssssssss',
+    $stmt->bind_param('sssssssss',
         $data['firstName'],
         $data['lastName'],
         $data['email'],
         $contactNumber,
         $data['role'],
+        $status,
         $emergencyContactName,
         $emergencyContactNumber,
         $hashedPassword
@@ -148,7 +152,7 @@ function updateUser($conn, $data) {
     $types = '';
     $values = [];
     
-    $allowedFields = ['firstName', 'lastName', 'email', 'contactNumber', 'role', 
+    $allowedFields = ['firstName', 'lastName', 'email', 'contactNumber', 'role', 'status',
                      'emergencyContactName', 'emergencyContactNumber'];
     
     foreach ($allowedFields as $field) {
