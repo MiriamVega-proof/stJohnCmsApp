@@ -297,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const clientCount = data.clientCount;
         const todayNewUsers = data.todayCount;
 
-        console.log("total users: " + totalUsers);
+        // console.log("total users: " + totalUsers);
         
         // Update user-related counters
         updateUserCounters(totalUsers, activeUsers, clientCount, todayNewUsers);
