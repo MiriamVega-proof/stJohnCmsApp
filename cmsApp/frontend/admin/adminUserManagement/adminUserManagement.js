@@ -1,25 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    let users = [
-        { id: 1, firstName: 'John', lastName: 'Doe', email: 'john.doe@client.com', role: 'Client', status: 'Active', lastLogin: '2024-05-15 10:30 AM', password: 'hashedpassword1' },
-        { id: 2, firstName: 'Jane', lastName: 'Smith', email: 'jane.s@office.com', role: 'Secretary', status: 'Inactive', lastLogin: '2023-11-01 08:00 AM', password: 'hashedpassword2' },
-        { id: 3, firstName: 'Very', lastName: 'Old', email: 'old@client.com', role: 'Client', status: 'Active', lastLogin: '2023-01-01 12:00 PM', password: 'hashedpassword3' },
-        { id: 4, firstName: 'Admin', lastName: 'Master', email: 'admin@sys.com', role: 'Admin', status: 'Active', lastLogin: '2024-05-15 1:00 PM', password: 'hashedpassword4' },
-        { id: 5, firstName: 'Archived', lastName: 'Client', email: 'archived.c@test.com', role: 'Client', status: 'Archived', lastLogin: '2024-05-10 11:00 AM', password: 'hashedpassword5' },
-        { id: 6, firstName: 'Another', lastName: 'Secretary', email: 'sec2@office.com', role: 'Secretary', status: 'Active', lastLogin: '2024-05-14 9:00 AM', password: 'hashedpassword6' },
-        { id: 7, firstName: 'New', lastName: 'Client', email: 'new.c@test.com', role: 'Client', status: 'Inactive', lastLogin: 'N/A', password: 'hashedpassword7' },
-        // Add more mock data for pagination testing
-        ...Array(15).fill(null).map((_, i) => ({
-            id: i + 8,
-            firstName: `Test`,
-            lastName: `User ${i + 1}`,
-            email: `test${i + 1}@example.com`,
-            role: i % 3 === 0 ? 'Client' : 'Secretary',
-            status: i % 5 === 0 ? 'Archived' : 'Active',
-            lastLogin: `2024-05-${(i % 20) + 1} 10:00 AM`,
-            password: `hashedpassword${i + 8}`
-        }))
-    ];
+    let users = [];
+    let apiData = null;
 
     let currentPage = 1;
     const usersPerPage = 10;
@@ -50,6 +32,75 @@ document.addEventListener('DOMContentLoaded', () => {
     const creationPasswordFields = document.getElementById('creationPasswordFields');
     
     let currentUserId = null; 
+
+    // --- API Functions ---
+    const fetchUsers = async () => {
+        try {
+            showLoadingState();
+            const response = await fetch('../../../../cms.api/fetchUsers.php');
+            const data = await response.json();
+            
+            if (data.success) {
+                apiData = data;
+                // Transform API data to match our existing user structure
+                users = data.data.map(user => ({
+                    id: user.userId,
+                    firstName: user.firstName || '',
+                    lastName: user.lastName || '',
+                    email: user.email || '',
+                    role: user.role || 'Client',
+                    status: 'Active', // Default status since API doesn't provide this
+                    lastLogin: user.updatedAt ? formatDateTime(user.updatedAt) : 'N/A',
+                    contactNumber: user.contactNumber || '',
+                    emergencyContactName: user.emergencyContactName || '',
+                    emergencyContactNumber: user.emergencyContactNumber || '',
+                    createdAt: user.createdAt,
+                    updatedAt: user.updatedAt
+                }));
+                
+                hideLoadingState();
+                applyInactivityCheck();
+                filterAndRender();
+            } else {
+                throw new Error(data.error || 'Failed to fetch users');
+            }
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            hideLoadingState();
+            showErrorMessage('Failed to load user data. Please try refreshing the page.');
+        }
+    };
+
+    const formatDateTime = (dateString) => {
+        if (!dateString) return 'N/A';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
+    };
+
+    const showLoadingState = () => {
+        const tableBody = document.getElementById('userTableBody');
+        if (tableBody) {
+            tableBody.innerHTML = '<tr><td colspan="7" class="text-center p-4"><i class="fas fa-spinner fa-spin me-2"></i>Loading users...</td></tr>';
+        }
+    };
+
+    const hideLoadingState = () => {
+        // This will be handled by the renderTable function
+    };
+
+    const showErrorMessage = (message) => {
+        const tableBody = document.getElementById('userTableBody');
+        if (tableBody) {
+            tableBody.innerHTML = `<tr><td colspan="7" class="text-center p-4 text-danger"><i class="fas fa-exclamation-triangle me-2"></i>${message}</td></tr>`;
+        }
+    };
 
     // --- Utility Functions (Unchanged) ---
     const getRoleClass = (role) => {
@@ -136,10 +187,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Metrics Calculation Function ---
     const updateMetrics = () => {
-        const totalUsers = users.length;
-        const activeUsers = users.filter(user => user.status === 'Active').length;
-        const inactiveUsers = users.filter(user => user.status === 'Inactive' || user.status === 'Archived').length;
-        const adminUsers = users.filter(user => user.role === 'Admin').length;
+        let totalUsers, activeUsers, inactiveUsers, adminUsers;
+        
+        if (apiData) {
+            // Use API provided counts when available
+            totalUsers = apiData.totalCount || 0;
+            adminUsers = apiData.adminCount || 0;
+            // Calculate active/inactive from current users array since API doesn't provide status
+            activeUsers = users.filter(user => user.status === 'Active').length;
+            inactiveUsers = users.filter(user => user.status === 'Inactive' || user.status === 'Archived').length;
+        } else {
+            // Fallback to local calculation
+            totalUsers = users.length;
+            activeUsers = users.filter(user => user.status === 'Active').length;
+            inactiveUsers = users.filter(user => user.status === 'Inactive' || user.status === 'Archived').length;
+            adminUsers = users.filter(user => user.role === 'Admin').length;
+        }
 
         // Update metric displays with animation
         animateCounter('totalUsersMetric', totalUsers);
@@ -594,6 +657,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // INITIAL LOAD
-    applyInactivityCheck();
-    filterAndRender();
+    fetchUsers(); // This will call applyInactivityCheck() and filterAndRender() after loading data
 });
