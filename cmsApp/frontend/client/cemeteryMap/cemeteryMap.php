@@ -20,19 +20,19 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="../clientDashboard/clientDashboard.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="cemeteryMap.html">Cemetery Map</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../lotReservation/lotReservation.html">Lot Reservation</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../payment/payment.html">Payment</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../burialRecord/burialRecord.html">Burial Record</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../maintenanceServiceRequest/maintenanceServiceRequest.html">Maintenance Request</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../clientDashboard/clientDashboard.php">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="cemeteryMap.php">Cemetery Map</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../lotReservation/lotReservation.php">Lot Reservation</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../payment/payment.php">Payment</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../burialRecord/burialRecord.php">Burial Record</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../maintenanceServiceRequest/maintenanceServiceRequest.php">Maintenance Request</a></li>
                 </ul>
     
                 <div class="d-lg-none mt-3 pt-3 border-top border-dark-subtle">
                     <div class="d-flex align-items-center mb-2">
                         <span id="user-name-display-mobile" class="fw-bold">Maria Anjelika Erese</span>
                     </div>
-                    <a href=".././auth/login.html" id="logoutLinkMobile" class="mobile-logout-link">
+                    <a href=".././auth/login.php" id="logoutLinkMobile" class="mobile-logout-link">
                         <i class="fas fa-sign-out-alt me-2"></i>Logout
                     </a>
                 </div>
@@ -44,7 +44,7 @@
                     <span id="user-name-display-desktop">Maria Anjelika Erese</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                    <li><a class="dropdown-item" href=".././auth/login.html" id="logoutLinkDesktop">
+                    <li><a class="dropdown-item" href=".././auth/login.php" id="logoutLinkDesktop">
                         <i class="fas fa-sign-out-alt me-2"></i>Logout
                     </a></li>
                 </ul>
@@ -89,7 +89,7 @@
                 <div class="card map-placeholder bg-white shadow-lg border-0 p-3">
                     <div class="card-body p-0">
                         <div class="map-wrapper">
-                            <iframe id="cemeteryMapIframe" src="./simulated_map_content.html" frameborder="0" allowfullscreen="" loading="lazy"></iframe>
+                            <iframe id="cemeteryMapIframe" src="./simulated_map_content.php" frameborder="0" allowfullscreen="" loading="lazy"></iframe>
 
                             <div id="mapOverlay" class="map-overlay">
                                 <div class="click-area available" data-lot-data="GARDEN|A|1|Available|"></div>
@@ -142,7 +142,7 @@
                 </div>
                 <div class="modal-footer justify-content-center">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <a href="../lotReservation/lotReservation.html" class="btn btn-warning fw-bold submit-btn" id="confirmReservationBtn">
+                    <a href="../lotReservation/lotReservation.php" class="btn btn-warning fw-bold submit-btn" id="confirmReservationBtn">
                         <i class="fas fa-file-alt me-2"></i> Go to Reservation Form
                     </a>
                 </div>
@@ -158,7 +158,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-0">
-                    <iframe id="zoomableMapIframe" src="./simulated_map_content_zoomable.html" frameborder="0" allowfullscreen="" loading="lazy"></iframe>
+                    <iframe id="zoomableMapIframe" src="./simulated_map_content_zoomable.php" frameborder="0" allowfullscreen="" loading="lazy"></iframe>
                 </div>
             </div>
         </div>

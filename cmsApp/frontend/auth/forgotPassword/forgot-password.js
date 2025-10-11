@@ -74,6 +74,6 @@ recoverForm.addEventListener('submit', function(event) {
 
   // Simulate short delay before redirect (e.g., 2 seconds)
   setTimeout(() => {
-    window.location.href = "../verifyOtp/verifyOtp.html";
+    window.location.href = "../verifyOtp/verifyOtp.php";
   }, 2000);
 });

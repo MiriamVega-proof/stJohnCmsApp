@@ -20,12 +20,12 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                     <li class="nav-item"><a class="nav-link" href="../clientDashboard/clientDashboard.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../cemeteryMap/cemeteryMap.html">Cemetery Map</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../lotReservation/lotReservation.html">Lot Reservation</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../payment/payment.html">Payment</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../burialRecord/burialRecord.html">Burial Record</a></li>
-                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="maintenanceServiceRequest.html">Maintenance Request</a></li>
+                     <li class="nav-item"><a class="nav-link" href="../clientDashboard/clientDashboard.php">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../cemeteryMap/cemeteryMap.php">Cemetery Map</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../lotReservation/lotReservation.php">Lot Reservation</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../payment/payment.php">Payment</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../burialRecord/burialRecord.php">Burial Record</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="maintenanceServiceRequest.php">Maintenance Request</a></li>
                 </ul>
     
             <div class="dropdown d-none d-lg-block">
@@ -33,7 +33,7 @@
                     <span id="user-name-display-desktop">User Name</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                    <li><a class="dropdown-item" href="../../auth/login/login.html" id="logoutLinkDesktop">
+                    <li><a class="dropdown-item" href="../../auth/login/login.php" id="logoutLinkDesktop">
                         <i class="fas fa-sign-out-alt me-2"></i>Logout
                     </a></li>
                 </ul>

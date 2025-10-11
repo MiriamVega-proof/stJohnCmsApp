@@ -58,6 +58,6 @@ resetForm.addEventListener("submit", function (e) {
     // fetch("/reset-password", { method: "POST", body: JSON.stringify({ password: passwordValue }) })
 
     setTimeout(() => {
-        window.location.href = "../login/login.html"; // Adjust path as needed
+        window.location.href = "../login/login.php"; // Adjust path as needed
     }, 1500);
 });

@@ -64,7 +64,7 @@ const amountInput = document.getElementById("amountInput");
     // --- Logout ---
     logoutLinks.forEach(link => link.addEventListener('click', e => {
         e.preventDefault();
-        window.location.href = '../../auth/login/login.html';
+        window.location.href = '../../auth/login/login.php';
     }));
 
     // --- Load User Name ---

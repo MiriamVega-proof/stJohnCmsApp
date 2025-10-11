@@ -1,3 +1,18 @@
+<?php
+// Include authentication helper
+require_once '../../../../cms.api/auth_helper.php';
+
+// Require authentication - redirect to login if not logged in
+requireAuth('../../auth/login/login.php');
+
+// Require admin or secretary role for this page
+requireAdminOrSecretary('../../auth/login/login.php');
+
+// Get current user information
+$userId = getCurrentUserId();
+$userName = getCurrentUserName();
+$userRole = getCurrentUserRole();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,18 +33,18 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
-                    <li class="nav-item"><a class="nav-link" href="../adminDashboard/adminDashboard.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../adminDashboard/adminDashboard.php">Home</a></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle active" href="#" id="managementDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Management
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="managementDropdown">
-                            <li><a class="dropdown-item" href="../adminAppointment/adminAppointment.html">Appointment Management</a></li>
-                            <li><a class="dropdown-item" href="../adminCemeteryMap/adminCemeteryMap.html">Cemetery Map Management</a></li>
-                            <li><a class="dropdown-item" href="../adminReservation/adminReservation.html">Lot Reservation Management</a></li>
-                            <li><a class="dropdown-item active" href="adminBurial.html">Burial Record Management</a></li>
-                            <li><a class="dropdown-item" href="../adminFinancial/adminFinancial.html">Financial Tracking</a></li>
-                            <li><a class="dropdown-item" href="../adminMaintenance/adminMaintenance.html">Maintenance Management</a></li>
+                            <li><a class="dropdown-item" href="../adminAppointment/adminAppointment.php">Appointment Management</a></li>
+                            <li><a class="dropdown-item" href="../adminCemeteryMap/adminCemeteryMap.php">Cemetery Map Management</a></li>
+                            <li><a class="dropdown-item" href="../adminReservation/adminReservation.php">Lot Reservation Management</a></li>
+                            <li><a class="dropdown-item active" href="adminBurial.php">Burial Record Management</a></li>
+                            <li><a class="dropdown-item" href="../adminFinancial/adminFinancial.php">Financial Tracking</a></li>
+                            <li><a class="dropdown-item" href="../adminMaintenance/adminMaintenance.php">Maintenance Management</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -37,18 +52,19 @@
                             Admin Tools
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="adminToolsDropdown">
-                            <li><a class="dropdown-item" href="../adminAuditLogs/adminAuditLogs.html">Audit Logs</a></li>
-                            <li><a class="dropdown-item" href="../adminUserManagement/adminUserManagement.html">User Management</a></li>
-                            <li><a class="dropdown-item" href="../adminReports/adminReports.html">Reports Module</a></li>
+                            <li><a class="dropdown-item" href="../adminAuditLogs/adminAuditLogs.php">Audit Logs</a></li>
+                            <li><a class="dropdown-item" href="../adminUserManagement/adminUserManagement.php">User Management</a></li>
+                            <li><a class="dropdown-item" href="../adminReports/adminReports.php">Reports Module</a></li>
                         </ul>
                     </li>
                 </ul>
 
                 <div class="d-lg-none mt-3 pt-3 border-top border-dark-subtle">
                     <div class="d-flex align-items-center mb-2">
-                        <span id="user-name-display-mobile" class="fw-bold">Admin</span>
+                        <span id="user-name-display-mobile" class="fw-bold"><?php echo htmlspecialchars($userName); ?></span>
+                        <small class="text-muted ms-2">(<?php echo htmlspecialchars($userRole); ?>)</small>
                     </div>
-                    <a href="../../../frontend/auth/login/login.html" id="logoutLinkMobile" class="mobile-logout-link">
+                    <a href="../../../../cms.api/logout.php" id="logoutLinkMobile" class="mobile-logout-link">
                         <i class="fas fa-sign-out-alt me-2"></i>Logout
                     </a>
                 </div>
@@ -56,16 +72,57 @@
             
             <div class="dropdown d-none d-lg-flex">
                 <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span id="user-name-display-desktop">Admin User</span>
+                    <span id="user-name-display-desktop"><?php echo htmlspecialchars($userName); ?></span>
+                    <small class="text-muted ms-2">(<?php echo htmlspecialchars($userRole); ?>)</small>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                    <li><a class="dropdown-item" href="../../../frontend/auth/login/login.html" id="logoutLinkDesktop"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    <li><a class="dropdown-item" href="../../../../cms.api/logout.php" id="logoutLinkDesktop"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <main class="main-content">
+        <!-- Key Metrics Section -->
+        <div class="row g-2 mb-3">
+            <div class="col-6 col-lg-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center p-2 p-md-3">
+                        <i class="fas fa-book-open fs-4 text-primary mb-1"></i>
+                        <h5 class="fw-bold mb-0" id="totalRecordsMetric">0</h5>
+                        <small class="text-muted fw-medium">Total Records</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center p-2 p-md-3">
+                        <i class="fas fa-heart fs-4 text-success mb-1"></i>
+                        <h5 class="fw-bold mb-0" id="activeRecordsMetric">0</h5>
+                        <small class="text-muted fw-medium">Active</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center p-2 p-md-3">
+                        <i class="fas fa-box-open fs-4 text-info mb-1"></i>
+                        <h5 class="fw-bold mb-0" id="exhumedRecordsMetric">0</h5>
+                        <small class="text-muted fw-medium">Exhumed</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center p-2 p-md-3">
+                        <i class="fas fa-archive fs-4 text-secondary mb-1"></i>
+                        <h5 class="fw-bold mb-0" id="archivedRecordsMetric">0</h5>
+                        <small class="text-muted fw-medium">Archived</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="card shadow-sm">
             <div class="card-header">Burial Record Management</div>
             <div class="card-body">

@@ -27,7 +27,7 @@
       <ul class="navbar-nav">
         <li class="nav-item"><a class="nav-link" href="#login">Login</a></li>
         <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="../signup/signup.html">Join</a></li>
+        <li class="nav-item"><a class="nav-link" href="../signup/signup.php">Join</a></li>
         <li class="nav-item"><a class="nav-link" href="#about">About Us</a></li>
         <li class="nav-item"><a class="nav-link" href="#appointment">Appointment</a></li>
       </ul>
@@ -53,10 +53,10 @@
           <div class="text-danger small" id="passwordError"></div>
         </div>
         <div class="text-center mb-2">
-          <a href="../forgotPassword/forgotPassword.html">Forgot Password?</a>
+          <a href="../forgotPassword/forgotPassword.php">Forgot Password?</a>
         </div>
         <div class="text-center mb-3">
-          Not a member yet? <a href="../signup/signup.html">Join Now</a>
+          Not a member yet? <a href="../signup/signup.php">Join Now</a>
         </div>
         <div id="serverMessage" class="mb-2"></div>
         <button type="submit" class="btn btn-warning w-100 fw-bold">Log In</button>

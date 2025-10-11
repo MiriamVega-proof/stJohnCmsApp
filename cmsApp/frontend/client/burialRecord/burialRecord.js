@@ -210,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (link)
             link.addEventListener("click", (e) => {
                 e.preventDefault();
-                window.location.href = "../../auth/login/login.html";
+                window.location.href = "../../auth/login/login.php";
             });
     });
 

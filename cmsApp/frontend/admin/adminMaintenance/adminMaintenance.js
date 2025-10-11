@@ -325,7 +325,7 @@ const handlePaginationClick = (e) => {
 window.handleLogout = (e) => {
     e.preventDefault();
     if (confirm("Are you sure you want to log out?")) {
-        window.location.href = "../../../frontend/auth/login/login.html";
+        window.location.href = "../../../frontend/auth/login/login.php";
     }
 };
 

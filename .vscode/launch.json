@@ -4,7 +4,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "http://localhost/stJohnCmsApp/cmsApp/frontend/auth/login/login.html",
+            "url": "http://localhost/stJohnCmsApp/cmsApp/frontend/auth/login/login.php",
             "webRoot": "${workspaceFolder}"
         }
 

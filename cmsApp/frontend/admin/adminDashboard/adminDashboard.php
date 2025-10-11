@@ -1,3 +1,18 @@
+<?php
+// Include authentication helper
+require_once '../../../../cms.api/auth_helper.php';
+
+// Require authentication - redirect to login if not logged in
+requireAuth('../../auth/login/login.php');
+
+// Require admin or secretary role for this page
+requireAdminOrSecretary('../../auth/login/login.php');
+
+// Get current user information
+$userId = getCurrentUserId();
+$userName = getCurrentUserName();
+$userRole = getCurrentUserRole();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,18 +33,18 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
-                    <li class="nav-item active"><a class="nav-link active" href="../adminDashboard/adminDashboard.html">Home</a></li>
+                    <li class="nav-item active"><a class="nav-link active" href="../adminDashboard/adminDashboard.php">Home</a></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="managementDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Management
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="managementDropdown">
-                            <li><a class="dropdown-item" href="../adminAppointment/adminAppointment.html">Appointment Management</a></li>
-                            <li><a class="dropdown-item" href="../adminCemeteryMap/adminCemeteryMap.html">Cemetery Map Management</a></li>
-                            <li><a class="dropdown-item" href="../adminReservation/adminReservation.html">Lot Reservation Management</a></li>
-                            <li><a class="dropdown-item" href="../adminBurial/adminBurial.html">Burial Record Management</a></li>
-                            <li><a class="dropdown-item" href="../adminFinancial/adminFinancial.html">Financial Tracking</a></li>
-                            <li><a class="dropdown-item" href="../adminMaintenance/adminMaintenance.html">Maintenance Management</a></li>
+                            <li><a class="dropdown-item" href="../adminAppointment/adminAppointment.php">Appointment Management</a></li>
+                            <li><a class="dropdown-item" href="../adminCemeteryMap/adminCemeteryMap.php">Cemetery Map Management</a></li>
+                            <li><a class="dropdown-item" href="../adminReservation/adminReservation.php">Lot Reservation Management</a></li>
+                            <li><a class="dropdown-item" href="../adminBurial/adminBurial.php">Burial Record Management</a></li>
+                            <li><a class="dropdown-item" href="../adminFinancial/adminFinancial.php">Financial Tracking</a></li>
+                            <li><a class="dropdown-item" href="../adminMaintenance/adminMaintenance.php">Maintenance Management</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -37,18 +52,19 @@
                             Admin Tools
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="adminToolsDropdown">
-                            <li><a class="dropdown-item active" href="adminAuditLogs.html">Audit Logs</a></li>
-                            <li><a class="dropdown-item" href="../adminUserManagement/adminUserManagement.html">User Management</a></li>
-                            <li><a class="dropdown-item" href="../adminReports/adminReports.html">Reports Module</a></li>
+                            <li><a class="dropdown-item active" href="adminAuditLogs.php">Audit Logs</a></li>
+                            <li><a class="dropdown-item" href="../adminUserManagement/adminUserManagement.php">User Management</a></li>
+                            <li><a class="dropdown-item" href="../adminReports/adminReports.php">Reports Module</a></li>
                         </ul>
                     </li>
                 </ul>
 
                 <div class="d-lg-none mt-3 pt-3 border-top border-dark-subtle">
                     <div class="d-flex align-items-center mb-2">
-                        <span id="user-name-display-mobile" class="fw-bold">Admin</span>
+                        <span id="user-name-display-mobile" class="fw-bold"><?php echo htmlspecialchars($userName); ?></span>
+                        <small class="text-muted ms-2">(<?php echo htmlspecialchars($userRole); ?>)</small>
                     </div>
-                    <a href="../../../frontend/auth/login/login.html" id="logoutLinkMobile" class="mobile-logout-link">
+                    <a href="../../../../cms.api/logout.php" id="logoutLinkMobile" class="mobile-logout-link">
                         <i class="fas fa-sign-out-alt me-2"></i>Logout
                     </a>
                 </div>
@@ -56,10 +72,11 @@
             
             <div class="dropdown d-none d-lg-flex">
                 <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span id="user-name-display-desktop">Admin User</span>
+                    <span id="user-name-display-desktop"><?php echo htmlspecialchars($userName); ?></span>
+                    <small class="text-muted ms-2">(<?php echo htmlspecialchars($userRole); ?>)</small>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                    <li><a class="dropdown-item" href="../../../frontend/auth/login/login.html" id="logoutLinkDesktop"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    <li><a class="dropdown-item" href="../../../../cms.api/logout.php" id="logoutLinkDesktop"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                 </ul>
             </div>
         </div>
@@ -75,7 +92,7 @@
             <div class="row g-4">
                 
                 <div class="col-md-6 col-lg-3">
-                    <div class="card shadow-sm dashboard-card" onclick="location.href='../adminReservation/adminReservation.html'">
+                    <div class="card shadow-sm dashboard-card" onclick="location.href='../adminReservation/adminReservation.php'">
                         <div class="card-body">
                             <h3 class="card-title text-primary"><i class="fas fa-file-contract me-2"></i>Reservation Metrics</h3>
                             <hr>
@@ -87,7 +104,7 @@
                 </div>
 
                 <div class="col-md-6 col-lg-3">
-                    <div class="card shadow-sm dashboard-card" onclick="location.href='../adminFinancial/adminFinancial.html'">
+                    <div class="card shadow-sm dashboard-card" onclick="location.href='../adminFinancial/adminFinancial.php'">
                         <div class="card-body">
                             <h3 class="card-title text-success"><i class="fas fa-money-bill-wave me-2"></i>Payment Summary</h3>
                             <hr>
@@ -99,7 +116,7 @@
                 </div>
 
                 <div class="col-md-6 col-lg-3">
-                    <div class="card shadow-sm dashboard-card" onclick="location.href='../adminMaintenance/adminMaintenance.html'">
+                    <div class="card shadow-sm dashboard-card" onclick="location.href='../adminMaintenance/adminMaintenance.php'">
                         <div class="card-body">
                             <h3 class="card-title text-info"><i class="fas fa-tools me-2"></i>Maintenance Requests</h3>
                             <hr>
@@ -111,7 +128,7 @@
                 </div>
 
                 <div class="col-md-6 col-lg-3">
-                    <div class="card shadow-sm dashboard-card" onclick="location.href='../adminAppointment/adminAppointment.html'">
+                    <div class="card shadow-sm dashboard-card" onclick="location.href='../adminAppointment/adminAppointment.php'">
                         <div class="card-body">
                             <h3 class="card-title text-warning"><i class="fas fa-calendar-alt me-2"></i>Appointment Statuses</h3>
                             <hr>
@@ -123,7 +140,7 @@
                 </div>
                 
                 <div class="col-md-6 col-lg-3">
-                    <div class="card shadow-sm dashboard-card" onclick="location.href='../adminCemeteryMap/adminCemeteryMap.html'">
+                    <div class="card shadow-sm dashboard-card" onclick="location.href='../adminCemeteryMap/adminCemeteryMap.php'">
                         <div class="card-body">
                             <h3 class="card-title text-secondary"><i class="fas fa-box-open me-2"></i>Lot Classification</h3>
                             <hr>
@@ -135,7 +152,7 @@
                 </div>
                 
                 <div class="col-md-6 col-lg-3">
-                    <div class="card shadow-sm dashboard-card" onclick="location.href='../adminUserManagement/adminUserManagement.html'">
+                    <div class="card shadow-sm dashboard-card" onclick="location.href='../adminUserManagement/adminUserManagement.php'">
                         <div class="card-body">
                             <h3 class="card-title text-dark"><i class="fas fa-users me-2"></i>Users & Clients</h3>
                             <hr>
@@ -146,7 +163,7 @@
                 </div>
                 
                 <div class="col-md-6 col-lg-3">
-                    <div class="card shadow-sm dashboard-card" onclick="location.href='../adminAuditLogs/adminAuditLogs.html'">
+                    <div class="card shadow-sm dashboard-card" onclick="location.href='../adminAuditLogs/adminAuditLogs.php'">
                         <div class="card-body">
                             <h3 class="card-title text-danger"><i class="fas fa-bell me-2"></i>System Alerts</h3>
                             <hr>
@@ -157,17 +174,8 @@
                     </div>
                 </div>
                 
-                <div class="col-lg-8">
-                    <div class="card shadow-sm wide-card" onclick="location.href='../adminFinancial/adminFinancial.html'">
-                        <div class="card-header bg-white"><h3 class="h5 m-0 text-primary">Monthly Income Trend</h3></div>
-                        <div class="card-body">
-                            <canvas id="incomeChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4">
-                    <div class="card shadow-sm wide-card" onclick="location.href='../adminCemeteryMap/adminCemeteryMap.html'">
+                <div class="col-lg-12">
+                    <div class="card shadow-sm wide-card" onclick="location.href='../adminCemeteryMap/adminCemeteryMap.php'">
                          <div class="card-header bg-white"><h3 class="h5 m-0 text-secondary">Cemetery Map Status</h3></div>
                         <div class="card-body text-center p-2">
                             <img src="cemetery-map-placeholder.png" alt="Cemetery Map Status" class="img-fluid" style="max-height: 100%; width: auto; object-fit: contain;">
@@ -188,7 +196,6 @@
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="adminDashboard.js"></script>
 </body>
 </html>

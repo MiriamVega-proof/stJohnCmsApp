@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
         link.addEventListener("click", e => {
             e.preventDefault();
             localStorage.removeItem("user_token"); // Example: clear token on logout
-            window.location.href = "../../auth/login/login.html";
+            window.location.href = "../../auth/login/login.php";
         });
     });
 
@@ -262,7 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // ✅ Redirect after success
             setTimeout(() => {
-                window.location.href = "../payment/payment.html";
+                window.location.href = "../payment/payment.php";
             }, 1500);
         } else {
             alert("❌ Error: " + (result.message || "Unknown error occurred."));

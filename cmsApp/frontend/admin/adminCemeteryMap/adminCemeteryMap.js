@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   cancelDeleteBtn?.addEventListener('click', () => { deleteLotModal.style.display = 'none'; lotToDelete = null; });
 
-  logoutLink?.addEventListener('click', e => { e.preventDefault(); if (confirm('Log out?')) window.location.href = '../../auth/login/login.html'; });
+  logoutLink?.addEventListener('click', e => { e.preventDefault(); if (confirm('Log out?')) window.location.href = '../../auth/login/login.php'; });
   expandMapBtn?.addEventListener('click', () => {
     cemeteryMap.classList.toggle('expanded');
     expandMapBtn.innerHTML = cemeteryMap.classList.contains('expanded')
@@ -585,7 +585,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Navigation and Filtering Listeners
-    document.getElementById('logoutLinkDesktop').addEventListener("click", (e) => { e.preventDefault(); window.location.href = "../../auth/login/login.html"; });
+    document.getElementById('logoutLinkDesktop').addEventListener("click", (e) => { e.preventDefault(); window.location.href = "../../auth/login/login.php"; });
     searchInput.addEventListener('input', applyFilters);
     statusFilter.addEventListener('change', applyFilters);
     clearSearchBtn.addEventListener('click', () => { searchInput.value = ''; applyFilters(); });

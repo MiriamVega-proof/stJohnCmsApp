@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const targetUrl = link.getAttribute("href") && link.getAttribute("href") !== "javascript:void(0);"
             ? link.getAttribute("href")
-            : "../../auth/login/login.html";
+            : "../../auth/login/login.php";
 
         window.location.href = targetUrl;
     }

@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (redirectPath && redirectPath !== '#') {
             window.location.href = redirectPath; 
         } else {
-            window.location.href = "../../frontend/auth/login/login.html";
+            window.location.href = "../../frontend/auth/login/login.php";
         }
     };
     

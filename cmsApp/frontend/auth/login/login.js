@@ -52,17 +52,17 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
                 const userRole = data.role ? data.role.toLowerCase() : '';
 
                 if (userRole === "admin") {
-                    // Path from login.html to adminDashboard.html
-                    // login.html: stJohnCmsApp/cmsApp/frontend/auth/login/login.html
-                    // adminDashboard.html: stJohnCmsApp/cmsApp/frontend/admin/adminDashboard/adminDashboard.html
-                    window.location.href = "../../admin/adminDashboard/adminDashboard.html";
+                    // Path from login.php to adminDashboard.php
+                    // login.php: stJohnCmsApp/cmsApp/frontend/auth/login/login.php
+                    // adminDashboard.php: stJohnCmsApp/cmsApp/frontend/admin/adminDashboard/adminDashboard.php
+                    window.location.href = "../../admin/adminDashboard/adminDashboard.php";
                 } else if (userRole === "secretary") {
-                    // Assuming secretary dashboard is at: stJohnCmsApp/cmsApp/frontend/secretary/secretaryDashboard.html
-                    window.location.href = "../../secretary/secretaryDashboard.html";
+                    // Assuming secretary dashboard is at: stJohnCmsApp/cmsApp/frontend/secretary/secretaryDashboard.php
+                    window.location.href = "../../secretary/secretaryDashboard.php";
                 } else if (userRole === "client") {
-                    // Assuming client dashboard is at: stJohnCmsApp/cmsApp/frontend/client/clientDashboard.html
-                    // Corrected path to clientDashboard.html
-                    window.location.href = "../../client/clientDashboard/clientDashboard.html";
+                    // Assuming client dashboard is at: stJohnCmsApp/cmsApp/frontend/client/clientDashboard.php
+                    // Corrected path to clientDashboard.php
+                    window.location.href = "../../client/clientDashboard/clientDashboard.php";
                 } else {
                     // Fallback or error if role is not recognized
                     console.error("Unknown user role:", data.role);
