@@ -7,14 +7,14 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['role'])) {
     $role = $_SESSION['role'];
     
     switch ($role) {
-        case 'admin':
+        case 'Admin':
             header("Location: frontend/admin/adminDashboard/adminDashboard.php");
             exit();
-        case 'secretary':
+        case 'Secretary':
             // Assuming secretary dashboard exists or redirect to admin
             header("Location: frontend/admin/adminDashboard/adminDashboard.php");
             exit();
-        case 'client':
+        case 'Client':
             header("Location: frontend/client/clientDashboard/clientDashboard.php");
             exit();
         default:
