@@ -16,12 +16,20 @@ if (ini_get("session.use_cookies")) {
 // Destroy the session
 session_destroy();
 
-// Set proper headers
-header('Content-Type: application/json');
+// Check if this is an AJAX request
+$isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+          strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 
-echo json_encode([
-    "status" => "success", 
-    "message" => "Logged out successfully"
-]);
+if ($isAjax) {
+    // Return JSON for AJAX requests
+    header('Content-Type: application/json');
+    echo json_encode([
+        "status" => "success", 
+        "message" => "Logged out successfully"
+    ]);
+} else {
+    // Redirect for normal requests
+    header("Location: ../cmsApp/frontend/auth/login/login.php");
+}
 exit;
 ?>
