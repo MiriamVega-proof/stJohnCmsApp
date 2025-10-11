@@ -94,13 +94,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $updateLoginStmt->close();
             }
 
-            // Set session variables
-            $_SESSION['user_id'] = $row['userId'];
+            // Set session variables for authentication
+            $_SESSION['user_id'] = $row['userId'];  // Primary authentication key
+            $_SESSION['userId'] = $row['userId'];   // Alternative key for consistency
             $_SESSION['firstName'] = $row['firstName'];
             $_SESSION['lastName'] = $row['lastName'];
             $_SESSION['name'] = $row['firstName'] . " " . $row['lastName'];
             $_SESSION['role'] = $row['role'];
             $_SESSION['email'] = $row['email'];
+            $_SESSION['status'] = $row['status'];
+            $_SESSION['login_time'] = time();       // Track login time
+            $_SESSION['is_authenticated'] = true;   // Authentication flag
+            
+            // Regenerate session ID for security
+            session_regenerate_id(true);
 
             // Determine redirect URL based on role
             $redirectUrl = '';
