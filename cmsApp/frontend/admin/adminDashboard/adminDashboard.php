@@ -174,16 +174,7 @@ $userRole = getCurrentUserRole();
                     </div>
                 </div>
                 
-                <div class="col-lg-8">
-                    <div class="card shadow-sm wide-card" onclick="location.href='../adminFinancial/adminFinancial.php'">
-                        <div class="card-header bg-white"><h3 class="h5 m-0 text-primary">Monthly Income Trend</h3></div>
-                        <div class="card-body">
-                            <canvas id="incomeChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4">
+                <div class="col-lg-12">
                     <div class="card shadow-sm wide-card" onclick="location.href='../adminCemeteryMap/adminCemeteryMap.php'">
                          <div class="card-header bg-white"><h3 class="h5 m-0 text-secondary">Cemetery Map Status</h3></div>
                         <div class="card-body text-center p-2">
@@ -205,7 +196,6 @@ $userRole = getCurrentUserRole();
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="adminDashboard.js"></script>
 </body>
 </html>
