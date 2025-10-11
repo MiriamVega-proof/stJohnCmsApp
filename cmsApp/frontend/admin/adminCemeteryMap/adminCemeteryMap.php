@@ -27,18 +27,18 @@
               </button>
               <div class="collapse navbar-collapse" id="navbarNav">
                   <ul class="navbar-nav mx-auto">
-                      <li class="nav-item"><a class="nav-link" href="../adminDashboard/adminDashboard.html">Home</a></li>
+                      <li class="nav-item"><a class="nav-link" href="../adminDashboard/adminDashboard.php">Home</a></li>
                       <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle active" href="#" id="managementDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-current="page">
                               Management
                           </a>
                           <ul class="dropdown-menu" aria-labelledby="managementDropdown">
-                              <li><a class="dropdown-item" href="../adminAppointment/adminAppointment.html">Appointment Management</a></li> 
-                              <li><a class="dropdown-item active" href="adminCemeteryMap.html">Cemetery Map Management</a></li>
-                              <li><a class="dropdown-item" href="../adminReservation/adminReservation.html">Lot Reservation Management</a></li>
-                              <li><a class="dropdown-item" href="../adminBurial/adminBurial.html">Burial Record Management</a></li>
-                              <li><a class="dropdown-item" href="../adminFinancial/adminFinancial.html">Financial Tracking</a></li>
-                              <li><a class="dropdown-item" href="../adminMaintenance/adminMaintenance.html">Maintenance Management</a></li>
+                              <li><a class="dropdown-item" href="../adminAppointment/adminAppointment.php">Appointment Management</a></li> 
+                              <li><a class="dropdown-item active" href="adminCemeteryMap.php">Cemetery Map Management</a></li>
+                              <li><a class="dropdown-item" href="../adminReservation/adminReservation.php">Lot Reservation Management</a></li>
+                              <li><a class="dropdown-item" href="../adminBurial/adminBurial.php">Burial Record Management</a></li>
+                              <li><a class="dropdown-item" href="../adminFinancial/adminFinancial.php">Financial Tracking</a></li>
+                              <li><a class="dropdown-item" href="../adminMaintenance/adminMaintenance.php">Maintenance Management</a></li>
                           </ul>
                       </li>
                       <li class="nav-item dropdown">
@@ -46,9 +46,9 @@
                               Admin Tools
                           </a>
                           <ul class="dropdown-menu" aria-labelledby="adminToolsDropdown">
-                              <li><a class="dropdown-item" href="../adminAuditLogs/adminAuditLogs.html">Audit Logs</a></li>
-                              <li><a class="dropdown-item" href="../adminUserManagement/adminUserManagement.html">User Management</a></li>
-                              <li><a class="dropdown-item" href="../adminReports/adminReports.html">Reports Module</a></li>
+                              <li><a class="dropdown-item" href="../adminAuditLogs/adminAuditLogs.php">Audit Logs</a></li>
+                              <li><a class="dropdown-item" href="../adminUserManagement/adminUserManagement.php">User Management</a></li>
+                              <li><a class="dropdown-item" href="../adminReports/adminReports.php">Reports Module</a></li>
                           </ul>
                       </li>
                   </ul>

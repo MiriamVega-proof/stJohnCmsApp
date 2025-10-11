@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   navItems.forEach(item => {
     item.classList.remove('active');
-    if (item.getAttribute('href') === currentPath || (currentPath === 'adminDashboard.html' && item.getAttribute('href') === 'adminDashboard.html')) {
+    if (item.getAttribute('href') === currentPath || (currentPath === 'adminDashboard.php' && item.getAttribute('href') === 'adminDashboard.php')) {
       item.classList.add('active');
     }
   });
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (confirmed) {
           const redirectPath = link.getAttribute('href') && link.getAttribute('href') !== '#'
             ? link.getAttribute('href')
-            : '../../frontend/auth/login/login.html';
+            : '../../frontend/auth/login/login.php';
           window.location.href = redirectPath;
         }
       });

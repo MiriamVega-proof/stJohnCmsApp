@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             // Fallback to a known path if href is empty or not set
             // Assumes a relative path from current file
-            window.location.href = "../../../frontend/auth/login/login.html";
+            window.location.href = "../../../frontend/auth/login/login.php";
         }
     };
     

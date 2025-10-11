@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
             window.location.href = redirectPath; 
         } else {
             // Fallback just in case the href attribute is malformed
-            window.location.href = "../../auth/login/login.html";
+            window.location.href = "../../auth/login/login.php";
         }
     };
 

@@ -8,7 +8,7 @@ window.handleLogout = () => {
         // In a real application, you would replace this with an API call to clear the session
         console.log("User logged out.");
         // Redirect to the login page (ensure this path is correct for your project structure)
-        window.location.href = "../../../frontend/auth/login/login.html";
+        window.location.href = "../../../frontend/auth/login/login.php";
     }
 };
 

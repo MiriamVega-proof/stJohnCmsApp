@@ -49,7 +49,7 @@ const CSS_PREFIX = 'layer-switcher-';
  * lyr.set('title', 'OpenStreetMap');
  * ```
  *
- * To create a LayerSwitcher and add it to a map, create a new instance then pass it to the map's [`addControl` method](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#addControl).
+ * To create a LayerSwitcher and add it to a map, create a new instance then pass it to the map's [`addControl` method](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.php#addControl).
  * ```javascript
  * var layerSwitcher = new LayerSwitcher({
  *   reverse: true,
@@ -444,7 +444,7 @@ class LayerSwitcher extends Control {
                     render(lyr);
                 };
                 li.appendChild(input);
-                label.htmlFor = checkboxId;
+                label.phpFor = checkboxId;
             }
             label.innerHTML = lyrTitle;
             li.appendChild(label);
@@ -470,7 +470,7 @@ class LayerSwitcher extends Control {
                 render(lyr);
             };
             li.appendChild(input);
-            label.htmlFor = checkboxId;
+            label.phpFor = checkboxId;
             label.innerHTML = lyrTitle;
             const rsl = map.getView().getResolution();
             if (rsl >= lyr.getMaxResolution() || rsl < lyr.getMinResolution()) {

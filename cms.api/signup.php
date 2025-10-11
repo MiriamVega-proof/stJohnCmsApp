@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               </div>';
         echo '<script>
                 setTimeout(function() {
-                    window.location.href = "../cmsApp/frontend/auth/login/login.html";
+                    window.location.href = "../cmsApp/frontend/auth/login/login.php";
                 }, 8000);
               </script>';
     } else {

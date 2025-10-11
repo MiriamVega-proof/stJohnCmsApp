@@ -13,7 +13,7 @@
 
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="../adminDashboard/adminDashboard.html">Blessed Saint John Memorial</a>
+            <a class="navbar-brand" href="../adminDashboard/adminDashboard.php">Blessed Saint John Memorial</a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -21,19 +21,19 @@
             
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
-                    <li class="nav-item"><a class="nav-link" href="../adminDashboard/adminDashboard.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../adminDashboard/adminDashboard.php">Home</a></li>
                     
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle active" href="#" id="managementDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Management
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="managementDropdown">
-                            <li><a class="dropdown-item" href="../adminAppointment/adminAppointment.html">Appointment Management</a></li>
-                            <li><a class="dropdown-item" href="../adminCemeteryMap/adminCemeteryMap.html">Cemetery Map Management</a></li>
-                            <li><a class="dropdown-item" href="../adminReservation/adminReservation.html">Lot Reservation Management</a></li>
-                            <li><a class="dropdown-item" href="../adminBurial/adminBurial.html">Burial Record Management</a></li>
-                            <li><a class="dropdown-item" href="../adminFinancial/adminFinancial.html">Financial Tracking</a></li>
-                            <li class="nav-item"><a class="dropdown-item active" href="adminMaintenance.html">Maintenance Management</a></li>
+                            <li><a class="dropdown-item" href="../adminAppointment/adminAppointment.php">Appointment Management</a></li>
+                            <li><a class="dropdown-item" href="../adminCemeteryMap/adminCemeteryMap.php">Cemetery Map Management</a></li>
+                            <li><a class="dropdown-item" href="../adminReservation/adminReservation.php">Lot Reservation Management</a></li>
+                            <li><a class="dropdown-item" href="../adminBurial/adminBurial.php">Burial Record Management</a></li>
+                            <li><a class="dropdown-item" href="../adminFinancial/adminFinancial.php">Financial Tracking</a></li>
+                            <li class="nav-item"><a class="dropdown-item active" href="adminMaintenance.php">Maintenance Management</a></li>
                         </ul>
                     </li>
                     
@@ -42,9 +42,9 @@
                             Admin Tools
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="adminToolsDropdown">
-                            <li><a class="dropdown-item" href="../adminAuditLogs/adminAuditLogs.html">Audit Logs</a></li>
-                            <li><a class="dropdown-item" href="../adminUserManagement/adminUserManagement.html">User Management</a></li>
-                            <li><a class="dropdown-item" href="../adminReports/adminReports.html">Reports Module</a></li>
+                            <li><a class="dropdown-item" href="../adminAuditLogs/adminAuditLogs.php">Audit Logs</a></li>
+                            <li><a class="dropdown-item" href="../adminUserManagement/adminUserManagement.php">User Management</a></li>
+                            <li><a class="dropdown-item" href="../adminReports/adminReports.php">Reports Module</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -53,7 +53,7 @@
                     <div class="d-flex align-items-center mb-2">
                         <span id="user-name-display-mobile" class="fw-bold">Admin</span>
                     </div>
-                    <a href="../../../frontend/auth/login/login.html" id="logoutLinkMobile" class="mobile-logout-link">
+                    <a href="../../../frontend/auth/login/login.php" id="logoutLinkMobile" class="mobile-logout-link">
                         <i class="fas fa-sign-out-alt me-2"></i>Logout
                     </a>
                 </div>
@@ -64,7 +64,7 @@
                     <span id="user-name-display-desktop">Admin User</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                    <li><a class="dropdown-item" href="../../../frontend/auth/login/login.html" id="logoutLinkDesktop"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    <li><a class="dropdown-item" href="../../../frontend/auth/login/login.php" id="logoutLinkDesktop"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                 </ul>
             </div>
         </div>
@@ -90,7 +90,7 @@
                 </div>
             </div>
             <div class="col-sm-6 col-md-4">
-                <div class="card text-center dashboard-card border-start border-danger border-5.html">
+                <div class="card text-center dashboard-card border-start border-danger border-5.php">
                     <div class="card-body">
                         <h5 class="card-title text-danger"><i class="fas fa-times-circle me-2"></i>Cancelled (Total)</h5>
                         <p class="fs-2 fw-bold"><span id="cancelledCount">0</span></p>

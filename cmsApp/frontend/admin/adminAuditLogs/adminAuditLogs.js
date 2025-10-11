@@ -115,7 +115,7 @@ const handleLogout = async (e) => {
         window.location.href = redirectPath; 
     } else {
         // Fallback to a known path if the href attribute is missing or '#'
-        window.location.href = '../../../frontend/auth/login/login.html';
+        window.location.href = '../../../frontend/auth/login/login.php';
     }
 };
 

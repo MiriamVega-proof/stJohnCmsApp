@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (confirm('Are you sure you want to log out?')) {
                 const redirectPath = link.getAttribute('href') && link.getAttribute('href') !== '#'
                     ? link.getAttribute('href')
-                    : '../../frontend/auth/login/login.html'; // fallback
+                    : '../../frontend/auth/login/login.php'; // fallback
                 alert('You have successfully logged out.');
                 window.location.href = redirectPath;
             }

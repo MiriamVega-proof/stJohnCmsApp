@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (confirm("Are you sure you want to log out?")) {
                 try {
                     await fetch(`${API_BASE_URL}logout.php`, { credentials: "include" });
-                    window.location.href = "../../auth/login/login.html";
+                    window.location.href = "../../auth/login/login.php";
                 } catch (err) {
                     console.error("Error logging out:", err);
                 }

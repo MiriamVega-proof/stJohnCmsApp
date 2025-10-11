@@ -20,11 +20,11 @@
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="../login/login.html#login">Login</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../login/login.html#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../login/login.php#login">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../login/login.php#home">Home</a></li>
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Join</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../login/login.html#about">About Us</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../login/login.html#appointment">Appointment</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../login/login.php#about">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../login/login.php#appointment">Appointment</a></li>
                 </ul>
             </div>
         </div>
@@ -76,7 +76,7 @@
                         <input type="tel" id="emergencyContactNumber" name="emergencyContactNumber" class="form-control" placeholder="Emergency Contact Number" required>
                     </div>
 
-                    <p class="text-center">Already a Member? <a href="../login/login.html">Log In</a></p>
+                    <p class="text-center">Already a Member? <a href="../login/login.php">Log In</a></p>
                     <button type="submit" class="btn btn-warning w-100 fw-bold">Create Account</button>
                 </form>
             </div>
