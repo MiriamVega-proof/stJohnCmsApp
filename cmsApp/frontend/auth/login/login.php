@@ -35,32 +35,87 @@
   </div>
 </nav>
 
-<!-- ======== LOGIN SECTION ======== -->
-<section id="login" class="py-5 bg-light">
-  <div class="container">
-    <div class="login-box p-4 shadow-sm rounded mx-auto">
-      <h2 class="text-center mb-4">Login to your <span>account</span></h2>
-      <form id="loginForm">
-        <div class="mb-3 position-relative">
-          <i class="bi bi-envelope-fill input-icon"></i>
-          <input type="text" id="email" class="form-control ps-5" placeholder="Email">
-          <div class="text-danger small" id="emailError"></div>
+<!-- ======== FULL SCREEN LOGIN SECTION ======== -->
+<section id="login" class="login-fullscreen">
+  <div class="login-background-overlay"></div>
+  
+  <!-- Cemetery Background Elements -->
+  <div class="cemetery-elements">
+    <div class="floating-element element-1"></div>
+    <div class="floating-element element-2"></div>
+    <div class="floating-element element-3"></div>
+    <div class="floating-element element-4"></div>
+  </div>
+  
+  <div class="login-container">
+    <div class="login-content">
+      <!-- Logo Section -->
+      <div class="login-header">
+        <div class="login-logo">
+          <div class="logo-text">
+            <h1 class="system-title">Blessed Saint John</h1>
+            <p class="system-subtitle">Memorial Gardens Management System</p>
+          </div>
         </div>
-        <div class="mb-3 position-relative">
-          <i class="bi bi-lock-fill input-icon"></i>
-          <input type="password" id="password" class="form-control ps-5" placeholder="Password">
-          <i class="bi bi-eye-slash password-toggle-icon" onclick="togglePassword()"></i>
-          <div class="text-danger small" id="passwordError"></div>
+      </div>
+
+      <!-- Login Form Card -->
+      <div class="login-card">
+        <div class="login-card-header">
+          <h2 class="login-title">Welcome Back</h2>
+          <p class="login-subtitle">Please sign in to your account</p>
         </div>
-        <div class="text-center mb-2">
-          <a href="../forgotPassword/forgotPassword.php">Forgot Password?</a>
-        </div>
-        <div class="text-center mb-3">
-          Not a member yet? <a href="../signup/signup.php">Join Now</a>
-        </div>
-        <div id="serverMessage" class="mb-2"></div>
-        <button type="submit" class="btn btn-warning w-100 fw-bold">Log In</button>
-      </form>
+        
+        <form id="loginForm" class="login-form">
+          <div class="form-group">
+            <label for="email" class="form-label">
+              <i class="bi bi-envelope-fill"></i>
+              Email Address
+            </label>
+            <div class="input-wrapper">
+              <input type="text" id="email" class="form-input" placeholder="Enter your email address" required>
+              <div class="input-focus-line"></div>
+            </div>
+            <div class="text-danger small" id="emailError"></div>
+          </div>
+          
+          <div class="form-group">
+            <label for="password" class="form-label">
+              <i class="bi bi-lock-fill"></i>
+              Password
+            </label>
+            <div class="input-wrapper password-wrapper">
+              <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+              <button type="button" class="password-toggle" onclick="togglePassword()">
+                <i class="bi bi-eye-slash" id="passwordToggleIcon"></i>
+              </button>
+              <div class="input-focus-line"></div>
+            </div>
+            <div class="text-danger small" id="passwordError"></div>
+          </div>
+
+          <div class="form-links">
+            <a href="../forgotPassword/forgotPassword.php" class="forgot-password-link">
+              <i class="bi bi-question-circle"></i>
+              Forgot your password?
+            </a>
+          </div>
+
+          <div id="serverMessage" class="server-message"></div>
+          
+          <button type="submit" class="login-btn">
+            <span class="btn-text">Sign In</span>
+            <i class="bi bi-arrow-right btn-icon"></i>
+          </button>
+          
+          <div class="signup-section">
+            <p class="signup-text">
+              Don't have an account? 
+              <a href="../signup/signup.php" class="signup-link">Create one here</a>
+            </p>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </section>

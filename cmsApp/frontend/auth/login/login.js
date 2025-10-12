@@ -44,8 +44,9 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
     .then(res => res.json())
     .then(data => {
         if (data.status === "success") {
-            document.getElementById("serverMessage").style.color = "green";
-            document.getElementById("serverMessage").textContent = data.message;
+            const msgElement = document.getElementById("serverMessage");
+            msgElement.className = "server-message alert alert-success";
+            msgElement.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>' + data.message;
 
             setTimeout(() => {
                 // Convert the role from PHP to lowercase for consistent comparison
@@ -70,21 +71,23 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
                 }
             }, 1000);
         } else {
-            document.getElementById("serverMessage").style.color = "red";
-            document.getElementById("serverMessage").textContent = data.message;
+            const msgElement = document.getElementById("serverMessage");
+            msgElement.className = "server-message alert alert-danger";
+            msgElement.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-2"></i>' + data.message;
         }
     })
     .catch(err => {
         console.error("Fetch error:", err);
-        document.getElementById("serverMessage").style.color = "red";
-        document.getElementById("serverMessage").textContent = "An error occurred. Please try again.";
+        const msgElement = document.getElementById("serverMessage");
+        msgElement.className = "server-message alert alert-danger";
+        msgElement.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-2"></i>An error occurred. Please try again.';
     });
 });
 
 // Function to toggle password visibility
 function togglePassword() {
     const passwordField = document.getElementById("password");
-    const toggleIcon = document.querySelector(".password-toggle-icon");
+    const toggleIcon = document.getElementById("passwordToggleIcon");
 
     if (passwordField.type === "password") {
         passwordField.type = "text";
