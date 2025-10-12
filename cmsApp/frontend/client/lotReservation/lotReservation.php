@@ -90,7 +90,15 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                                         <p class="card-text fs-5 fw-semibold mb-2" style="color: #343a40;">₱50,000</p>
                                         <p class="mb-2" style="color: #6c757d;">₱1,000/month</p>
                                         <p class="mb-3" style="color: #6c757d;">Depth: 4 feet or 6 feet</p>
-                                        <button class="btn w-100" style="background-color: #6c757d; color: white; border: none;">Select</button>
+                                        <button class="btn w-100 package-select-btn" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#packageModal"
+                                                data-package="Regular Lot (₱50,000)"
+                                                data-price="₱50,000"
+                                                data-monthly="₱1,000/month"
+                                                data-details="Depth: 4 feet or 6 feet"
+                                                data-lot-type="1"
+                                                style="background-color: #6c757d; color: white; border: none;">Select</button>
                                     </div>
                                 </div>
                             </div>
@@ -103,7 +111,15 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                                         <p class="card-text fs-5 fw-semibold mb-2" style="color: #343a40;">₱60,000</p>
                                         <p class="mb-2" style="color: #6c757d;">₱1,200/month</p>
                                         <p class="mb-3" style="color: #6c757d;">Depth: 4 feet or 6 feet</p>
-                                        <button class="btn w-100" style="background-color: #6c757d; color: white; border: none;">Select</button>
+                                        <button class="btn w-100 package-select-btn" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#packageModal"
+                                                data-package="Regular Lot (₱60,000)"
+                                                data-price="₱60,000"
+                                                data-monthly="₱1,200/month"
+                                                data-details="Depth: 4 feet or 6 feet"
+                                                data-lot-type="2"
+                                                style="background-color: #6c757d; color: white; border: none;">Select</button>
                                     </div>
                                 </div>
                             </div>
@@ -116,7 +132,15 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                                         <p class="card-text fs-5 fw-semibold mb-2" style="color: #856404;">₱70,000</p>
                                         <p class="mb-2" style="color: #b8860b;">₱1,400/month</p>
                                         <p class="mb-3" style="color: #b8860b;">Depth: 4 feet or 6 feet</p>
-                                        <button class="btn w-100" style="background-color: #daa520; color: white; border: none;">Select</button>
+                                        <button class="btn w-100 package-select-btn" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#packageModal"
+                                                data-package="Premium Lot (₱70,000)"
+                                                data-price="₱70,000"
+                                                data-monthly="₱1,400/month"
+                                                data-details="Depth: 4 feet or 6 feet"
+                                                data-lot-type="3"
+                                                style="background-color: #daa520; color: white; border: none;">Select</button>
                                     </div>
                                 </div>
                             </div>
@@ -138,7 +162,15 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                                         <p class="card-text fs-5 fw-semibold mb-2" style="color: #856404;">₱500,000</p>
                                         <p class="mb-2" style="color: #b8860b;">₱10,000/month</p>
                                         <p class="mb-3" style="color: #b8860b;">Dimensions: 5x4 sqm</p>
-                                        <button class="btn w-100" style="background-color: #daa520; color: white; border: none;">Select</button>
+                                        <button class="btn w-100 package-select-btn" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#packageModal"
+                                                data-package="Mausoleum - Inside Cemetery"
+                                                data-price="₱500,000"
+                                                data-monthly="₱10,000/month"
+                                                data-details="Dimensions: 5x4 sqm"
+                                                data-lot-type="4"
+                                                style="background-color: #daa520; color: white; border: none;">Select</button>
                                     </div>
                                 </div>
                             </div>
@@ -151,7 +183,15 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                                         <p class="card-text fs-5 fw-semibold mb-2" style="color: #654321;">₱600,000</p>
                                         <p class="mb-2" style="color: #8b4513;">₱12,000/month</p>
                                         <p class="mb-3" style="color: #8b4513;">Dimensions: 5x4 sqm</p>
-                                        <button class="btn w-100" style="background-color: #b8860b; color: white; border: none;">Select</button>
+                                        <button class="btn w-100 package-select-btn" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#packageModal"
+                                                data-package="Mausoleum - Roadside"
+                                                data-price="₱600,000"
+                                                data-monthly="₱12,000/month"
+                                                data-details="Dimensions: 5x4 sqm"
+                                                data-lot-type="5"
+                                                style="background-color: #b8860b; color: white; border: none;">Select</button>
                                     </div>
                                 </div>
                             </div>
@@ -173,7 +213,15 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                                         <p class="card-text fs-5 fw-semibold mb-2" style="color: #856404;">₱300,000</p>
                                         <p class="mb-2" style="color: #b8860b;">₱6,000/month</p>
                                         <p class="mb-3" style="color: #b8860b;">Depth: 4 feet or 6 feet</p>
-                                        <button class="btn w-100" style="background-color: #daa520; color: white; border: none;">Select</button>
+                                        <button class="btn w-100 package-select-btn" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#packageModal"
+                                                data-package="4-Lot Package"
+                                                data-price="₱300,000"
+                                                data-monthly="₱6,000/month"
+                                                data-details="Depth: 4 feet or 6 feet"
+                                                data-lot-type="6"
+                                                style="background-color: #daa520; color: white; border: none;">Select</button>
                                     </div>
                                 </div>
                             </div>
@@ -186,7 +234,15 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                                         <p class="card-text fs-5 fw-semibold mb-2" style="color: #343a40;">₱15,000</p>
                                         <p class="mb-2" style="color: #6c757d;">One-time payment</p>
                                         <p class="mb-3" style="color: #6c757d;">Per person service</p>
-                                        <button class="btn w-100" style="background-color: #6c757d; color: white; border: none;">Select</button>
+                                        <button class="btn w-100 package-select-btn" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#packageModal"
+                                                data-package="Exhumation Service"
+                                                data-price="₱15,000"
+                                                data-monthly="One-time payment"
+                                                data-details="Per person service"
+                                                data-lot-type="7"
+                                                style="background-color: #6c757d; color: white; border: none;">Select</button>
                                     </div>
                                 </div>
                             </div>
@@ -443,6 +499,56 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
         </div>
     </div>
 
+    <!-- Package Selection Modal -->
+    <div class="modal fade" id="packageModal" tabindex="-1" aria-labelledby="packageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="packageModalLabel">Package Selection</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <h4 id="selectedPackageTitle" class="fw-bold text-primary"></h4>
+                        <p id="selectedPackagePrice" class="fs-4 fw-semibold text-dark"></p>
+                        <p id="selectedPackageMonthly" class="text-muted"></p>
+                        <p id="selectedPackageDetails" class="text-muted"></p>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Next Steps:</strong> This package will be automatically selected in the reservation form below. Please scroll down to complete your reservation details.
+                    </div>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title">Payment Terms</h6>
+                                    <p class="card-text small mb-0">50 months payment plan available</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title">Advance Payment</h6>
+                                    <p class="card-text small mb-0">Full payment discounts available</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmPackageSelection" data-bs-dismiss="modal">
+                        <i class="fas fa-check me-2"></i>Confirm Selection
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer text-center py-3">
         <div class="container d-flex flex-column flex-md-row justify-content-center align-items-center">
             <p class="m-0">
@@ -456,5 +562,63 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script src="lotReservation.js" defer></script>
+
+    <script>
+        // Package selection modal functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const packageButtons = document.querySelectorAll('.package-select-btn');
+            const packageModal = document.getElementById('packageModal');
+            let selectedLotType = null;
+            
+            // Handle package button clicks
+            packageButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const packageName = this.getAttribute('data-package');
+                    const price = this.getAttribute('data-price');
+                    const monthly = this.getAttribute('data-monthly');
+                    const details = this.getAttribute('data-details');
+                    const lotType = this.getAttribute('data-lot-type');
+                    
+                    // Store selected lot type
+                    selectedLotType = lotType;
+                    
+                    // Update modal content
+                    document.getElementById('selectedPackageTitle').textContent = packageName;
+                    document.getElementById('selectedPackagePrice').textContent = price;
+                    document.getElementById('selectedPackageMonthly').textContent = monthly;
+                    document.getElementById('selectedPackageDetails').textContent = details;
+                });
+            });
+            
+            // Handle confirm selection button
+            document.getElementById('confirmPackageSelection').addEventListener('click', function() {
+                if (selectedLotType) {
+                    // Set the dropdown value in the form
+                    const lotTypeSelect = document.getElementById('preferred_lot');
+                    if (lotTypeSelect) {
+                        lotTypeSelect.value = selectedLotType;
+                        
+                        // Trigger change event to update any dependent fields
+                        lotTypeSelect.dispatchEvent(new Event('change'));
+                        
+                        // Scroll to the form section
+                        document.querySelector('.lot-reservation-section').scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                        
+                        // Optional: Highlight the form briefly
+                        const form = document.querySelector('.lot-reservation-form');
+                        if (form) {
+                            form.style.border = '2px solid #0d6efd';
+                            setTimeout(() => {
+                                form.style.border = '';
+                            }, 3000);
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>
