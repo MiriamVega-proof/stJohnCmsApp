@@ -75,39 +75,51 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                     <h2>Cemetery Lot and Mausoleum Options</h2>
                     <p class="payment-terms">All lots are payable within 4 years and 2 months (50 months) and can be paid monthly or in advance.</p>
                 
-                    <div class="pricing-section">
-                        <h3>Burial Lots</h3>
-                        <div class="table-responsive">
-                            <table class="pricing-table table">
-                                <thead>
-                                    <tr>
-                                        <th>Type</th>
-                                        <th>Price</th>
-                                        <th>Monthly Payment</th>
-                                        <th>Depth Options</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td data-label="Type">Regular Lot</td>
-                                        <td data-label="Price">₱50,000</td>
-                                        <td data-label="Monthly Payment">₱1,000/month</td>
-                                        <td data-label="Depth Options">4 feet or 6 feet</td>
-                                    </tr>
-                                    <tr>
-                                        <td data-label="Type">Regular Lot</td>
-                                        <td data-label="Price">₱60,000</td>
-                                        <td data-label="Monthly Payment">₱1,200/month</td>
-                                        <td data-label="Depth Options">4 feet or 6 feet</td>
-                                    </tr>
-                                    <tr>
-                                        <td data-label="Type">Premium Lot</td>
-                                        <td data-label="Price">₱70,000</td>
-                                        <td data-label="Monthly Payment">₱1,400/month</td>
-                                        <td data-label="Depth Options">4 feet or 6 feet</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="container my-5">
+                        <div class="text-center mb-4">
+                            <h3 class="fw-bold text-primary">Burial Lots</h3>
+                            <p class="text-muted">Choose the best lot that fits your needs and budget.</p>
+                        </div>
+
+                        <div class="row g-4">
+                            <!-- Regular Lot - 50,000 -->
+                            <div class="col-md-4">
+                                <div class="card shadow-sm border-0 h-100">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title fw-bold text-primary">Regular Lot</h5>
+                                        <p class="card-text fs-5 fw-semibold text-dark mb-2">₱50,000</p>
+                                        <p class="text-muted mb-2">₱1,000/month</p>
+                                        <p class="text-muted mb-3">Depth: 4 feet or 6 feet</p>
+                                        <button class="btn btn-outline-primary w-100">Select</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Regular Lot - 60,000 -->
+                            <div class="col-md-4">
+                                <div class="card shadow-sm border-0 h-100">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title fw-bold text-primary">Regular Lot</h5>
+                                        <p class="card-text fs-5 fw-semibold text-dark mb-2">₱60,000</p>
+                                        <p class="text-muted mb-2">₱1,200/month</p>
+                                        <p class="text-muted mb-3">Depth: 4 feet or 6 feet</p>
+                                        <button class="btn btn-outline-primary w-100">Select</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Premium Lot -->
+                            <div class="col-md-4">
+                                <div class="card shadow-sm border-0 h-100">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title fw-bold text-primary">Premium Lot</h5>
+                                        <p class="card-text fs-5 fw-semibold text-dark mb-2">₱70,000</p>
+                                        <p class="text-muted mb-2">₱1,400/month</p>
+                                        <p class="text-muted mb-3">Depth: 4 feet or 6 feet</p>
+                                        <button class="btn btn-outline-primary w-100">Select</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
