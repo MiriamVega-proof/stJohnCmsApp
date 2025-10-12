@@ -3,17 +3,27 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Blessed Saint John Memorial Gardens and Park - Signup</title>
+    <title>Blessed Saint John Memorial - Sign Up</title>
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="signup.css" />
 </head>
 <body>
 
+    <!-- ======== NAVBAR ======== -->
     <nav class="navbar navbar-expand-lg navbar-light bg-warning sticky-top shadow-sm">
-        <div class="container-fluid">
-            <a class="navbar-brand fw-bold" href="#">Blessed Saint John Memorial Gardens and Park</a>
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <span class="d-none d-sm-inline">Blessed Saint John Memorial Gardens and Park</span>
+                <span class="d-sm-none">BSJ Memorial Park</span>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -30,80 +40,104 @@
         </div>
     </nav>
 
-    <section id="signup" class="py-5 bg-light">
-        <div class="container">
-            <div class="signup-box p-4 shadow-sm rounded mx-auto bg-white">
-                <h2 class="text-center mb-4">Create <span class="text-warning">New Account</span></h2>
-                <form id="signupForm" method="POST" action="http://localhost/stJohnCmsApp/cms.api/signup.php
-">
-
-                    <div class="row g-2 mb-3">
-                        <div class="col-md-6">
-                            <input type="text" id="firstName" name="firstName" class="form-control" placeholder="First Name" required>
+    <!-- ======== FULL SCREEN SIGNUP SECTION ======== -->
+    <section id="signup" class="signup-fullscreen">
+        <div class="signup-background-overlay"></div>
+        
+        <!-- Cemetery Background Elements -->
+        <div class="cemetery-elements">
+            <div class="floating-element element-1"></div>
+            <div class="floating-element element-2"></div>
+            <div class="floating-element element-3"></div>
+            <div class="floating-element element-4"></div>
+        </div>
+        
+        <div class="signup-container">
+            <div class="signup-content">
+                <!-- Logo Section -->
+                <div class="signup-header">
+                    <div class="signup-logo">
+                        <div class="logo-text">
+                            <h1 class="system-title">Blessed Saint John</h1>
+                            <p class="system-subtitle">Memorial Gardens Management System</p>
                         </div>
-                        <div class="col-md-6">
-                            <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Last Name" required>
-                        </div>
                     </div>
+                </div>
 
-                    <div class="mb-3">
-                        <input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
+                <!-- Signup Form Card -->
+                <div class="signup-card">
+                    <div class="signup-card-header">
+                        <h2 class="signup-title">Create Account</h2>
+                        <p class="signup-subtitle">Join our memorial community</p>
                     </div>
+                    
+                    <div class="signup-card-body">
+                        <form id="signupForm" method="POST" action="http://localhost/stJohnCmsApp/cms.api/signup.php">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <i class="bi bi-person input-icon"></i>
+                                        <input type="text" id="firstName" name="firstName" class="form-control" placeholder="First Name" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <i class="bi bi-person input-icon"></i>
+                                        <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Last Name" required>
+                                    </div>
+                                </div>
+                            </div>
 
-                    <div class="mb-3">
-                        <input type="tel" id="contactNumber" name="contactNumber" class="form-control" placeholder="Phone Number" required>
+                            <div class="form-group mb-3">
+                                <i class="bi bi-envelope input-icon"></i>
+                                <input type="email" id="email" name="email" class="form-control" placeholder="Email Address" required>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <i class="bi bi-telephone input-icon"></i>
+                                <input type="tel" id="contactNumber" name="contactNumber" class="form-control" placeholder="Phone Number" required>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <i class="bi bi-lock input-icon"></i>
+                                <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                                <i class="bi bi-eye-slash password-toggle" onclick="togglePassword('password', this)"></i>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <i class="bi bi-lock-fill input-icon"></i>
+                                <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="Confirm Password" required>
+                                <i class="bi bi-eye-slash password-toggle" onclick="togglePassword('confirmPassword', this)"></i>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <i class="bi bi-person-plus input-icon"></i>
+                                <input type="text" id="emergencyContactName" name="emergencyContactName" class="form-control" placeholder="Emergency Contact Name" required>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <i class="bi bi-telephone-plus input-icon"></i>
+                                <input type="tel" id="emergencyContactNumber" name="emergencyContactNumber" class="form-control" placeholder="Emergency Contact Number" required>
+                            </div>
+
+                            <button type="submit" class="btn-signup">
+                                <span class="btn-text">Create Account</span>
+                                <i class="bi bi-arrow-right btn-icon"></i>
+                            </button>
+
+                            <div class="form-footer">
+                                <p>Already have an account? <a href="../login/login.php" class="signup-link">Sign In</a></p>
+                            </div>
+                        </form>
                     </div>
-
-                    <div class="mb-3 position-relative">
-                        <i class="bi bi-lock-fill input-icon position-absolute top-50 start-0 translate-middle-y ps-2"></i>
-                        <input type="password" id="password" name="password" class="form-control ps-5" placeholder="Password" required>
-                        <i class="bi bi-eye-slash password-toggle-icon position-absolute top-50 end-0 translate-middle-y pe-3"
-                            onclick="togglePassword('password', this)"></i>
-                    </div>
-
-                    <div class="mb-3 position-relative">
-                        <i class="bi bi-lock-fill input-icon position-absolute top-50 start-0 translate-middle-y ps-2"></i>
-                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control ps-5" placeholder="Confirm Password" required>
-                        <i class="bi bi-eye-slash password-toggle-icon position-absolute top-50 end-0 translate-middle-y pe-3"
-                            onclick="togglePassword('confirmPassword', this)"></i>
-                    </div>
-
-                    <div class="mb-3">
-                        <input type="text" id="emergencyContactName" name="emergencyContactName" class="form-control" placeholder="Emergency Contact Name" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <input type="tel" id="emergencyContactNumber" name="emergencyContactNumber" class="form-control" placeholder="Emergency Contact Number" required>
-                    </div>
-
-                    <p class="text-center">Already a Member? <a href="../login/login.php">Log In</a></p>
-                    <button type="submit" class="btn btn-warning w-100 fw-bold">Create Account</button>
-                </form>
+                </div>
             </div>
         </div>
     </section>
 
-    <footer class="text-center py-3">
-        &copy; 2025 Blessed Saint John Memorial Gardens and Park. All Rights Reserved.
-    </footer>
-
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        // Toggle password visibility
-        function togglePassword(inputId, icon) {
-            const input = document.getElementById(inputId);
-            if (input.type === "password") {
-                input.type = "text";
-                icon.classList.remove("bi-eye-slash");
-                icon.classList.add("bi-eye");
-            } else {
-                input.type = "password";
-                icon.classList.remove("bi-eye");
-                icon.classList.add("bi-eye-slash");
-            }
-        }
-    </script>
-<script src="signup.js"></script>
+    <!-- Custom JS -->
+    <script src="signup.js"></script>
 </body>
 </html>
