@@ -165,11 +165,12 @@ $userRole = getCurrentUserRole();
                 <div class="col-md-6 col-lg-3">
                     <div class="card shadow-sm dashboard-card" onclick="location.href='../adminAuditLogs/adminAuditLogs.php'">
                         <div class="card-body">
-                            <h3 class="card-title text-danger"><i class="fas fa-bell me-2"></i>System Alerts</h3>
+                            <h3 class="card-title text-info"><i class="fas fa-clock me-2"></i>Recent Activity</h3>
                             <hr>
-                            <p class="m-0 status-red"><i class="fas fa-exclamation-triangle"></i> 1 Failed Login Attempt</p>
-                            <p class="m-0 status-green"><i class="fas fa-check-circle"></i> All Services Operational</p>
-                            <p class="m-0 text-muted small">Admin login at 9:00 AM</p>
+                            <div id="recent-activity-content">
+                                <p class="m-0"><i class="fas fa-spinner fa-spin"></i> Loading recent activities...</p>
+                            </div>
+                            <p class="m-0 text-muted small" id="last-activity-time">Loading...</p>
                         </div>
                     </div>
                 </div>

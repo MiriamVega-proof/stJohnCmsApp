@@ -280,4 +280,85 @@ document.addEventListener('DOMContentLoaded', function() {
       pendingApprovalsElement.textContent = '0';
     }
   }
+
+  // Fetch recent audit logs for Recent Activity card
+  fetch('../../../../cms.api/fetchAuditLogs.php')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.success && data.recentActivities) {
+        updateRecentActivity(data.recentActivities);
+      } else {
+        // Show default message if no activities found
+        updateRecentActivity([]);
+      }
+    })
+    .catch(error => {
+      // Handle fetch errors silently and show default message
+      updateRecentActivity([]);
+    });
+
+  // Function to update recent activity display
+  function updateRecentActivity(activities) {
+    const contentElement = document.getElementById('recent-activity-content');
+    const timeElement = document.getElementById('last-activity-time');
+    
+    if (!contentElement || !timeElement) {
+      return;
+    }
+
+    if (activities.length === 0) {
+      contentElement.innerHTML = '<p class="m-0 text-muted"><i class="fas fa-info-circle"></i> No recent activities</p>';
+      timeElement.textContent = 'No recent activity';
+      return;
+    }
+
+    let activityHtml = '';
+    let latestTime = 'No activity';
+
+    activities.slice(0, 2).forEach((activity, index) => {
+      // Map action types to appropriate icons
+      let icon = 'fas fa-circle';
+      switch (activity.actionType?.toLowerCase()) {
+        case 'login':
+          icon = 'fas fa-sign-in-alt';
+          break;
+        case 'create':
+        case 'add':
+          icon = 'fas fa-plus';
+          break;
+        case 'update':
+        case 'edit':
+          icon = 'fas fa-edit';
+          break;
+        case 'delete':
+          icon = 'fas fa-trash';
+          break;
+        case 'view':
+          icon = 'fas fa-eye';
+          break;
+        default:
+          icon = 'fas fa-circle';
+      }
+
+      // Create a short description
+      let shortDesc = activity.description || `${activity.actionType} in ${activity.module}`;
+      if (shortDesc.length > 30) {
+        shortDesc = shortDesc.substring(0, 30) + '...';
+      }
+
+      activityHtml += `<p class="m-0"><i class="${icon}"></i> ${shortDesc}</p>`;
+      
+      if (index === 0) {
+        latestTime = `Last activity: ${activity.timeAgo}`;
+      }
+    });
+
+    contentElement.innerHTML = activityHtml;
+    timeElement.textContent = latestTime;
+  }
 });
