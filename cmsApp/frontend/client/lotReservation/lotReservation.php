@@ -123,63 +123,73 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                         </div>
                     </div>
 
-                    <div class="pricing-section">
-                        <h3>Mausoleums</h3>
-                        <div class="table-responsive">
-                            <table class="pricing-table table">
-                                <thead>
-                                    <tr>
-                                        <th>Dimensions</th>
-                                        <th>Location</th>
-                                        <th>Price</th>
-                                        <th>Monthly Payment</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td data-label="Dimensions">5x4 sqm</td>
-                                        <td data-label="Location">Inside the cemetery</td>
-                                        <td data-label="Price">₱500,000</td>
-                                        <td data-label="Monthly Payment">₱10,000/month</td>
-                                    </tr>
-                                    <tr>
-                                        <td data-label="Dimensions">5x4 sqm</td>
-                                        <td data-label="Location">Along the road/main road</td>
-                                        <td data-label="Price">₱600,000</td>
-                                        <td data-label="Monthly Payment">₱12,000/month</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="container my-5">
+                        <div class="text-center mb-4">
+                            <h3 class="fw-bold text-primary">Mausoleums</h3>
+                            <p class="text-muted">Premium mausoleum options for lasting memorials.</p>
+                        </div>
+
+                        <div class="row g-4 justify-content-center">
+                            <!-- Mausoleum Inside Cemetery -->
+                            <div class="col-md-6">
+                                <div class="card shadow-sm border-0 h-100">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title fw-bold text-primary">Mausoleum - Inside Cemetery</h5>
+                                        <p class="card-text fs-5 fw-semibold text-dark mb-2">₱500,000</p>
+                                        <p class="text-muted mb-2">₱10,000/month</p>
+                                        <p class="text-muted mb-3">Dimensions: 5x4 sqm</p>
+                                        <button class="btn btn-outline-primary w-100">Select</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mausoleum Along Road -->
+                            <div class="col-md-6">
+                                <div class="card shadow-sm border-0 h-100">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title fw-bold text-primary">Mausoleum - Roadside</h5>
+                                        <p class="card-text fs-5 fw-semibold text-dark mb-2">₱600,000</p>
+                                        <p class="text-muted mb-2">₱12,000/month</p>
+                                        <p class="text-muted mb-3">Dimensions: 5x4 sqm</p>
+                                        <button class="btn btn-outline-primary w-100">Select</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="pricing-section">
-                        <h3>Special Packages</h3>
-                        <div class="table-responsive">
-                            <table class="pricing-table table">
-                                <thead>
-                                    <tr>
-                                        <th>Option</th>
-                                        <th>Price</th>
-                                        <th>Monthly Payment</th>
-                                        <th>Depth Options</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td data-label="Option">4-Lot Package</td>
-                                        <td data-label="Price">₱300,000</td>
-                                        <td data-label="Monthly Payment">₱6,000/month</td>
-                                        <td data-label="Depth Options">4 feet or 6 feet</td>
-                                    </tr>
-                                    <tr>
-                                        <td data-label="Option">Exhumation (per person)</td>
-                                        <td data-label="Price">₱15,000</td>
-                                        <td data-label="Monthly Payment">One-time payment</td>
-                                        <td data-label="Depth Options">N/A</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="container my-5">
+                        <div class="text-center mb-4">
+                            <h3 class="fw-bold text-primary">Special Packages</h3>
+                            <p class="text-muted">Comprehensive packages and additional services.</p>
+                        </div>
+
+                        <div class="row g-4 justify-content-center">
+                            <!-- 4-Lot Package -->
+                            <div class="col-md-6">
+                                <div class="card shadow-sm border-0 h-100">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title fw-bold text-primary">4-Lot Package</h5>
+                                        <p class="card-text fs-5 fw-semibold text-dark mb-2">₱300,000</p>
+                                        <p class="text-muted mb-2">₱6,000/month</p>
+                                        <p class="text-muted mb-3">Depth: 4 feet or 6 feet</p>
+                                        <button class="btn btn-outline-primary w-100">Select</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Exhumation Service -->
+                            <div class="col-md-6">
+                                <div class="card shadow-sm border-0 h-100">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title fw-bold text-primary">Exhumation Service</h5>
+                                        <p class="card-text fs-5 fw-semibold text-dark mb-2">₱15,000</p>
+                                        <p class="text-muted mb-2">One-time payment</p>
+                                        <p class="text-muted mb-3">Per person service</p>
+                                        <button class="btn btn-outline-primary w-100">Select</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
