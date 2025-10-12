@@ -1,3 +1,19 @@
+<?php
+session_start();
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
+    // User is not logged in, redirect to login page
+    header("Location: ../../auth/login/login.php");
+    exit();
+}
+
+// Optional: You can also check user role if needed
+// if ($_SESSION['role'] !== 'client') {
+//     header("Location: ../../auth/login/login.php");
+//     exit();
+// }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,9 +48,20 @@
             
                 <div class="dropdown d-none d-lg-block">
                     <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span id="user-name-display-desktop">Username</span> </a>
+                        <span id="user-name-display-desktop">
+                            <?php 
+                            // Display user name from session, fallback to email if name not available
+                            if (isset($_SESSION['firstName']) && isset($_SESSION['lastName'])) {
+                                echo htmlspecialchars($_SESSION['firstName'] . ' ' . $_SESSION['lastName']);
+                            } elseif (isset($_SESSION['username'])) {
+                                echo htmlspecialchars($_SESSION['username']);
+                            } else {
+                                echo htmlspecialchars($_SESSION['email']);
+                            }
+                            ?>
+                        </span> </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="../../auth/login/login.php" id="logoutLinkDesktop">
+                        <li><a class="dropdown-item" href="../../../../cms.api/logout.php" id="logoutLinkDesktop">
                             <i class="fas fa-sign-out-alt me-2"></i>Logout
                         </a></li>
                     </ul>
