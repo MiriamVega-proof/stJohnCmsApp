@@ -526,10 +526,10 @@ if(mainForm){
 // Load appointments from MySQL (XAMPP)
 async function loadAppointmentsFromDB() {
   try {
-    const res = await fetch("http://localhost/stJohnCmsApp/clientAppointment.php");
+    const res = await fetch("http://localhost/stJohnCmsApp/cms.api/clientAppointment.php");
     if (!res.ok) throw new Error("Failed to connect to MySQL backend");
     const data = await res.json();
-    console.log("Fetched appointments from MySQL:", data);
+    // console.log("Fetched appointments from MySQL:", data);
     appointments = Array.isArray(data) ? data : [];
     renderCalendar(currentMonth, currentYear);
   } catch (err) {
@@ -555,7 +555,7 @@ document.getElementById("appointmentForm").addEventListener("submit", async func
   };
 
   try {
-    const res = await fetch("http://localhost/stJohnCmsApp/clientAppointment.php", {
+    const res = await fetch("http://localhost/stJohnCmsApp/cms.api/clientAppointment.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),

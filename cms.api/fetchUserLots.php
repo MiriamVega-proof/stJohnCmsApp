@@ -36,7 +36,7 @@ try {
                 u.lastName,
                 u.email
             FROM lots l
-            LEFT JOIN users u ON l.userId = u.userId
+            LEFT JOIN user u ON l.userId = u.userId
             WHERE l.userId = ? 
             AND l.status IN ('Reserved', 'Occupied')
             ORDER BY l.area, l.block, l.lotNumber";
