@@ -91,8 +91,6 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                                         <p class="mb-2" style="color: #6c757d;">₱1,000/month</p>
                                         <p class="mb-3" style="color: #6c757d;">Depth: 4 feet or 6 feet</p>
                                         <button class="btn w-100 package-select-btn" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#packageModal"
                                                 data-package="Regular Lot (₱50,000)"
                                                 data-price="₱50,000"
                                                 data-monthly="₱1,000/month"
@@ -112,8 +110,6 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                                         <p class="mb-2" style="color: #6c757d;">₱1,200/month</p>
                                         <p class="mb-3" style="color: #6c757d;">Depth: 4 feet or 6 feet</p>
                                         <button class="btn w-100 package-select-btn" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#packageModal"
                                                 data-package="Regular Lot (₱60,000)"
                                                 data-price="₱60,000"
                                                 data-monthly="₱1,200/month"
@@ -133,8 +129,6 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                                         <p class="mb-2" style="color: #b8860b;">₱1,400/month</p>
                                         <p class="mb-3" style="color: #b8860b;">Depth: 4 feet or 6 feet</p>
                                         <button class="btn w-100 package-select-btn" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#packageModal"
                                                 data-package="Premium Lot (₱70,000)"
                                                 data-price="₱70,000"
                                                 data-monthly="₱1,400/month"
@@ -163,8 +157,6 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                                         <p class="mb-2" style="color: #b8860b;">₱10,000/month</p>
                                         <p class="mb-3" style="color: #b8860b;">Dimensions: 5x4 sqm</p>
                                         <button class="btn w-100 package-select-btn" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#packageModal"
                                                 data-package="Mausoleum - Inside Cemetery"
                                                 data-price="₱500,000"
                                                 data-monthly="₱10,000/month"
@@ -184,8 +176,6 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                                         <p class="mb-2" style="color: #8b4513;">₱12,000/month</p>
                                         <p class="mb-3" style="color: #8b4513;">Dimensions: 5x4 sqm</p>
                                         <button class="btn w-100 package-select-btn" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#packageModal"
                                                 data-package="Mausoleum - Roadside"
                                                 data-price="₱600,000"
                                                 data-monthly="₱12,000/month"
@@ -214,8 +204,6 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                                         <p class="mb-2" style="color: #b8860b;">₱6,000/month</p>
                                         <p class="mb-3" style="color: #b8860b;">Depth: 4 feet or 6 feet</p>
                                         <button class="btn w-100 package-select-btn" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#packageModal"
                                                 data-package="4-Lot Package"
                                                 data-price="₱300,000"
                                                 data-monthly="₱6,000/month"
@@ -235,8 +223,6 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                                         <p class="mb-2" style="color: #6c757d;">One-time payment</p>
                                         <p class="mb-3" style="color: #6c757d;">Per person service</p>
                                         <button class="btn w-100 package-select-btn" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#packageModal"
                                                 data-package="Exhumation Service"
                                                 data-price="₱15,000"
                                                 data-monthly="One-time payment"
@@ -564,13 +550,11 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
     <script src="lotReservation.js" defer></script>
 
     <script>
-        // Package selection modal functionality
+        // Package selection redirect functionality
         document.addEventListener('DOMContentLoaded', function() {
             const packageButtons = document.querySelectorAll('.package-select-btn');
-            const packageModal = document.getElementById('packageModal');
-            let selectedLotType = null;
             
-            // Handle package button clicks
+            // Handle package button clicks - redirect to new page
             packageButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const packageName = this.getAttribute('data-package');
@@ -579,44 +563,17 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                     const details = this.getAttribute('data-details');
                     const lotType = this.getAttribute('data-lot-type');
                     
-                    // Store selected lot type
-                    selectedLotType = lotType;
+                    // Create URL with parameters
+                    const url = new URL('lotReservationForm.php', window.location.origin + window.location.pathname.replace('lotReservation.php', ''));
+                    url.searchParams.set('package', packageName);
+                    url.searchParams.set('price', price);
+                    url.searchParams.set('monthly', monthly);
+                    url.searchParams.set('details', details);
+                    url.searchParams.set('lotType', lotType);
                     
-                    // Update modal content
-                    document.getElementById('selectedPackageTitle').textContent = packageName;
-                    document.getElementById('selectedPackagePrice').textContent = price;
-                    document.getElementById('selectedPackageMonthly').textContent = monthly;
-                    document.getElementById('selectedPackageDetails').textContent = details;
+                    // Redirect to the new page
+                    window.location.href = url.toString();
                 });
-            });
-            
-            // Handle confirm selection button
-            document.getElementById('confirmPackageSelection').addEventListener('click', function() {
-                if (selectedLotType) {
-                    // Set the dropdown value in the form
-                    const lotTypeSelect = document.getElementById('preferred_lot');
-                    if (lotTypeSelect) {
-                        lotTypeSelect.value = selectedLotType;
-                        
-                        // Trigger change event to update any dependent fields
-                        lotTypeSelect.dispatchEvent(new Event('change'));
-                        
-                        // Scroll to the form section
-                        document.querySelector('.lot-reservation-section').scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                        
-                        // Optional: Highlight the form briefly
-                        const form = document.querySelector('.lot-reservation-form');
-                        if (form) {
-                            form.style.border = '2px solid #0d6efd';
-                            setTimeout(() => {
-                                form.style.border = '';
-                            }, 3000);
-                        }
-                    }
-                }
             });
         });
     </script>
