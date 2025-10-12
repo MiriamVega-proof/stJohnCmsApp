@@ -84,39 +84,39 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                         <div class="row g-4">
                             <!-- Regular Lot - 50,000 - Silver Theme -->
                             <div class="col-md-4">
-                                <div class="card shadow-sm border-0 h-100" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 2px solid #adb5bd !important;">
+                                <div class="card shadow-sm border-0 h-100" style="background-color: #f8f9fa; border: 2px solid #adb5bd !important;">
                                     <div class="card-body text-center">
                                         <h5 class="card-title fw-bold" style="color: #495057;">Regular Lot</h5>
                                         <p class="card-text fs-5 fw-semibold mb-2" style="color: #343a40;">₱50,000</p>
                                         <p class="mb-2" style="color: #6c757d;">₱1,000/month</p>
                                         <p class="mb-3" style="color: #6c757d;">Depth: 4 feet or 6 feet</p>
-                                        <button class="btn w-100" style="background: linear-gradient(135deg, #6c757d 0%, #495057 100%); color: white; border: none;">Select</button>
+                                        <button class="btn w-100" style="background-color: #6c757d; color: white; border: none;">Select</button>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Regular Lot - 60,000 - Silver Theme -->
                             <div class="col-md-4">
-                                <div class="card shadow-sm border-0 h-100" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 2px solid #adb5bd !important;">
+                                <div class="card shadow-sm border-0 h-100" style="background-color: #f8f9fa; border: 2px solid #adb5bd !important;">
                                     <div class="card-body text-center">
                                         <h5 class="card-title fw-bold" style="color: #495057;">Regular Lot</h5>
                                         <p class="card-text fs-5 fw-semibold mb-2" style="color: #343a40;">₱60,000</p>
                                         <p class="mb-2" style="color: #6c757d;">₱1,200/month</p>
                                         <p class="mb-3" style="color: #6c757d;">Depth: 4 feet or 6 feet</p>
-                                        <button class="btn w-100" style="background: linear-gradient(135deg, #6c757d 0%, #495057 100%); color: white; border: none;">Select</button>
+                                        <button class="btn w-100" style="background-color: #6c757d; color: white; border: none;">Select</button>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Premium Lot - Gold Theme -->
                             <div class="col-md-4">
-                                <div class="card shadow-sm border-0 h-100" style="background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); border: 2px solid #d4a574 !important;">
+                                <div class="card shadow-sm border-0 h-100" style="background-color: #fff3cd; border: 2px solid #d4a574 !important;">
                                     <div class="card-body text-center">
                                         <h5 class="card-title fw-bold" style="color: #b8860b;">Premium Lot</h5>
                                         <p class="card-text fs-5 fw-semibold mb-2" style="color: #856404;">₱70,000</p>
                                         <p class="mb-2" style="color: #b8860b;">₱1,400/month</p>
                                         <p class="mb-3" style="color: #b8860b;">Depth: 4 feet or 6 feet</p>
-                                        <button class="btn w-100" style="background: linear-gradient(135deg, #daa520 0%, #b8860b 100%); color: white; border: none;">Select</button>
+                                        <button class="btn w-100" style="background-color: #daa520; color: white; border: none;">Select</button>
                                     </div>
                                 </div>
                             </div>
@@ -132,26 +132,26 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                         <div class="row g-4 justify-content-center">
                             <!-- Mausoleum Inside Cemetery - Premium Gold Theme -->
                             <div class="col-md-6">
-                                <div class="card shadow-sm border-0 h-100" style="background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); border: 2px solid #d4a574 !important;">
+                                <div class="card shadow-sm border-0 h-100" style="background-color: #fff3cd; border: 2px solid #d4a574 !important;">
                                     <div class="card-body text-center">
                                         <h5 class="card-title fw-bold" style="color: #b8860b;">Mausoleum - Inside Cemetery</h5>
                                         <p class="card-text fs-5 fw-semibold mb-2" style="color: #856404;">₱500,000</p>
                                         <p class="mb-2" style="color: #b8860b;">₱10,000/month</p>
                                         <p class="mb-3" style="color: #b8860b;">Dimensions: 5x4 sqm</p>
-                                        <button class="btn w-100" style="background: linear-gradient(135deg, #daa520 0%, #b8860b 100%); color: white; border: none;">Select</button>
+                                        <button class="btn w-100" style="background-color: #daa520; color: white; border: none;">Select</button>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Mausoleum Along Road - Luxury Gold Theme -->
                             <div class="col-md-6">
-                                <div class="card shadow-sm border-0 h-100" style="background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%); border: 2px solid #cd853f !important;">
+                                <div class="card shadow-sm border-0 h-100" style="background-color: #ffd700; border: 2px solid #cd853f !important;">
                                     <div class="card-body text-center">
                                         <h5 class="card-title fw-bold" style="color: #8b4513;">Mausoleum - Roadside</h5>
                                         <p class="card-text fs-5 fw-semibold mb-2" style="color: #654321;">₱600,000</p>
                                         <p class="mb-2" style="color: #8b4513;">₱12,000/month</p>
                                         <p class="mb-3" style="color: #8b4513;">Dimensions: 5x4 sqm</p>
-                                        <button class="btn w-100" style="background: linear-gradient(135deg, #b8860b 0%, #8b4513 100%); color: white; border: none;">Select</button>
+                                        <button class="btn w-100" style="background-color: #b8860b; color: white; border: none;">Select</button>
                                     </div>
                                 </div>
                             </div>
@@ -167,26 +167,26 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                         <div class="row g-4 justify-content-center">
                             <!-- 4-Lot Package - Gold Theme -->
                             <div class="col-md-6">
-                                <div class="card shadow-sm border-0 h-100" style="background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); border: 2px solid #d4a574 !important;">
+                                <div class="card shadow-sm border-0 h-100" style="background-color: #fff3cd; border: 2px solid #d4a574 !important;">
                                     <div class="card-body text-center">
                                         <h5 class="card-title fw-bold" style="color: #b8860b;">4-Lot Package</h5>
                                         <p class="card-text fs-5 fw-semibold mb-2" style="color: #856404;">₱300,000</p>
                                         <p class="mb-2" style="color: #b8860b;">₱6,000/month</p>
                                         <p class="mb-3" style="color: #b8860b;">Depth: 4 feet or 6 feet</p>
-                                        <button class="btn w-100" style="background: linear-gradient(135deg, #daa520 0%, #b8860b 100%); color: white; border: none;">Select</button>
+                                        <button class="btn w-100" style="background-color: #daa520; color: white; border: none;">Select</button>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Exhumation Service - Silver Theme -->
                             <div class="col-md-6">
-                                <div class="card shadow-sm border-0 h-100" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 2px solid #adb5bd !important;">
+                                <div class="card shadow-sm border-0 h-100" style="background-color: #f8f9fa; border: 2px solid #adb5bd !important;">
                                     <div class="card-body text-center">
                                         <h5 class="card-title fw-bold" style="color: #495057;">Exhumation Service</h5>
                                         <p class="card-text fs-5 fw-semibold mb-2" style="color: #343a40;">₱15,000</p>
                                         <p class="mb-2" style="color: #6c757d;">One-time payment</p>
                                         <p class="mb-3" style="color: #6c757d;">Per person service</p>
-                                        <button class="btn w-100" style="background: linear-gradient(135deg, #6c757d 0%, #495057 100%); color: white; border: none;">Select</button>
+                                        <button class="btn w-100" style="background-color: #6c757d; color: white; border: none;">Select</button>
                                     </div>
                                 </div>
                             </div>
