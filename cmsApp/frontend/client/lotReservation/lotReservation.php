@@ -193,14 +193,47 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                         </div>
                     </div>
 
-                    <div class="instructions card p-3 mt-4">
-                        <h3>Important Notes:</h3>
-                        <ul>
-                            <li>All mausoleums measure 5 meters by 4 meters (5x4 sqm)</li>
-                            <li>Burial lots offer depth options of either 4 feet or 6 feet</li>
-                            <li>Monthly payment plans span 50 months (4 years and 2 months)</li>
-                            <li>Advance payments are accepted</li>
-                        </ul>
+                    <div class="container my-5">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-10">
+                                <div class="bg-light rounded-4 p-4 border-0 shadow-sm">
+                                    <div class="text-center mb-4">
+                                        <h3 class="fw-bold text-primary mb-2">Important Information</h3>
+                                        <p class="text-muted mb-0">Please review these details before making your reservation</p>
+                                    </div>
+                                    
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <div class="bg-white rounded-3 p-3 h-100 border border-light">
+                                                <h6 class="fw-semibold text-dark mb-2">Mausoleum Specifications</h6>
+                                                <p class="text-muted mb-0 small">All mausoleums measure 5 meters by 4 meters (5x4 sqm)</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <div class="bg-white rounded-3 p-3 h-100 border border-light">
+                                                <h6 class="fw-semibold text-dark mb-2">Burial Depth Options</h6>
+                                                <p class="text-muted mb-0 small">Burial lots offer depth options of either 4 feet or 6 feet</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <div class="bg-white rounded-3 p-3 h-100 border border-light">
+                                                <h6 class="fw-semibold text-dark mb-2">Payment Terms</h6>
+                                                <p class="text-muted mb-0 small">Monthly payment plans span 50 months (4 years and 2 months)</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <div class="bg-white rounded-3 p-3 h-100 border border-light">
+                                                <h6 class="fw-semibold text-dark mb-2">Payment Flexibility</h6>
+                                                <p class="text-muted mb-0 small">Advance payments are accepted and welcome</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
