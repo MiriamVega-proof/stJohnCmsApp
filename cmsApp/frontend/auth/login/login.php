@@ -1,3 +1,15 @@
+<?php
+// Check if user is already logged in
+session_start();
+
+// Include authentication helper
+require_once '../../../../cms.api/auth_helper.php';
+
+// Check if user is already authenticated
+$isLoggedIn = isAuthenticated();
+$currentUserName = $isLoggedIn ? getCurrentUserName() : null;
+$currentUserRole = $isLoggedIn ? getCurrentUserRole() : null;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,60 +73,122 @@
 
       <!-- Login Form Card -->
       <div class="login-card">
-        <div class="login-card-header">
-          <h2 class="login-title">Welcome Back</h2>
-          <p class="login-subtitle">Please sign in to your account</p>
-        </div>
-        
-        <form id="loginForm" class="login-form">
-          <div class="form-group">
-            <label for="email" class="form-label">
-              <i class="bi bi-envelope-fill"></i>
-              Email Address
-            </label>
-            <div class="input-wrapper">
-              <input type="text" id="email" class="form-input" placeholder="Enter your email address" required>
-              <div class="input-focus-line"></div>
+        <?php if ($isLoggedIn): ?>
+          <!-- Already Logged In Message -->
+          <div class="already-logged-in">
+            <div class="logged-in-icon">
+              <i class="bi bi-check-circle-fill"></i>
             </div>
-            <div class="text-danger small" id="emailError"></div>
-          </div>
-          
-          <div class="form-group">
-            <label for="password" class="form-label">
-              <i class="bi bi-lock-fill"></i>
-              Password
-            </label>
-            <div class="input-wrapper password-wrapper">
-              <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
-              <button type="button" class="password-toggle" onclick="togglePassword()">
-                <i class="bi bi-eye-slash" id="passwordToggleIcon"></i>
-              </button>
-              <div class="input-focus-line"></div>
+            <div class="logged-in-content">
+              <h2 class="logged-in-title">You're Already Signed In!</h2>
+              <p class="logged-in-subtitle">Welcome back, <strong><?php echo htmlspecialchars($currentUserName); ?></strong></p>
+              <div class="user-info">
+                <div class="user-role">
+                  <i class="bi bi-person-badge"></i>
+                  <span>Role: <?php echo ucfirst(htmlspecialchars($currentUserRole)); ?></span>
+                </div>
+              </div>
+              
+              <div class="logged-in-actions">
+                <?php 
+                $dashboardUrl = '';
+                switch(strtolower($currentUserRole)) {
+                  case 'admin':
+                    $dashboardUrl = '../../admin/adminDashboard/adminDashboard.php';
+                    break;
+                  case 'secretary':
+                    $dashboardUrl = '../../secretary/secretaryDashboard.php';
+                    break;
+                  case 'client':
+                    $dashboardUrl = '../../client/clientDashboard/clientDashboard.php';
+                    break;
+                  default:
+                    $dashboardUrl = '#';
+                }
+                ?>
+                <a href="<?php echo $dashboardUrl; ?>" class="dashboard-btn">
+                  <i class="bi bi-speedometer2"></i>
+                  <span>Go to Dashboard</span>
+                </a>
+                
+                <a href="../../../../cms.api/logout.php" class="logout-btn">
+                  <i class="bi bi-box-arrow-right"></i>
+                  <span>Sign Out</span>
+                </a>
+              </div>
+              
+              <div class="quick-actions">
+                <p class="quick-actions-title">Quick Actions:</p>
+                <div class="action-links">
+                  <a href="#home" class="action-link">
+                    <i class="bi bi-map"></i>
+                    <span>View Cemetery Map</span>
+                  </a>
+                  <a href="#appointment" class="action-link">
+                    <i class="bi bi-calendar-plus"></i>
+                    <span>Schedule Visit</span>
+                  </a>
+                </div>
+              </div>
             </div>
-            <div class="text-danger small" id="passwordError"></div>
           </div>
-
-          <div class="form-links">
-            <a href="../forgotPassword/forgotPassword.php" class="forgot-password-link">
-              <i class="bi bi-question-circle"></i>
-              Forgot your password?
-            </a>
+        <?php else: ?>
+          <!-- Regular Login Form -->
+          <div class="login-card-header">
+            <h2 class="login-title">Welcome Back</h2>
+            <p class="login-subtitle">Please sign in to your account</p>
           </div>
-
-          <div id="serverMessage" class="server-message"></div>
           
-          <button type="submit" class="login-btn">
-            <span class="btn-text">Sign In</span>
-            <i class="bi bi-arrow-right btn-icon"></i>
-          </button>
-          
-          <div class="signup-section">
-            <p class="signup-text">
-              Don't have an account? 
-              <a href="../signup/signup.php" class="signup-link">Create one here</a>
-            </p>
-          </div>
-        </form>
+          <form id="loginForm" class="login-form">
+            <div class="form-group">
+              <label for="email" class="form-label">
+                <i class="bi bi-envelope-fill"></i>
+                Email Address
+              </label>
+              <div class="input-wrapper">
+                <input type="text" id="email" class="form-input" placeholder="Enter your email address" required>
+                <div class="input-focus-line"></div>
+              </div>
+              <div class="text-danger small" id="emailError"></div>
+            </div>
+            
+            <div class="form-group">
+              <label for="password" class="form-label">
+                <i class="bi bi-lock-fill"></i>
+                Password
+              </label>
+              <div class="input-wrapper password-wrapper">
+                <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+                <button type="button" class="password-toggle" onclick="togglePassword()">
+                  <i class="bi bi-eye-slash" id="passwordToggleIcon"></i>
+                </button>
+                <div class="input-focus-line"></div>
+              </div>
+              <div class="text-danger small" id="passwordError"></div>
+            </div>
+
+            <div class="form-links">
+              <a href="../forgotPassword/forgotPassword.php" class="forgot-password-link">
+                <i class="bi bi-question-circle"></i>
+                Forgot your password?
+              </a>
+            </div>
+
+            <div id="serverMessage" class="server-message"></div>
+            
+            <button type="submit" class="login-btn">
+              <span class="btn-text">Sign In</span>
+              <i class="bi bi-arrow-right btn-icon"></i>
+            </button>
+            
+            <div class="signup-section">
+              <p class="signup-text">
+                Don't have an account? 
+                <a href="../signup/signup.php" class="signup-link">Create one here</a>
+              </p>
+            </div>
+          </form>
+        <?php endif; ?>
       </div>
     </div>
   </div>
