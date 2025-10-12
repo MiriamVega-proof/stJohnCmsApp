@@ -77,7 +77,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                 
                     <div class="container my-5">
                         <div class="text-center mb-4">
-                            <h3 class="fw-bold text-primary">Burial Lots</h3>
+                            <h3 class="fw-bold text-dark">Burial Lots</h3>
                             <p class="text-muted">Choose the best lot that fits your needs and budget.</p>
                         </div>
 
@@ -149,7 +149,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
 
                     <div class="container my-5">
                         <div class="text-center mb-4">
-                            <h3 class="fw-bold text-primary">Mausoleums</h3>
+                            <h3 class="fw-bold text-dark">Mausoleums</h3>
                             <p class="text-muted">Premium mausoleum options for lasting memorials.</p>
                         </div>
 
@@ -200,7 +200,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
 
                     <div class="container my-5">
                         <div class="text-center mb-4">
-                            <h3 class="fw-bold text-primary">Special Packages</h3>
+                            <h3 class="fw-bold text-dark">Special Packages</h3>
                             <p class="text-muted">Comprehensive packages and additional services.</p>
                         </div>
 
@@ -254,7 +254,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                             <div class="col-lg-10">
                                 <div class="bg-light rounded-4 p-4 border-0 shadow-sm">
                                     <div class="text-center mb-4">
-                                        <h3 class="fw-bold text-primary mb-2">Important Information</h3>
+                                        <h3 class="fw-bold text-dark mb-2">Important Information</h3>
                                         <p class="text-muted mb-0">Please review these details before making your reservation</p>
                                     </div>
                                     
@@ -509,7 +509,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
                 </div>
                 <div class="modal-body">
                     <div class="text-center mb-4">
-                        <h4 id="selectedPackageTitle" class="fw-bold text-primary"></h4>
+                        <h4 id="selectedPackageTitle" class="fw-bold text-dark"></h4>
                         <p id="selectedPackagePrice" class="fs-4 fw-semibold text-dark"></p>
                         <p id="selectedPackageMonthly" class="text-muted"></p>
                         <p id="selectedPackageDetails" class="text-muted"></p>
