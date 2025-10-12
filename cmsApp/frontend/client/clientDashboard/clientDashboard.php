@@ -99,37 +99,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <!-- Data will be populated by JavaScript -->
                                     <tr>
-                                        <td>Maria A. Erese</td>
-                                        <td>Area A</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>12</td>
-                                        <td><span class="status completed">Paid</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Maria A. Erese</td>
-                                        <td>Area B</td>
-                                        <td>3</td>
-                                        <td>1</td>
-                                        <td>8</td>
-                                        <td><span class="status pending">Partially Paid</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Maria A. Erese</td>
-                                        <td>Area C</td>
-                                        <td>5</td>
-                                        <td>1</td>
-                                        <td>22</td>
-                                        <td><span class="status in-progress">Reserved</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Maria A. Erese</td>
-                                        <td>Area D</td>
-                                        <td>2</td>
-                                        <td>1</td>
-                                        <td>15</td>
-                                        <td><span class="status completed">Paid</span></td>
+                                        <td colspan="6" class="text-center">Loading...</td>
                                     </tr>
                                 </tbody>
                             </table>

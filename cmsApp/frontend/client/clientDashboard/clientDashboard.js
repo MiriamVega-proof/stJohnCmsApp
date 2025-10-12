@@ -1,22 +1,23 @@
 document.addEventListener("DOMContentLoaded", function () {
-    async function fetchClientDashboardData() {
+    // Fetch user's reserved lots from the database
+    async function fetchUserLots() {
         try {
-            const response = await fetch("../../api/dashboard.php", {
+            const response = await fetch("../../../../cms.api/fetchUserLots.php", {
                 method: "GET",
-                credentials: "include", // include cookies for PHP session
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json"
                 }
             });
 
             if (!response.ok) {
-                throw new Error("Failed to fetch dashboard data");
+                throw new Error("Failed to fetch user lots");
             }
 
             return await response.json();
         } catch (error) {
             console.error("Fetch error:", error);
-            return null;
+            return { status: "error", data: [] };
         }
     }
     
@@ -41,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function renderReservedLots(reservedLots) {
-        const tbody = document.querySelector(".maintenance-history-table tbody");
+        const tbody = document.querySelector(".custom-table tbody");
         tbody.innerHTML = "";
 
         if (!reservedLots || reservedLots.length === 0) {
@@ -55,12 +56,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td>${lot.clientName}</td>
                 <td>${lot.area}</td>
                 <td>${lot.block}</td>
-                <td>${lot.row}</td>
-                <td>${lot.lot}</td>
+                <td>1</td>
+                <td>${lot.lotNumber}</td>
                 <td><span class="status ${getStatusClass(lot.status)}">${lot.status}</span></td>
             `;
             tbody.appendChild(row);
         });
+
+        // Update the reserved lots count in the dashboard panels
+        document.getElementById('reservedLotsCount').textContent = reservedLots.length;
     }
 
     function renderRequests(requests) {
@@ -86,6 +90,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function getStatusClass(status) {
         switch (status?.toLowerCase()) {
+            case "reserved": return "in-progress";
+            case "occupied": return "completed";
+            case "available": return "pending";
+            case "for reservation": return "pending";
             case "paid": return "completed";
             case "partially paid": return "pending";
             case "pending": return "pending";
@@ -122,6 +130,18 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
+
+    // Initialize dashboard
+    async function initDashboard() {
+        const lotsResponse = await fetchUserLots();
+        
+        if (lotsResponse.status === 'success') {
+            renderReservedLots(lotsResponse.data);
+        } else {
+            console.error("Failed to load lots:", lotsResponse.message);
+            renderReservedLots([]); // Show empty table
+        }
+    }
 
     initDashboard();
 });
