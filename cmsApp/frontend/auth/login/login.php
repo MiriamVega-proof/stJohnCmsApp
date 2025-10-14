@@ -92,7 +92,7 @@
       <div class="row gx-3">
         <div class="col-lg-7">
           <!-- Appointment form (kept) -->
-          <form id="appointmentForm" class="appointment-form" onsubmit="handleLocalAppointmentSubmit && handleLocalAppointmentSubmit(event)">
+          <form id="appointmentForm" class="appointment-form">
             <div>
               <label for="user_name" class="required">Your Name</label>
               <input type="text" id="user_name" required aria-required="true" placeholder="Full name">
@@ -100,6 +100,10 @@
             <div>
               <label for="user_email" class="required">Your Email</label>
               <input type="email" id="user_email" required placeholder="name@example.com">
+            </div>
+            <div>
+                <label for="user_address" class="required">Your Address</label>
+                <input type="text" id="user_address" required placeholder="Full address (Street, City, Province)">
             </div>
             <div>
               <label for="user_phone" class="required">Contact Number</label>
@@ -260,4 +264,3 @@
 <script src="login.js"> </script>
 </body>
 </html>
-
