@@ -1,3 +1,19 @@
+<?php
+session_start();
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
+    // User is not logged in, redirect to login page
+    header("Location: ../../auth/login/login.php");
+    exit();
+}
+
+// Optional: You can also check user role if needed
+// if ($_SESSION['role'] !== 'client') {
+//     header("Location: ../../auth/login/login.php");
+//     exit();
+// }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,9 +48,20 @@
             
                 <div class="dropdown d-none d-lg-block">
                     <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span id="user-name-display-desktop">Username</span> </a>
+                        <span id="user-name-display-desktop">
+                            <?php 
+                            // Display user name from session, fallback to email if name not available
+                            if (isset($_SESSION['firstName']) && isset($_SESSION['lastName'])) {
+                                echo htmlspecialchars($_SESSION['firstName'] . ' ' . $_SESSION['lastName']);
+                            } elseif (isset($_SESSION['username'])) {
+                                echo htmlspecialchars($_SESSION['username']);
+                            } else {
+                                echo htmlspecialchars($_SESSION['email']);
+                            }
+                            ?>
+                        </span> </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="../../auth/login/login.php" id="logoutLinkDesktop">
+                        <li><a class="dropdown-item" href="../../../../cms.api/logout.php" id="logoutLinkDesktop">
                             <i class="fas fa-sign-out-alt me-2"></i>Logout
                         </a></li>
                     </ul>
@@ -99,37 +126,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <!-- Data will be populated by JavaScript -->
                                     <tr>
-                                        <td>Maria A. Erese</td>
-                                        <td>Area A</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>12</td>
-                                        <td><span class="status completed">Paid</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Maria A. Erese</td>
-                                        <td>Area B</td>
-                                        <td>3</td>
-                                        <td>1</td>
-                                        <td>8</td>
-                                        <td><span class="status pending">Partially Paid</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Maria A. Erese</td>
-                                        <td>Area C</td>
-                                        <td>5</td>
-                                        <td>1</td>
-                                        <td>22</td>
-                                        <td><span class="status in-progress">Reserved</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Maria A. Erese</td>
-                                        <td>Area D</td>
-                                        <td>2</td>
-                                        <td>1</td>
-                                        <td>15</td>
-                                        <td><span class="status completed">Paid</span></td>
+                                        <td colspan="6" class="text-center">Loading...</td>
                                     </tr>
                                 </tbody>
                             </table>
