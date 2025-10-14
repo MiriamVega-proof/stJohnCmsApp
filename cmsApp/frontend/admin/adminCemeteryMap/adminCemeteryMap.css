@@ -64,32 +64,6 @@ main {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     border: none;
 }
-/* User Profile */
-.user-initials {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    color: #EFBF04; /* Gold */
-    font-weight: bold;
-    font-size: 0.9rem;
-    flex-shrink: 0;
-}
-.mobile-logout-link {
-    display: block;
-    padding: 0.5rem;
-    color: #000; /* Black */
-    text-decoration: none;
-    font-weight: 500;
-    text-align: center;
-    margin-top: 0.5rem;
-    border-radius: 0.25rem;
-}
-
-.mobile-logout-link:hover {
-    background-color: #ac8f1d; /* Dark Gold */
-}
 
 /* ----------------------------------- */
 /* --- MAIN CONTENT & CARD --- */
@@ -183,6 +157,51 @@ main {
   overflow: hidden;
   background: #f5f5f5;
 }
+
+/* === Expand / Fullscreen map styles === */
+.map-placeholder {
+  transition: all 300ms ease;
+  will-change: width, height, transform;
+  z-index: 1;
+}
+
+/* full-screen-ish expanded state (leaves room for top nav) */
+.map-placeholder.expanded {
+  position: fixed;
+  top: 72px;              /* leave room for navbar — tweak if needed */
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  width: auto !important;
+  height: calc(100vh - 112px) !important; /* keep a bit of margin for header/footer */
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+  background: #fff;
+  z-index: 2050;
+}
+
+/* ensure the ol map fills the expanded container */
+.map-placeholder.expanded #map,
+.map-placeholder.expanded .ol-viewport {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* place expand button above map content when expanded */
+.map-placeholder .expand-btn {
+  transition: box-shadow 220ms;
+  z-index: 2100;
+}
+.map-placeholder.expanded .expand-btn {
+  right: 32px;
+  bottom: 28px;
+}
+
+/* prevent body scroll when map is expanded */
+body.map-expanded {
+  overflow: hidden;
+}
+
 
 #map {
   width: 100%;

@@ -23,7 +23,7 @@ var lyr_nondescriptbuildings_1 = new ol.layer.Vector({
                 source:jsonSource_nondescriptbuildings_1, 
                 style: style_nondescriptbuildings_1,
                 popuplayertitle: 'nondescript buildings',
-                interactive: true,
+                interactive: false,
                 title: '<img src="styles/legend/nondescriptbuildings_1.png" /> nondescript buildings'
             });
 var format_geo_2 = new ol.format.GeoJSON();
@@ -48,11 +48,11 @@ var lyr_geo_2 = new ol.layer.Vector({
 lyr_1_0.setVisible(true);lyr_nondescriptbuildings_1.setVisible(true);lyr_geo_2.setVisible(true);
 var layersList = [lyr_1_0,lyr_nondescriptbuildings_1,lyr_geo_2];
 lyr_nondescriptbuildings_1.set('fieldAliases', {'label': 'label', 'auxiliary_storage_labeling_show': 'auxiliary_storage_labeling_show', });
-lyr_geo_2.set('fieldAliases', {'lotId': 'lotId', 'userId': 'userId', 'area': 'area', 'block': 'block', 'lotNumber': 'lotNumber', 'type': 'type', 'buryDepth': 'buryDepth', 'status': 'status', 'createdAt': 'createdAt', 'updatedAt': 'updatedAt', 'rowNumber': 'rowNumber', });
+lyr_geo_2.set('fieldAliases', {'lotId': 'lotId', 'userId': 'userId', 'area': 'area', 'block': 'block', 'rowNumber': 'rowNumber', 'lotNumber': 'lotNumber', 'type': 'type', 'lotTypeId': 'lotTypeId', 'buryDepth': 'buryDepth', 'status': 'status', 'createdAt': 'createdAt', 'updatedAt': 'updatedAt', });
 lyr_nondescriptbuildings_1.set('fieldImages', {'label': 'TextEdit', 'auxiliary_storage_labeling_show': 'Hidden', });
-lyr_geo_2.set('fieldImages', {'lotId': 'TextEdit', 'userId': 'TextEdit', 'area': 'TextEdit', 'block': 'TextEdit', 'lotNumber': 'TextEdit', 'type': 'TextEdit', 'buryDepth': 'TextEdit', 'status': 'TextEdit', 'createdAt': 'DateTime', 'updatedAt': 'DateTime', 'rowNumber': '', });
+lyr_geo_2.set('fieldImages', {'lotId': 'TextEdit', 'userId': 'TextEdit', 'area': 'TextEdit', 'block': 'TextEdit', 'rowNumber': 'TextEdit', 'lotNumber': 'TextEdit', 'type': 'TextEdit', 'lotTypeId': 'Range', 'buryDepth': 'TextEdit', 'status': 'TextEdit', 'createdAt': 'DateTime', 'updatedAt': 'DateTime', });
 lyr_nondescriptbuildings_1.set('fieldLabels', {'label': 'header label - always visible', });
-lyr_geo_2.set('fieldLabels', {'lotId': 'header label - visible with data', 'userId': 'header label - visible with data', 'area': 'header label - visible with data', 'block': 'header label - visible with data', 'lotNumber': 'header label - visible with data', 'type': 'header label - visible with data', 'buryDepth': 'header label - visible with data', 'status': 'header label - visible with data', 'createdAt': 'no label', 'updatedAt': 'no label', 'rowNumber': 'header label - visible with data', });
+lyr_geo_2.set('fieldLabels', {'lotId': 'header label - visible with data', 'userId': 'header label - visible with data', 'area': 'header label - visible with data', 'block': 'header label - visible with data', 'rowNumber': 'header label - visible with data', 'lotNumber': 'header label - visible with data', 'type': 'header label - visible with data', 'lotTypeId': 'no label', 'buryDepth': 'header label - visible with data', 'status': 'header label - visible with data', 'createdAt': 'no label', 'updatedAt': 'no label', });
 lyr_geo_2.on('precompose', function(evt) {
     evt.context.globalCompositeOperation = 'normal';
 });
