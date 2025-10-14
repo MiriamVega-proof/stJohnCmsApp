@@ -39,12 +39,12 @@ function saveFile($fileInputName, $uploadDir) {
 }
 
 /* ---------------------------------------------------
-   GET: Display Reservation History
+    GET: Display Reservation History (No Changes Needed)
 --------------------------------------------------- */
 if ($_SERVER["REQUEST_METHOD"] === "GET") {
     $sql = "SELECT r.reservationId, r.clientName, r.address, r.contactNumber,
-                   r.clientValidId, r.reservationDate, r.area, r.block, r.rowNumber,
-                   r.lotNumber, lt.typeName AS lotType, lt.price, r.status
+                    r.clientValidId, r.reservationDate, r.area, r.block, r.rowNumber,
+                    r.lotNumber, lt.typeName AS lotType, lt.price, r.status
             FROM reservations r
             LEFT JOIN lot_types lt ON r.lotTypeId = lt.lotTypeId
             WHERE r.userId = ?
@@ -68,10 +68,11 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
 }
 
 /* ---------------------------------------------------
-   POST: Save Reservation
+    POST: Save Reservation (MODIFIED)
 --------------------------------------------------- */
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $lotId = 0; // Assuming lotId is not yet assigned
+    // --- 1. Sanitize and Extract Input Data ---
+    $lotId           = trim($_POST["lotId"] ?? '');
     $clientName      = trim($_POST["client_name"] ?? '');
     $address         = trim($_POST["client_address"] ?? '');
     $contactNumber   = trim($_POST["client_contact"] ?? '');
@@ -79,24 +80,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $burialDate      = empty(trim($_POST["burial_date"])) ? null : trim($_POST["burial_date"]);
     $reservationDate = trim($_POST["reservation_date"] ?? '');
     $area            = trim($_POST["area"] ?? '');
-    $block           = trim($_POST["block"] ?? '');
-    $row_number      = trim($_POST["row_number"] ?? ''); // ✅ Correct variable name
+    $block           = trim($_POST["block"] ?? ''); // ✅ Corrected syntax, removed string:
+    $rowNumber       = trim($_POST["rowNumber"] ?? ''); // ✅ Corrected variable name from rowumber
     $lotNumber       = trim($_POST["lot_number"] ?? '');
     $burialDepth     = trim($_POST["burial_depth"] ?? '');
     $notes           = trim($_POST["additional_notes"] ?? '');
     $lotTypeId       = isset($_POST['lotTypeId']) && $_POST['lotTypeId'] !== '' ? (int)$_POST['lotTypeId'] : null;
 
+    // --- 2. Validation Checks ---
     if (empty($clientName) || empty($address) || empty($contactNumber) || empty($reservationDate) || $lotTypeId === null) {
         http_response_code(400);
         echo json_encode(["status" => "error", "message" => "Missing required fields. Please fill all fields marked with *."]);
         exit;
     }
 
-    // ✅ Handle file uploads
-    $clientValidId    = saveFile("client_id_upload", $uploadDir);
-    $deathCertificate = saveFile("death_certificate_upload", $uploadDir);
-    $deceasedValidId  = saveFile("deceased_id_upload", $uploadDir);
-    $burialPermit     = saveFile("burial_permit_upload", $uploadDir);
+    // --- 3. Handle File Uploads ---
+    $clientValidId      = saveFile("client_id_upload", $uploadDir);
+    $deathCertificate   = saveFile("death_certificate_upload", $uploadDir);
+    $deceasedValidId    = saveFile("deceased_id_upload", $uploadDir);
+    $burialPermit       = saveFile("burial_permit_upload", $uploadDir);
 
     if (empty($clientValidId)) {
         http_response_code(400);
@@ -104,64 +106,127 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     }
 
-    $status    = "For Reservation";
+    // --- 4. Define Status and Timestamp ---
+    // Status for a new client reservation request.
+    $reservationStatus = "Pending"; 
     $createdAt = date("Y-m-d H:i:s");
 
-    // ✅ Insert into reservations
+    // --- 5. Prepare Database Statements ---
+
+    // A. Reservation Insertion
     $sql = "INSERT INTO reservations (
-        lotId, userId, clientName, address, contactNumber, deceasedName, burialDate, reservationDate,
+        userId, lotId, clientName, address, contactNumber, deceasedName, burialDate, reservationDate,
         area, block, rowNumber, lotNumber, burialDepth, notes, clientValidId, deathCertificate, deceasedValidId,
         burialPermit, status, createdAt, lotTypeId
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
+    
     $stmt = $conn->prepare($sql);
+
+    // B. Lot Status Update (Only if lotId is present)
+    // IMPORTANT: Check if lotId is set to run the UPDATE query.
+    $updateLot = !empty($lotId);
+    if ($updateLot) {
+        // Check if the lot is available before attempting to reserve it
+        $checkLotSql = "SELECT status FROM lots WHERE lotId = ?";
+        $checkStmt = $conn->prepare($checkLotSql);
+        $checkStmt->bind_param("i", $lotId);
+        $checkStmt->execute();
+        $lotResult = $checkStmt->get_result()->fetch_assoc();
+        $checkStmt->close();
+
+        if ($lotResult && $lotResult['status'] !== 'Available') {
+            http_response_code(409); // Conflict
+            echo json_encode(["status" => "error", "message" => "Lot ID {$lotId} is already {$lotResult['status']}. Please select an available lot."]);
+            exit;
+        }
+
+        $sqlLots = "UPDATE lots SET status = ? where lotId = ?";
+        $stmtLots = $conn->prepare($sqlLots);
+
+        if (!$stmtLots) {
+             // Rollback reservation status on error if possible, or log
+             // For now, exit with error:
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Database prepare error (Lot Update): " . $conn->error]);
+            exit;
+        }
+        $stmtLots->bind_param("si", $reservationStatus, $lotId);
+    }
+
+
     if (!$stmt) {
         http_response_code(500);
-        echo json_encode(["status" => "error", "message" => "Database prepare error: " . $conn->error]);
+        echo json_encode(["status" => "error", "message" => "Database prepare error (Reservation Insert): " . $conn->error]);
         exit;
     }
 
-    // ✅ FIXED: Corrected variable $rowNumber to $row_number
+    // --- 6. Bind Parameters and Execute ---
+    // Note: lotId is now passed as an integer 'i'
     $stmt->bind_param(
         "iissssssssssssssssssi",
-        $lotId, $userId, $clientName, $address, $contactNumber, $deceasedName, $burialDate,
-        $reservationDate, $area, $block, $row_number, $lotNumber, $burialDepth, $notes,
-        $clientValidId, $deathCertificate, $deceasedValidId, $burialPermit, $status, $createdAt, $lotTypeId
+        $userId, $lotId, $clientName, $address, $contactNumber, $deceasedName, $burialDate,
+        $reservationDate, $area, $block, $rowNumber, $lotNumber, $burialDepth, $notes,
+        $clientValidId, $deathCertificate, $deceasedValidId, $burialPermit, $reservationStatus, $createdAt, $lotTypeId
     );
+    
+    // Begin transaction for data consistency
+    $conn->begin_transaction();
+    
+    $success = true;
 
+    // Execute Reservation Insert
     if (!$stmt->execute()) {
-        http_response_code(500);
-        echo json_encode(["status" => "error", "message" => "Failed to save reservation: " . $stmt->error]);
-        $stmt->close();
-        $conn->close();
-        exit;
-    }
-
-    $reservationId = $stmt->insert_id;
-    $stmt->close();
-
-    // ✅ Insert into burials only if deceased name is provided
-    if ($deceasedName && $burialDate) {
-        $sqlBurial = "INSERT INTO burials (
-            userId, lotId, reservationId, deceasedName, burialDate,
-            area, block, rowNumber, lotNumber, deceasedValidId, deathCertificate, burialPermit, createdAt
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
-
-        $stmtBurial = $conn->prepare($sqlBurial);
-        if ($stmtBurial) {
-            // ✅ FIXED: Corrected variable $rowNumber to $row_number
-            $stmtBurial->bind_param(
-                "iiisssssssss",
-                $userId, $lotId, $reservationId, $deceasedName, $burialDate, $area,
-                $block, $rowNumber, $lotNumber, $deceasedValidId, $deathCertificate, $burialPermit
-            );
-            $stmtBurial->execute();
-            $stmtBurial->close();
+        $success = false;
+        $errorMessage = "Failed to save reservation: " . $stmt->error;
+    } else {
+        $reservationId = $stmt->insert_id;
+        
+        // Execute Lot Status Update (Only if LotId was provided)
+        if ($success && $updateLot) {
+            if (!$stmtLots->execute()) {
+                $success = false;
+                $errorMessage = "Failed to update lot status: " . $stmtLots->error;
+            }
         }
     }
+    
+    $stmt->close();
+    if (isset($stmtLots)) $stmtLots->close();
 
-    echo json_encode(["status" => "success", "message" => "Reservation submitted successfully"]);
+
+    // --- 7. Handle Transaction Result and Burials Insert ---
+    if ($success) {
+        $conn->commit();
+        
+        // Insert into burials only if deceased name is provided
+        if ($deceasedName && $burialDate) {
+            $sqlBurial = "INSERT INTO burials (
+                userId, lotId, reservationId, deceasedName, burialDate,
+                area, block, rowNumber, lotNumber, deceasedValidId, deathCertificate, burialPermit, createdAt
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+
+            $stmtBurial = $conn->prepare($sqlBurial);
+            if ($stmtBurial) {
+                // Binding LotId as integer 'i'
+                $stmtBurial->bind_param(
+                    "iiisssssssss",
+                    $userId, $lotId, $reservationId, $deceasedName, $burialDate, $area,
+                    $block, $rowNumber, $lotNumber, $deceasedValidId, $deathCertificate, $burialPermit
+                );
+                $stmtBurial->execute();
+                $stmtBurial->close();
+            }
+        }
+
+        echo json_encode(["status" => "success", "message" => "Reservation submitted successfully. Lot {$lotId} status set to '{$reservationStatus}'."]);
+    } else {
+        $conn->rollback();
+        http_response_code(500);
+        echo json_encode(["status" => "error", "message" => $errorMessage]);
+    }
+    
     exit;
 }
 
 $conn->close();
+?>

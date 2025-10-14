@@ -16,6 +16,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const depthOption = document.getElementById("depth_option");
     const burialDepthSelect = document.getElementById("burial_depth");
 
+    const lotIdInput = document.getElementById("lotId"); 
+    const areaInput = document.getElementById("area"); 
+    const blockInput = document.getElementById("block"); 
+    const rowNumberInput = document.getElementById("rowNumber"); 
+    const lotNumberInput = document.getElementById("lot_number"); 
+
     const docModalEl = document.getElementById("docModal");
     const docModal = docModalEl ? new bootstrap.Modal(docModalEl) : null;
     const docFilename = document.getElementById("docFilename");
@@ -33,12 +39,69 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Get the modal body for centering content
     const modalBody = document.querySelector('.modal-body');
-
+    
+    // 🛑 NEW: Pagination Element
+    const historyTable = document.querySelector(".lot-history-table");
+    const paginationContainer = document.getElementById("reservation-pagination");
 
     // ---- State ----
     const fileMap = {};
     let currentFileInput = null, currentFileObj = null;
     let pdfDoc = null, currentPage = 1, totalPages = 1;
+
+    // 🛑 NEW: PAGINATION STATE
+    const recordsPerPage = 10;
+    let currentPageNumber = 1;
+    let totalPagesCount = 0;
+    let fullReservationData = []; // Store the full fetched list
+
+
+    // ====================================================================
+    // 🛑 START: LOT DATA TRANSFER LOGIC (Retrieve from localStorage)
+    // ====================================================================
+
+    const storedLotData = localStorage.getItem('selectedLotData');
+
+    if (storedLotData) {
+        try {
+            const lot = JSON.parse(storedLotData);
+            console.log("Lot data successfully received from Cemetery Map:", lot);
+
+            // 1. Populate Lot Identification Fields
+            if (lotIdInput) lotIdInput.value = lot.lotId || '';
+            if (areaInput) areaInput.value = lot.area || '';
+            if (blockInput) blockInput.value = lot.block || '';
+            if (rowNumberInput) rowNumberInput.value = lot.rowNumber || '';
+            if (lotNumberInput) lotNumberInput.value = lot.lotNumber || '';
+            
+            // 2. Populate Lot Type (Select Field)
+            if (preferredLot) {
+                // Set the lot type using the stored lotTypeId
+                preferredLot.value = lot.lotTypeId || '';
+                // Trigger change event to run the toggleDepthOption function immediately
+                preferredLot.dispatchEvent(new Event('change')); 
+            }
+            
+            // 3. Populate Burial Depth (Select Field)
+            if (burialDepthSelect) {
+                // Set the burial depth
+                burialDepthSelect.value = lot.buryDepth || '';
+            }
+
+            // 4. Show confirmation and clear storage
+            alert(`✅ Lot ${lot.lotNumber} (Block: ${lot.block}) has been successfully pre-selected for reservation.`);
+            localStorage.removeItem('selectedLotData');
+
+        } catch (e) {
+            console.error("Error parsing stored lot data:", e);
+            alert("⚠️ Error loading pre-selected lot details.");
+        }
+    }
+    
+    // ====================================================================
+    // 🛑 END: LOT DATA TRANSFER LOGIC
+    // ====================================================================
+
 
     // ---- Logout handling ----
     logoutLinks.forEach(link => {
@@ -46,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
         link.addEventListener("click", e => {
             e.preventDefault();
             localStorage.removeItem("user_token"); // Example: clear token on logout
-            window.location.href = "../../auth/login/login.php";
+            window.location.href = "../../auth/login/login.html";
         });
     });
 
@@ -70,57 +133,143 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     loadUserName();
 
-    // ---- Load reservation history ----
-    async function loadReservationHistory() {
-        try {
-            const res = await fetch(`${API_BASE_URL}clientLotReservation.php`, {
-                method: "GET", credentials: "include"
+    // ====================================================================
+    // 🛑 START: PAGINATION LOGIC FUNCTIONS
+    // ====================================================================
+
+    function renderTableRows(dataForPage) {
+        if (!historyTableBody) return;
+        historyTableBody.innerHTML = "";
+
+        if (dataForPage.length > 0) {
+            dataForPage.forEach(row => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${row.clientName || "-"}</td>
+                    <td>${row.address || "-"}</td>
+                    <td>${row.contactNumber || "-"}</td>
+                    <td class="text-center">
+                        ${row.clientValidId ? 
+                            `<a href="#" class="view-history-doc text-decoration-underline text-primary" data-url="${API_BASE_URL}${row.clientValidId}" title="View Document">
+                                View
+                                </a>` 
+                            : "N/A"}
+                    </td>
+                    <td>${row.reservationDate || "-"}</td>
+                    <td>${row.area || "-"}</td>
+                    <td>${row.block || "-"}</td>
+                    <td>${row.rowNumber || "-"}</td>
+                    <td>${row.lotNumber || "-"}</td>
+                    <td>${row.lotType || "N/A"}</td>
+                    <td>${row.price ? "₱" + Number(row.price).toLocaleString() : "-"}</td>
+                    <td>${row.status || "N/A"}</span></td>
+                `;
+                historyTableBody.appendChild(tr);
             });
-            const data = await res.json();
-
-            if (!historyTableBody) return;
-            historyTableBody.innerHTML = "";
-
-            if (data.status === "success" && data.data.length > 0) {
-                data.data.forEach(row => {
-                    const tr = document.createElement("tr");
-                    // ✅ MODIFIED: Changed icon to the word 'View'
-                    tr.innerHTML = `
-                        <td>${row.clientName || "-"}</td>
-                        <td>${row.address || "-"}</td>
-                        <td>${row.contactNumber || "-"}</td>
-                        <td class="text-center">
-                            ${row.clientValidId ? 
-                                `<a href="#" class="view-history-doc text-decoration-underline text-primary" data-url="${API_BASE_URL}${row.clientValidId}" title="View Document">
-                                    View
-                                 </a>` 
-                                : "N/A"}
-                        </td>
-                        <td>${row.reservationDate || "-"}</td>
-                        <td>${row.area || "-"}</td>
-                        <td>${row.block || "-"}</td>
-                        <td>${row.rowNumber || "-"}</td>
-                        <td>${row.lotNumber || "-"}</td>
-                        <td>${row.lotType || "N/A"}</td>
-                        <td>${row.price ? "₱" + Number(row.price).toLocaleString() : "-"}</td>
-                        <td>${row.status || "N/A"}</span></td>
-                    `;
-                    historyTableBody.appendChild(tr);
-                });
-            } else {
-                historyTableBody.innerHTML = `<tr><td colspan="12" class="text-center">No reservation history found.</td></tr>`;
-            }
-        } catch (err) {
-            console.error("Error loading history:", err);
-            if (historyTableBody) {
-                 historyTableBody.innerHTML = `<tr><td colspan="12" class="text-center text-danger">Failed to load history.</td></tr>`;
-            }
+        } else {
+            historyTableBody.innerHTML = `<tr><td colspan="12" class="text-center">No reservation history found.</td></tr>`;
         }
     }
+
+    function renderPaginationControls() {
+        if (!paginationContainer) return;
+        paginationContainer.innerHTML = '';
+        
+        if (totalPagesCount <= 1) return; // Hide pagination if only one page
+
+        const ul = document.createElement('ul');
+        ul.className = 'pagination justify-content-center mt-3';
+
+        // --- Previous Button ---
+        const prevLi = document.createElement('li');
+        prevLi.className = `page-item ${currentPageNumber === 1 ? 'disabled' : ''}`;
+        prevLi.innerHTML = `<a class="page-link" href="#" data-page="${currentPageNumber - 1}">Previous</a>`;
+        ul.appendChild(prevLi);
+
+        // --- Page Number Buttons ---
+        for (let i = 1; i <= totalPagesCount; i++) {
+            const pageLi = document.createElement('li');
+            pageLi.className = `page-item ${currentPageNumber === i ? 'active' : ''}`;
+            pageLi.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i}</a>`;
+            ul.appendChild(pageLi);
+        }
+
+        // --- Next Button ---
+        const nextLi = document.createElement('li');
+        nextLi.className = `page-item ${currentPageNumber === totalPagesCount ? 'disabled' : ''}`;
+        nextLi.innerHTML = `<a class="page-link" href="#" data-page="${currentPageNumber + 1}">Next</a>`;
+        ul.appendChild(nextLi);
+
+        paginationContainer.appendChild(ul);
+    }
+    
+    // ---- Load reservation history (The main function is now modified) ----
+    async function loadReservationHistory(page = 1) {
+        // 1. Fetch data only if it hasn't been fetched yet
+        if (fullReservationData.length === 0 && page === 1) {
+            try {
+                const res = await fetch(`${API_BASE_URL}clientLotReservation.php`, {
+                    method: "GET", credentials: "include"
+                });
+                const data = await res.json();
+                
+                if (data.status === "success" && data.data.length > 0) {
+                    fullReservationData = data.data;
+                } else {
+                    fullReservationData = [];
+                }
+            } catch (err) {
+                console.error("Error loading history:", err);
+                if (historyTableBody) {
+                    historyTableBody.innerHTML = `<tr><td colspan="12" class="text-center text-danger">Failed to load history.</td></tr>`;
+                }
+                return; // Exit on fetch error
+            }
+        }
+
+        // 2. Set pagination state
+        currentPageNumber = page;
+        const totalRecords = fullReservationData.length;
+        totalPagesCount = Math.ceil(totalRecords / recordsPerPage);
+        
+        // Clamp current page number
+        if (currentPageNumber > totalPagesCount) currentPageNumber = totalPagesCount;
+        if (currentPageNumber < 1) currentPageNumber = 1;
+
+        // 3. Slice data for the current page
+        const startIndex = (currentPageNumber - 1) * recordsPerPage;
+        const endIndex = startIndex + recordsPerPage;
+        const dataForPage = fullReservationData.slice(startIndex, endIndex);
+
+        // 4. Render the table rows and pagination controls
+        renderTableRows(dataForPage);
+        renderPaginationControls();
+    }
+    
+    // ====================================================================
+    // 🛑 END: PAGINATION LOGIC FUNCTIONS
+    // ====================================================================
+
+
+    // Initial load
     loadReservationHistory();
     
-    // ✅ Event listener now targets the new class 'view-history-doc'
-    historyTableBody?.addEventListener("click", e => {
+    // ✅ NEW: Pagination Click Handler (using event delegation on the container)
+    paginationContainer?.addEventListener('click', (e) => {
+        e.preventDefault();
+        const pageLink = e.target.closest('.page-link');
+        if (pageLink) {
+            const pageNum = parseInt(pageLink.dataset.page);
+            if (!isNaN(pageNum) && pageNum >= 1 && pageNum <= totalPagesCount && pageNum !== currentPageNumber) {
+                // Scroll to top of table when changing pages (optional but helpful UX)
+                historyTable?.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+                loadReservationHistory(pageNum);
+            }
+        }
+    });
+
+    // ✅ MODIFIED: Event listener is now delegated to the table wrapper since tbody content is replaced
+    historyTable?.addEventListener("click", e => {
         const link = e.target.closest('.view-history-doc');
         if (link) {
             e.preventDefault(); 
@@ -133,19 +282,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 
-    // ---- Autodetect lot from URL ----
+    // ---- Autodetect lot from URL and Set Hidden Fields (Original logic preserved) ----
     const urlParams = new URLSearchParams(window.location.search);
-    ["area", "block", "lot_number", "rowNumber"].forEach(param => {
-        const value = urlParams.get(param.replace('_', ''));
+    
+    ["lotId", "area", "block", "lot_number", "rowNumber"].forEach(param => {
+        const value = urlParams.get(param); 
         const el = document.getElementById(param);
-        if (value && el) el.value = value;
+        if (value && el && !el.value) el.value = value; 
     });
 
-    if (urlParams.get("lot")) {
+    if (lotIdInput?.value && !storedLotData) { 
         const alertDiv = document.createElement("div");
         alertDiv.className = "alert alert-info alert-dismissible fade show mt-3";
         alertDiv.innerHTML = `
-            <i class="fas fa-info-circle me-2"></i> A lot was pre-selected from the map. Please complete the form.
+            <i class="fas fa-info-circle me-2"></i> Lot (ID: ${lotIdInput.value}) was pre-selected. Please complete the form.
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         `;
         document.querySelector(".lot-reservation-section")?.prepend(alertDiv);
@@ -154,12 +304,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // Default reservation date = today
     document.getElementById("reservation_date").valueAsDate = new Date();
 
-    // ---- Show/hide burial depth ----
+    // ---- Show/hide burial depth (Original logic preserved) ----
     function toggleDepthOption() {
         if (!preferredLot || !depthOption) return;
         const selected = preferredLot.value;
-        // Hide for Mausoleum options (IDs 4 and 5)
-        if (["4", "5"].includes(selected)) {
+        // Hide for Mausoleum options (IDs 4 and 5) and Exhumation (ID 7)
+        if (["4", "5", "7"].includes(selected)) {
             depthOption.style.display = "none";
             burialDepthSelect?.removeAttribute("required");
         } else {
@@ -168,9 +318,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     preferredLot?.addEventListener("change", toggleDepthOption);
-    toggleDepthOption();
+    toggleDepthOption(); // Run on load (and after lot pre-selection)
 
-    // ---- File input handling ----
+    // ---- File input handling (Original logic preserved) ----
     document.querySelectorAll(".file-input-wrapper").forEach(wrapper => {
         const targetId = wrapper.querySelector(".file-actions")?.getAttribute("data-target");
         const input = document.getElementById(targetId);
@@ -227,23 +377,76 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const formData = new FormData(form);
 
+    // ✅ CRITICAL: Ensure lotId is present in formData for the PHP lot update logic
+    const lotId = lotIdInput?.value.trim();
+    if (lotId) {
+        formData.append('lotId', lotId); 
+    }
+
     try {
+        // --- 1. Initial Reservation Submission ---
         const res = await fetch(form.action, {
             method: "POST",
             body: formData,
             credentials: "include",
         });
 
-        // Handle non-200 responses gracefully
+        const result = await res.json(); 
+
         if (!res.ok) {
-            const text = await res.text(); // fallback if response isn’t JSON
-            throw new Error(`Server error (${res.status}): ${text}`);
+            throw new Error(`Server error (${res.status}): ${result.message || 'Unknown server error.'}`);
         }
 
-        const result = await res.json();
-
         if (result.status === "success") {
-            alert("✅ Reservation submitted successfully!");
+
+            // 🛑 NEW CODE BLOCK: Update Lot Status on the Server using JSON
+            if (lotId) {
+                const updateStatus = "Pending"; // The status to set
+
+                // Gather all necessary data from the form to satisfy update_lot.php's logic
+                const updatePayload = {
+                    lotId: lotId,
+                    block: document.getElementById('block')?.value.trim() || '',
+                    area: document.getElementById('area')?.value.trim() || '',
+                    rowNumber: document.getElementById('rowNumber')?.value.trim() || '',
+                    lotNumber: document.getElementById('lot_number')?.value.trim() || '',
+                    lotTypeId: preferredLot?.value.trim() || null, // preferred_lot is Lot Type ID
+                    buryDepth: burialDepthSelect?.value.trim() || '',
+                    status: updateStatus,
+                    userId: null 
+                };
+                
+                try {
+                    // --- 2. Update Lot Status via JSON API ---
+                    const updateRes = await fetch(`${API_BASE_URL}update_lot.php`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json' // CRITICAL for your PHP script
+                        },
+                        body: JSON.stringify(updatePayload), // CRITICAL: Send as JSON
+                        credentials: "include",
+                    });
+
+                    const updateResult = await updateRes.json();
+                    
+                    if (updateRes.ok && updateResult.success) {
+                        console.log(`Server lot status update successful for Lot ID ${lotId}: Pending`);
+                        
+                        // Set sessionStorage flag for client-side map visualization
+                        sessionStorage.setItem("lotStatusUpdate", JSON.stringify({
+                            id: lotId,
+                            status: updateStatus 
+                        }));
+                    } else {
+                        console.warn(`Server lot status update failed: ${updateResult.message || 'Unknown update error.'}`);
+                    }
+                } catch (updateError) {
+                    console.error("Error calling update_lot.php:", updateError);
+                }
+            } 
+            // 🛑 END NEW CODE BLOCK
+
+            alert("✅ Reservation submitted successfully! The lot is now marked Pending. Redirecting to the map...");
             form.reset();
 
             // ✅ Reset uploaded files display
@@ -255,14 +458,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 span.style.color = "#6c757d";
             });
 
-            // ✅ Refresh history table
-            if (typeof loadReservationHistory === "function") {
-                loadReservationHistory();
-            }
+            // ✅ Refresh history table (resets full data and reloads page 1)
+            fullReservationData = [];
+            loadReservationHistory(); 
 
             // ✅ Redirect after success
             setTimeout(() => {
-                window.location.href = "../payment/payment.php";
+                // Redirect to the map page so it can read the sessionStorage flag
+                window.location.href = "../cemeteryMap/cemeteryMap.html"; 
             }, 1500);
         } else {
             alert("❌ Error: " + (result.message || "Unknown error occurred."));
@@ -274,7 +477,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-    // ---- File preview modal ----
+    // ---- File preview modal (Original logic preserved) ----
     function openFileInModal(file, url, inputEl, isHistoryView = false) {
         currentFileInput = inputEl;
         currentFileObj = file;

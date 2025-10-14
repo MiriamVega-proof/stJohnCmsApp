@@ -1,18 +1,3 @@
-<?php
-// Include authentication helper
-require_once '../../../../cms.api/auth_helper.php';
-
-// Require authentication - redirect to login if not logged in
-requireAuth('../../auth/login/login.php');
-
-// Require admin or secretary role for this page
-requireAdminOrSecretary('../../auth/login/login.php');
-
-// Get current user information
-$userId = getCurrentUserId();
-$userName = getCurrentUserName();
-$userRole = getCurrentUserRole();
-?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -34,60 +19,50 @@ $userRole = getCurrentUserRole();
   </head>
 
   <body>
-  <nav class="navbar navbar-expand-lg fixed-top">
-          <div class="container-fluid">
-              <a class="navbar-brand" href="#">Blessed Saint John Memorial</a>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarNav">
-                  <ul class="navbar-nav mx-auto">
-                      <li class="nav-item"><a class="nav-link" href="../adminDashboard/adminDashboard.php">Home</a></li>
-                      <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle active" href="#" id="managementDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-current="page">
-                              Management
-                          </a>
-                          <ul class="dropdown-menu" aria-labelledby="managementDropdown">
-                              <li><a class="dropdown-item" href="../adminAppointment/adminAppointment.php">Appointment Management</a></li> 
-                              <li><a class="dropdown-item active" href="adminCemeteryMap.php">Cemetery Map Management</a></li>
-                              <li><a class="dropdown-item" href="../adminReservation/adminReservation.php">Lot Reservation Management</a></li>
-                              <li><a class="dropdown-item" href="../adminBurial/adminBurial.php">Burial Record Management</a></li>
-                              <li><a class="dropdown-item" href="../adminFinancial/adminFinancial.php">Financial Tracking</a></li>
-                              <li><a class="dropdown-item" href="../adminMaintenance/adminMaintenance.php">Maintenance Management</a></li>
-                          </ul>
-                      </li>
-                      <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle" href="#" id="adminToolsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                              Admin Tools
-                          </a>
-                          <ul class="dropdown-menu" aria-labelledby="adminToolsDropdown">
-                              <li><a class="dropdown-item" href="../adminAuditLogs/adminAuditLogs.php">Audit Logs</a></li>
-                              <li><a class="dropdown-item" href="../adminUserManagement/adminUserManagement.php">User Management</a></li>
-                              <li><a class="dropdown-item" href="../adminReports/adminReports.php">Reports Module</a></li>
-                          </ul>
-                      </li>
-                  </ul>
-
-                  <div class="d-lg-none mt-3 pt-3 border-top border-dark-subtle">
-                      <div class="d-flex align-items-center mb-2">
-                          <span id="user-name-display-mobile" class="fw-bold">Admin</span>
-                      </div>
-                      <a href="#" id="logoutLinkMobile" class="mobile-logout-link" onclick="handleLogout(); return false;">
-                          <i class="fas fa-sign-out-alt me-2"></i>Logout
-                      </a>
-                  </div>
-              </div>
-              
-              <div class="dropdown d-none d-lg-flex">
-                  <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      <span id="user-name-display-desktop">Admin User</span>
-                  </a>
-                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                      <li><a class="dropdown-item" href="#" id="logoutLinkDesktop" onclick="handleLogout(); return false;"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
-                  </ul>
-              </div>
-          </div>
-      </nav>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">Blessed Saint John Memorial</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="../adminDashboard/adminDashboard.html">Home</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="managementDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Management
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="managementDropdown">
+                            <li><a class="dropdown-item" href="../adminAppointment/adminAppointment.html">Appointment Management</a></li>
+                            <li><a class="dropdown-item active" href="../adminCemeteryMap/adminCemeteryMap.html">Cemetery Map Management</a></li>
+                            <li><a class="dropdown-item" href="..//adminReservation/adminReservation.html">Lot Reservation Management</a></li>
+                            <li><a class="dropdown-item" href="../adminBurial/adminBurial.html">Burial Record Management</a></li>
+                            <li><a class="dropdown-item" href="../adminFinancial/adminFinancial.html">Financial Tracking</a></li>
+                            <li><a class="dropdown-item" href="../adminMaintenance/adminMaintenance.html">Maintenance Management</a></li>
+                        </ul>
+                    </li>
+                     <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="adminToolsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Admin Tools
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="adminToolsDropdown">
+                            <li><a class="dropdown-item" href="../adminAuditLogs/adminAuditLogs.html">Audit Logs</a></li>
+                            <li><a class="dropdown-item" href="../adminUserManagement/adminUserManagement.html">User Management</a></li>
+                            <li><a class="dropdown-item" href="../adminReports/adminReports.html">Reports Module</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+             <div class="dropdown d-none d-lg-flex">
+                <a href="../../../frontend/auth/login/login.html" class="nav-link dropdown-toggle d-flex align-items-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Admin User
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li><a class="dropdown-item" href="../../../frontend/auth/login/login.html" id="logoutLinkDesktop"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
     <!-- MAIN CONTENT (Unchanged) -->
     <main class="main-content">
@@ -154,18 +129,20 @@ $userRole = getCurrentUserRole();
           <input type="text" id="editArea" required>
 
           <label for="editRowNum">Row Number</label>
-          <input type="text" id="editRowNum">
+          <input type="text" id="editRowNumber" name="rowNumber">
 
           <label for="editLotNum">Lot Number</label>
-          <input type="text" id="editLotNum">
+          <input type="text" id="editLotNumber" name="lotNumber">
 
-          <label for="editType">Type</label>
-          <select id="editType" required>
-            <option value="Regular Lot (₱50,000)">Regular Lot (₱50,000)</option>
-            <option value="Regular Lot (₱60,000)">Regular Lot (₱60,000)</option>
-            <option value="Premium Lot">Premium Lot</option>
-            <option value="Mausoleum (Inside Cemetery)">Mausoleum (Inside Cemetery)</option>
-            <option value="Mausoleum (Along Road)">Mausoleum (Along Road)</option>
+          <label for="editLotType">Type</label>
+          <select id="editLotType" required>
+            <option value="1">Regular Lot (₱50,000)</option>
+            <option value="2">Regular Lot (₱60,000)</option>
+            <option value="3">Premium Lot (₱70,000)</option>
+            <option value="4">Mausoleum Inside (₱500,000)</option>
+            <option value="5">Mausoleum Roadside (₱600,000)</option>
+            <option value="6">4-Lot Package (₱300,000)</option>
+            <option value="7">Exhumation (₱15,000)</option>
           </select>
 
           <label for="editDepth">Burial Depth</label>
@@ -224,6 +201,6 @@ $userRole = getCurrentUserRole();
     <script src="./resources/qgis2web.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script src="adminCemeteryMap.js" defer></script>
+    <script src="adminCemeteryMap.js"></script>
   </body>
 </html>

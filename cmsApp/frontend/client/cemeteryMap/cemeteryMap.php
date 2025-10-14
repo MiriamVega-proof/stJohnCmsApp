@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cemetery Map - Blessed Saint John Memorial</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <title>Cemetery Map Management</title>
+
+    <link rel="stylesheet" href="./resources/ol.css">
+    <link rel="stylesheet" href="resources/fontawesome-all.min.css">
+    <link href="resources/photon-geocoder-autocomplete.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./resources/ol-layerswitcher.css">
+    <link rel="stylesheet" href="./resources/qgis2web.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="cemeteryMap.css">
 </head>
 <body class="bg-light">
@@ -20,19 +29,19 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="../clientDashboard/clientDashboard.php">Home</a></li>
-                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="cemeteryMap.php">Cemetery Map</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../lotReservation/lotReservation.php">Lot Reservation</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../payment/payment.php">Payment</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../burialRecord/burialRecord.php">Burial Record</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../maintenanceServiceRequest/maintenanceServiceRequest.php">Maintenance Request</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../clientDashboard/clientDashboard.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="cemeteryMap.html">Cemetery Map</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../lotReservation/lotReservation.html">Lot Reservation</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../payment/payment.html">Payment</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../burialRecord/burialRecord.html">Burial Record</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../maintenanceServiceRequest/maintenanceServiceRequest.html">Maintenance Request</a></li>
                 </ul>
     
                 <div class="d-lg-none mt-3 pt-3 border-top border-dark-subtle">
                     <div class="d-flex align-items-center mb-2">
                         <span id="user-name-display-mobile" class="fw-bold">Maria Anjelika Erese</span>
                     </div>
-                    <a href=".././auth/login.php" id="logoutLinkMobile" class="mobile-logout-link">
+                    <a href=".././auth/login.html" id="logoutLinkMobile" class="mobile-logout-link">
                         <i class="fas fa-sign-out-alt me-2"></i>Logout
                     </a>
                 </div>
@@ -40,128 +49,108 @@
             
             <div class="dropdown d-none d-lg-block">
                 <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="user-initials me-2" id="user-initials-desktop">MA</span>
-                    <span id="user-name-display-desktop">Maria Anjelika Erese</span>
+                    <span id="user-name-display-desktop">User Name</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                    <li><a class="dropdown-item" href=".././auth/login.php" id="logoutLinkDesktop">
+                    <li><a class="dropdown-item" href=".././auth/login.html" id="logoutLinkDesktop">
                         <i class="fas fa-sign-out-alt me-2"></i>Logout
                     </a></li>
                 </ul>
             </div>
         </div>
     </nav>
-    <main class="container py-5">
-        <div class="row pt-4">
-            <div class="col-12">
-                <h1 class="mb-1 fw-bold text-dark">Cemetery Map</h1>
-                <p class="text-muted">Click any lot on the map to view its status and details. Use the zoom button for a larger view.</p>
-                <hr class="mb-4">
-            </div>
+
+    <main class="main-content">
+      <div class="page-header">
+        <h1>Cemetery Map Management</h1>
+        <p>Manage and view lot statuses on the interactive map.</p>
+      </div>
+      
+      <div class="map-section">
+        <div class="map-legend-container">
+          <h4>Legend:</h4>
+          <ul>
+            <li><span class="legend-color available"></span> Available</li><li><span class="legend-color pending"></span> Pending</li><li><span class="legend-color reserved"></span> Reserved</li><li><span class="legend-color occupied"></span> Occupied</li>
+          </ul>
         </div>
 
-        <div class="row mb-4 g-3">
-            <div class="col-lg-8">
-                <div class="card p-3 shadow-sm border-0 h-100">
-                    <h4 class="card-title fs-5 mb-2 fw-semibold"><i class="fas fa-search-location me-2"></i> Lot Availability Instructions:</h4>
-                    <p class="mb-0">
-                        Use the interactive map area below. **Click on a specific lot** to check its current status. 
-                        Only **Green (Available)** lots can be reserved. When you click an available lot, its detailed information will automatically populate on the right panel.
-                    </p>
-                </div>
+        <div class="map-container-wrapper">
+          <div class="map-placeholder" id="cemeteryMap">
+            <div id="map">
+              <div id="popup" class="ol-popup">
+                <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+                <div id="popup-content"></div>
+              </div>
             </div>
+            <button id="expandMapBtn" class="expand-btn"><i class="fas fa-expand"></i> Expand Map</button>
+          </div>
 
-            <div class="col-lg-4">
-                <div class="card p-3 shadow-sm border-0 h-100">
-                    <h4 class="card-title fs-5 mb-2 fw-semibold">Legend:</h4>
-                    <ul class="list-inline mb-0 d-flex flex-wrap gap-3">
-                        <li class="list-inline-item"><span class="legend-color available me-1"></span> Available</li>
-                        <li class="list-inline-item"><span class="legend-color pending me-1"></span> Pending</li>
-                        <li class="list-inline-item"><span class="legend-color reserved me-1"></span> Reserved</li>
-                        <li class="list-inline-item"><span class="legend-color occupied me-1"></span> Occupied</li>
-                    </ul>
-                </div>
+          <div class="lot-actions-panel">
+            <h3>Lot Management</h3>
+
+            <div class="lot-list-header">
+              <h4>Existing Lots</h4>
+              <input type="text" id="lotSearch" placeholder="Search by Lot ID, Block, Area...">
             </div>
+            
+            <div id="lotList" class="lot-list"></div>
+            <div class="pagination-controls">
+              <button id="prevPageBtn" class="pagination-btn">&laquo; Previous</button>
+              <span id="pageInfo">Page 1 of 1</span>
+              <button id="nextPageBtn" class="pagination-btn">Next &raquo;</button>
+            </div>
+            <p class="note"><strong>Note:</strong> All status changes are verified and reflected system-wide across dashboards.</p>
+          </div>
         </div>
-
-        <div class="row g-4">
-            <div class="col-lg-8">
-                <div class="card map-placeholder bg-white shadow-lg border-0 p-3">
-                    <div class="card-body p-0">
-                        <div class="map-wrapper">
-                            <iframe id="cemeteryMapIframe" src="./simulated_map_content.php" frameborder="0" allowfullscreen="" loading="lazy"></iframe>
-
-                            <div id="mapOverlay" class="map-overlay">
-                                <div class="click-area available" data-lot-data="GARDEN|A|1|Available|"></div>
-                                <div class="click-area available" data-lot-data="GARDEN|A|2|Available|"></div>
-                                <div class="click-area pending" data-lot-data="GARDEN|A|3|Pending|Maria Anjelika Erese"></div>
-                                <div class="click-area reserved" data-lot-data="GARDEN|B|1|Reserved|Juan Dela Cruz"></div>
-                                <div class="click-area occupied" data-lot-data="GARDEN|B|2|Occupied|Deceased Name"></div>
-                                <div class="click-area available" data-lot-data="GARDEN|B|3|Available|"></div>
-                                <div class="click-area available" data-lot-data="PRIME|C|5|Available|"></div>
-                            </div>
-                            
-                            <button class="btn btn-dark zoom-btn" data-bs-toggle="modal" data-bs-target="#zoomMapModal" title="Zoom In/Out">
-                                <i class="fas fa-expand"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4">
-                <div class="card p-4 bg-white shadow-lg border-0 sticky-top" id="lotDetailPanel" style="top: 80px;">
-                    <h3 class="card-title fs-5 mb-3 fw-bold border-bottom pb-2">Selected Lot Details</h3>
-                    <div id="lotInfoContent">
-                        <div class="alert alert-info" role="alert">
-                            <i class="fas fa-info-circle me-2"></i> Click a lot on the map to load details here.
-                        </div>
-                    </div>
-                    <button class="btn btn-warning mt-3 w-100 fw-bold d-none submit-btn" id="reserveLotBtn" type="button" 
-                        data-bs-toggle="modal" data-bs-target="#reservationModal">
-                        <i class="fas fa-hand-pointer me-2"></i> Reserve This Lot Now
-                    </button>
-                </div>
-            </div>
-        </div>
+      </div>
     </main>
 
-    <div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="reservationModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-warning">
-                    <h5 class="modal-title fw-bold" id="reservationModalLabel"><i class="fas fa-bookmark me-2"></i> Confirm Lot Reservation</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center p-4">
-                    <p class="fs-5">You are reserving lot details:</p>
-                    <p><strong>Area:</strong> <span id="modalArea" class="fw-bold text-dark"></span></p>
-                    <p><strong>Block:</strong> <span id="modalBlock" class="fw-bold text-dark"></span></p>
-                    <p><strong>Lot Number:</strong> <span id="modalLotNum" class="fw-bold text-dark"></span></p>
-                    <p class="text-muted mt-3">Proceed to the Lot Reservation page to complete the booking forms.</p>
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <a href="../lotReservation/lotReservation.php" class="btn btn-warning fw-bold submit-btn" id="confirmReservationBtn">
-                        <i class="fas fa-file-alt me-2"></i> Go to Reservation Form
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- EDIT LOT MODAL -->
+    <div id="editLotModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Lot Details</h2>
+        <form id="editLotForm">
+          <label for="editLotId">Lot ID</label>
+          <input type="text" id="editLotId" name="lotId" readonly>
 
-    <div class="modal fade" id="zoomMapModal" tabindex="-1" aria-labelledby="zoomMapModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-fullscreen-lg-down">
-            <div class="modal-content">
-                <div class="modal-header bg-light">
-                    <h5 class="modal-title fw-bold" id="zoomMapModalLabel"><i class="fas fa-search-plus me-2"></i> Interactive Cemetery Map (Zoom)</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-0">
-                    <iframe id="zoomableMapIframe" src="./simulated_map_content_zoomable.php" frameborder="0" allowfullscreen="" loading="lazy"></iframe>
-                </div>
-            </div>
-        </div>
+          <label for="editBlock">Block</label>
+          <input type="text" id="editBlock" required readonly>
+          
+          <label for="editArea">Area</label>
+          <input type="text" id="editArea" required readonly>
+
+          <label for="editRowNum">Row Number</label>
+          <input type="text" id="editRowNumber" name="rowNumber" readonly>
+
+          <label for="editLotNum">Lot Number</label>
+          <input type="text" id="editLotNumber" name="lotNumber" readonly>
+
+          <label for="editLotType">Type</label>
+          <select id="editLotType" required>
+            <option value="1">Regular Lot (₱50,000)</option>
+            <option value="2">Regular Lot (₱60,000)</option>
+            <option value="3">Premium Lot (₱70,000)</option>
+            <option value="4">Mausoleum Inside (₱500,000)</option>
+            <option value="5">Mausoleum Roadside (₱600,000)</option>
+            <option value="6">4-Lot Package (₱300,000)</option>
+            <option value="7">Exhumation (₱15,000)</option>
+          </select>
+
+          <label for="editDepth">Burial Depth</label>
+          <select id="editDepth" required>
+            <option value="4ft">4ft</option>
+            <option value="6ft">6ft</option>
+          </select>
+
+          <label for="editStatus">Status</label>
+          <input id="editStatus" readonly>
+
+          <input type="hidden" id="editGeo" name="geo">
+
+          <button type="submit" class="btn btn-update">Reserve Now</button>
+        </form>
+      </div>
     </div>
 
     <footer class="footer text-center py-3">
@@ -173,7 +162,19 @@
             </p>
         </div>
     </footer>
+
+    <script src="resources/qgis2web_expressions.js"></script>
+    <script src="./resources/functions.js"></script>
+    <script src="./resources/ol.js"></script>
+    <script src="./resources/ol-layerswitcher.js"></script>
+    <script src="resources/photon-geocoder-autocomplete.min.js"></script>
+    <script src="layers/nondescriptbuildings_1.js"></script><script src="layers/geo_2.js"></script>
+    <script src="styles/nondescriptbuildings_1_style.js"></script><script src="styles/geo_2_style.js"></script>
+    <script src="./layers/layers.js" type="text/javascript"></script> 
+    <script src="./resources/Autolinker.min.js"></script>
+    <script src="./resources/qgis2web.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script src="cemeteryMap.js"></script>
-</body>
+  </body>
 </html>
