@@ -42,8 +42,34 @@ document.addEventListener("DOMContentLoaded", () => {
     // ====== MODAL UTILITIES ======
     function setupModal(modal) {
         if (!modal) return;
+        // Close on close button
         modal.querySelector(".close-button")?.addEventListener("click", () => (modal.style.display = "none"));
+        // Close on click outside
         window.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
+        // Close on Esc key
+        window.addEventListener("keydown", (e) => {
+            if (modal.style.display !== "none" && (e.key === "Escape" || e.key === "Esc")) {
+                modal.style.display = "none";
+            }
+        });
+        // Focus trap for accessibility
+        modal.addEventListener("keydown", (e) => {
+            if (e.key !== "Tab") return;
+            const focusable = modal.querySelectorAll('input, select, button, [tabindex]:not([tabindex="-1"])');
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (e.shiftKey) {
+                if (document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                }
+            } else {
+                if (document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        });
     }
     setupModal(elements.editModal);
 
@@ -187,9 +213,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const form=elements.editForm;
         Object.entries(item.dataset).forEach(([k,v])=>{
             const input=form.querySelector(`#edit${k.charAt(0).toUpperCase()+k.slice(1)}`);
-            if(input) input.value=v;
+            if(input) {
+                input.value = v;
+                // Disable non-editable fields for accessibility
+                if (["editLotId","editBlock","editArea","editRowNumber","editLotNumber","editStatus"].includes(input.id)) {
+                    input.setAttribute("readonly","readonly");
+                    input.setAttribute("tabindex","0");
+                }
+            }
         });
         elements.editModal.style.display="flex";
+        // Focus first input for accessibility
+        setTimeout(()=>{
+            const firstInput = form.querySelector('input, select, button, [tabindex]:not([tabindex="-1"])');
+            firstInput?.focus();
+        }, 100);
         toggleDepthOption();
     }
 
