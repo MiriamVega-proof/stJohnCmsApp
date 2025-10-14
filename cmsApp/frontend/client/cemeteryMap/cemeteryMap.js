@@ -10,8 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ====== DOM ELEMENTS ======
     const elements = {
-        logoutDesktop: document.getElementById("logoutLinkDesktop"),
-        logoutMobile: document.getElementById("logoutLinkMobile"),
+        logout: document.getElementById("logoutLink"),
         expandMap: document.getElementById("expandMapBtn"),
         cemeteryMap: document.getElementById("cemeteryMap"),
         lotList: document.querySelector(".lot-list"),
@@ -42,9 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ====== MODAL UTILITIES ======
     function setupModal(modal) {
         if (!modal) return;
-        // Close on close button
         modal.querySelector(".close-button")?.addEventListener("click", () => (modal.style.display = "none"));
-        // Close on click outside
         window.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
         // Close on Esc key
         window.addEventListener("keydown", (e) => {
@@ -252,7 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("selectedLotData", JSON.stringify(lotData));
 
         // Redirect to Reservation page
-        window.location.href = "../lotReservation/lotReservation.html";
+        window.location.href = "../lotReservation/lotReservation.php";
     });
 
     // ====== TOGGLE BURIAL DEPTH ======
@@ -288,24 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
             : '<i class="fas fa-expand"></i> Expand Map';
         setTimeout(()=>window.map?.updateSize?.(),300);
     });
-    function handleLogoutRedirect(link) {
-        // Clear client-side data
-        localStorage.clear();
-        sessionStorage.clear();
-        const targetUrl = link.getAttribute("href") && link.getAttribute("href") !== "javascript:void(0);"
-            ? link.getAttribute("href")
-            : "../../auth/login/login.php";
-        window.location.href = targetUrl;
-    }
-
-    [elements.logoutDesktop, elements.logoutMobile].forEach(link => {
-        if (link) {
-            link.addEventListener("click", (e) => {
-                e.preventDefault();
-                handleLogoutRedirect(link);
-            });
-        }
-    });
+    elements.logout?.addEventListener("click",(e)=>{ e.preventDefault(); if(confirm("Log out?")) window.location.href="../auth/login/login.php"; });
 
     // ====== INIT ======
     loadUserName();

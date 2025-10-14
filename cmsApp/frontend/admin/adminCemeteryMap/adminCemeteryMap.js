@@ -311,7 +311,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     elements.logout?.addEventListener("click", (e) => {
         e.preventDefault();
-        if (confirm("Log out?")) window.location.href = "../../auth/login/login.html";
+        if (confirm("Log out?")) window.location.href = "../../auth/login/login.php";
     });
 
     /* ---------------------- INIT ---------------------- */

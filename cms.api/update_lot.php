@@ -93,7 +93,4 @@ try {
 } finally {
     $conn->close();
 }
-// NOTE: Your original PHP had complex logic to bind NULL for userId.
-// Since we are now using the authenticated user's ID, that complex logic is no longer needed
-// and has been replaced by the simpler, correct integer binding ("i") for the userId field.
 ?>

@@ -64,6 +64,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
 
           <aside class="lot-actions-panel" aria-label="Lot management panel">
             <h3>Lot Management</h3>
+
             <div class="lot-list-header">
               <h4>Existing Lots</h4>
               <input type="text" id="lotSearch" placeholder="Search by Lot ID, Block, Area..." aria-label="Search lots" tabindex="0">
