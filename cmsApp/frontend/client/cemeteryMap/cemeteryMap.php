@@ -1,3 +1,19 @@
+<?php
+session_start();
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
+    // User is not logged in, redirect to login page
+    header("Location: ../../auth/login/login.php");
+    exit();
+}
+
+// Optional: You can also check user role if needed
+// if ($_SESSION['role'] !== 'client') {
+//     header("Location: ../../auth/login/login.php");
+//     exit();
+// }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,7 +57,7 @@
                     <div class="d-flex align-items-center mb-2">
                         <span id="user-name-display-mobile" class="fw-bold">Maria Anjelika Erese</span>
                     </div>
-                    <a href=".././auth/login.html" id="logoutLinkMobile" class="mobile-logout-link">
+                    <a href="../../../../cms.api/logout.php" id="logoutLinkMobile" class="mobile-logout-link">
                         <i class="fas fa-sign-out-alt me-2"></i>Logout
                     </a>
                 </div>
@@ -52,7 +68,7 @@
                     <span id="user-name-display-desktop">User Name</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                    <li><a class="dropdown-item" href=".././auth/login.html" id="logoutLinkDesktop">
+                    <li><a class="dropdown-item" href="../../../../cms.api/logout.php" id="logoutLinkDesktop">
                         <i class="fas fa-sign-out-alt me-2"></i>Logout
                     </a></li>
                 </ul>

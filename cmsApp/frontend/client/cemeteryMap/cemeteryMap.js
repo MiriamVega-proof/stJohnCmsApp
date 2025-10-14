@@ -10,7 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ====== DOM ELEMENTS ======
     const elements = {
-        logout: document.getElementById("logoutLink"),
+        logoutDesktop: document.getElementById("logoutLinkDesktop"),
+        logoutMobile: document.getElementById("logoutLinkMobile"),
         expandMap: document.getElementById("expandMapBtn"),
         cemeteryMap: document.getElementById("cemeteryMap"),
         lotList: document.querySelector(".lot-list"),
@@ -249,7 +250,24 @@ document.addEventListener("DOMContentLoaded", () => {
             : '<i class="fas fa-expand"></i> Expand Map';
         setTimeout(()=>window.map?.updateSize?.(),300);
     });
-    elements.logout?.addEventListener("click",(e)=>{ e.preventDefault(); if(confirm("Log out?")) window.location.href="../../auth/login/login.html"; });
+    function handleLogoutRedirect(link) {
+        // Clear client-side data
+        localStorage.clear();
+        sessionStorage.clear();
+        const targetUrl = link.getAttribute("href") && link.getAttribute("href") !== "javascript:void(0);"
+            ? link.getAttribute("href")
+            : "../../auth/login/login.php";
+        window.location.href = targetUrl;
+    }
+
+    [elements.logoutDesktop, elements.logoutMobile].forEach(link => {
+        if (link) {
+            link.addEventListener("click", (e) => {
+                e.preventDefault();
+                handleLogoutRedirect(link);
+            });
+        }
+    });
 
     // ====== INIT ======
     loadUserName();
