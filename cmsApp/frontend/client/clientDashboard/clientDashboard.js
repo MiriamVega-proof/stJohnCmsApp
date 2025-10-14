@@ -143,5 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // Expose to global scope in case it's called from outside
+    window.initDashboard = initDashboard;
     initDashboard();
 });
