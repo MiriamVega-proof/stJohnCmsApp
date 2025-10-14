@@ -45,12 +45,12 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="../clientDashboard/clientDashboard.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="cemeteryMap.html">Cemetery Map</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../lotReservation/lotReservation.html">Lot Reservation</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../payment/payment.html">Payment</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../burialRecord/burialRecord.html">Burial Record</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../maintenanceServiceRequest/maintenanceServiceRequest.html">Maintenance Request</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../clientDashboard/clientDashboard.php">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="cemeteryMap.php">Cemetery Map</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../lotReservation/lotReservation.php">Lot Reservation</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../payment/payment.php">Payment</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../burialRecord/burialRecord.php">Burial Record</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../maintenanceServiceRequest/maintenanceServiceRequest.php">Maintenance Request</a></li>
                 </ul>
     
                 <div class="d-lg-none mt-3 pt-3 border-top border-dark-subtle">
